@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import com.google.inject.Inject
 import org.scalacheck.Gen
-import play.api.libs.json.{Format, JsValue, Json, Writes}
+import play.api.libs.json.{JsValue, Json, Writes}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord.{DesAddress, DesContactDetails, DesIndividual}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.{DesBusinessPartnerRecord, DesErrorResponse}
@@ -31,10 +31,7 @@ import uk.gov.hmrc.smartstub.Enumerable.instances.ninoEnumNoSpaces
 
 class BusinessPartnerRecordController @Inject()(cc: ControllerComponents) extends BackendController(cc) {
 
-  def errorResponse(errorCode: String, errorMessage: String): JsValue = Json.toJson(DesErrorResponse(errorCode, errorMessage))
-
   def getBusinessPartnerRecord(nino: String): Action[AnyContent] = Action { implicit request =>
-
     if (nino.startsWith("ER400")) {
       BadRequest(errorResponse("INVALID_NINO", "Submission has not passed validation. Invalid parameter NINO"))
     } else if (nino.startsWith("ER404")) {
@@ -56,34 +53,35 @@ class BusinessPartnerRecordController @Inject()(cc: ControllerComponents) extend
     }
   }
 
-  implicit val addressGen: Gen[DesAddress] = for{
-    addressLines <- Gen.ukAddress
-    postcode <- Gen.postcode
-  } yield {
-    val (l1, l2) = addressLines match {
-      case Nil => ("1 the Street", None)
-      case a1 :: Nil => (a1, None)
-      case a1 :: a2 :: _ => (a1, Some(a2))
+  def errorResponse(errorCode: String, errorMessage: String): JsValue =
+    Json.toJson(DesErrorResponse(errorCode, errorMessage))
+
+  val bprAutoGen: Gen[DesBusinessPartnerRecord] = {
+    val addressGen: Gen[DesAddress] = for{
+      addressLines <- Gen.ukAddress
+      postcode <- Gen.postcode
+    } yield {
+      val (l1, l2) = addressLines match {
+        case Nil => ("1 the Street", None)
+        case a1 :: Nil => (a1, None)
+        case a1 :: a2 :: _ => (a1, Some(a2))
+      }
+      DesAddress(l1, l2, None, None, postcode, "GB")
     }
-    DesAddress(l1, l2, None, None, postcode, "GB")
-  }
 
-  implicit val bprAutoGen: Gen[DesBusinessPartnerRecord] = for{
-    individual <- AutoGen[DesIndividual]
-    address <- addressGen
-  } yield {
-    val email = s"${individual.firstName.toLowerCase}.${individual.lastName.toLowerCase}@email.com"
-    DesBusinessPartnerRecord(individual, address, DesContactDetails(Some(email)))
+    for {
+      individual <- AutoGen[DesIndividual]
+      address <- addressGen
+    } yield {
+      val email = s"${individual.firstName.toLowerCase}.${individual.lastName.toLowerCase}@email.com"
+      DesBusinessPartnerRecord(individual, address, DesContactDetails(Some(email)))
+    }
   }
-
 }
 
 object BusinessPartnerRecordController {
 
-  final case class DesErrorResponse(
-                                     code: String,
-                                     reason: String
-                                   )
+  final case class DesErrorResponse(code: String, reason: String)
 
   object DesErrorResponse {
     implicit val desErrorWrites: Writes[DesErrorResponse] = Json.writes[DesErrorResponse]
