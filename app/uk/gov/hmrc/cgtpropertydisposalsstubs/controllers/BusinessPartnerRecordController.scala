@@ -19,15 +19,15 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 import java.time.LocalDate
 
 import com.google.inject.Inject
-import play.api.libs.json.{Json, Reads, Writes}
-import play.api.mvc.ControllerComponents
+import play.api.libs.json.{Json, Writes}
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord.{DesAddress, DesContactDetails, DesIndividual}
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 
 class BusinessPartnerRecordController @Inject()(cc: ControllerComponents) extends BackendController(cc) {
 
-  def getBusinessPartnerRecord(nino: String) = Action { implicit request =>
+  def getBusinessPartnerRecord(nino: String): Action[AnyContent] = Action { implicit request =>
     val individual = DesIndividual("Paulo", "Miguel", LocalDate.of(1989,1,14))
     val address = DesAddress("First Street", None, None, None, Some("ABC123"), "GB" )
     val contDetails = DesContactDetails(Some("paulomiguel010@gmail.com"))
