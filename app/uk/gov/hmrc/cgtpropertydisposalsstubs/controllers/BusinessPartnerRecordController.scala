@@ -19,25 +19,75 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 import java.time.LocalDate
 
 import com.google.inject.Inject
-import play.api.libs.json.{Json, Writes}
+import org.scalacheck.Gen
+import play.api.libs.json.{Format, JsValue, Json, Writes}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord.{DesAddress, DesContactDetails, DesIndividual}
+import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.{DesBusinessPartnerRecord, DesErrorResponse}
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import uk.gov.hmrc.smartstub._
+import uk.gov.hmrc.smartstub.AutoGen
+import uk.gov.hmrc.smartstub.Enumerable.instances.ninoEnumNoSpaces
 
 class BusinessPartnerRecordController @Inject()(cc: ControllerComponents) extends BackendController(cc) {
 
+  def errorResponse(errorCode: String, errorMessage: String): JsValue = Json.toJson(DesErrorResponse(errorCode, errorMessage))
+
   def getBusinessPartnerRecord(nino: String): Action[AnyContent] = Action { implicit request =>
-    val individual = DesIndividual("Paulo", "Miguel", LocalDate.of(1989,1,14))
-    val address = DesAddress("First Street", None, None, None, Some("ABC123"), "GB" )
-    val contDetails = DesContactDetails(Some("paulomiguel010@gmail.com"))
-    val bpr =  DesBusinessPartnerRecord(individual, address, contDetails)
-    Ok(Json.toJson(bpr))
+
+    if (nino.startsWith("ER400")) {
+      BadRequest(errorResponse("INVALID_NINO", "Submission has not passed validation. Invalid parameter NINO"))
+    } else if (nino.startsWith("ER404")) {
+      NotFound(errorResponse("NOT_FOUND", "The remote endpoint has indicated that no data can be found"))
+    } else if (nino.startsWith("ER409")) {
+      Conflict(errorResponse("CONFLICT", "The remote endpoint has indicated Duplicate Submission"))
+    } else if (nino.startsWith("ER500")) {
+      InternalServerError(errorResponse("SERVER_ERROR", "DES is currently experiencing problems that require live service intervention"))
+    } else if (nino.startsWith("ER503")) {
+      ServiceUnavailable(errorResponse("SERVICE_UNAVAILABLE", "Dependent systems are currently not responding"))
+    } else if (nino.equals("CG123456D")) {
+      Ok(Json.toJson(DesBusinessPartnerRecord(
+        DesIndividual("John", "Wick", LocalDate.of(2000, 1, 1)),
+        DesAddress("3rd Wick Street", None, None, None, "JW123ST", "GB"),
+        DesContactDetails(Some("testCGT@email.com"))
+      )))
+    } else {
+      Ok(Json.toJson(bprAutoGen.seeded(nino).get))
+    }
+  }
+
+  implicit val addressGen: Gen[DesAddress] = for{
+    addressLines <- Gen.ukAddress
+    postcode <- Gen.postcode
+  } yield {
+    val (l1, l2) = addressLines match {
+      case Nil => ("1 the Street", None)
+      case a1 :: Nil => (a1, None)
+      case a1 :: a2 :: _ => (a1, Some(a2))
+    }
+    DesAddress(l1, l2, None, None, postcode, "GB")
+  }
+
+  implicit val bprAutoGen: Gen[DesBusinessPartnerRecord] = for{
+    individual <- AutoGen[DesIndividual]
+    address <- addressGen
+  } yield {
+    val email = s"${individual.firstName.toLowerCase}.${individual.lastName.toLowerCase}@email.com"
+    DesBusinessPartnerRecord(individual, address, DesContactDetails(Some(email)))
   }
 
 }
 
 object BusinessPartnerRecordController {
+
+  final case class DesErrorResponse(
+                                     code: String,
+                                     reason: String
+                                   )
+
+  object DesErrorResponse {
+    implicit val desErrorWrites: Writes[DesErrorResponse] = Json.writes[DesErrorResponse]
+  }
 
   import DesBusinessPartnerRecord._
 
@@ -48,12 +98,13 @@ object BusinessPartnerRecordController {
                                            )
 
   object DesBusinessPartnerRecord {
+
     final case class DesAddress(
                                  addressLine1: String,
                                  addressLine2: Option[String],
                                  addressLine3: Option[String],
                                  addressLine4: Option[String],
-                                 postalCode: Option[String],
+                                 postalCode: String,
                                  countryCode: String
                                )
 
@@ -65,10 +116,11 @@ object BusinessPartnerRecordController {
 
     final case class DesContactDetails(emailAddress: Option[String])
 
-    implicit val addressReads: Writes[DesAddress] = Json.writes[DesAddress]
-    implicit val individualReads: Writes[DesIndividual] = Json.writes[DesIndividual]
-    implicit val contactDetailsReads: Writes[DesContactDetails] = Json.writes[DesContactDetails]
-    implicit val bprReads: Writes[DesBusinessPartnerRecord] = Json.writes[DesBusinessPartnerRecord]
+    implicit val addressWrites: Writes[DesAddress] = Json.writes[DesAddress]
+    implicit val individualWrites: Writes[DesIndividual] = Json.writes[DesIndividual]
+    implicit val contactDetailsWrites: Writes[DesContactDetails] = Json.writes[DesContactDetails]
+    implicit val bprWrites: Writes[DesBusinessPartnerRecord] = Json.writes[DesBusinessPartnerRecord]
+
   }
 
 
