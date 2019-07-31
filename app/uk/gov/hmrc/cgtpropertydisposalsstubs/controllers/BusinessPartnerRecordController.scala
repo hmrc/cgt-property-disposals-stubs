@@ -21,18 +21,21 @@ import java.time.LocalDate
 import com.google.inject.Inject
 import org.scalacheck.Gen
 import play.api.libs.json.{JsValue, Json, Writes}
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord.{DesAddress, DesContactDetails, DesIndividual}
-import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.{DesBusinessPartnerRecord, DesErrorResponse}
+import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import uk.gov.hmrc.smartstub._
 import uk.gov.hmrc.smartstub.AutoGen
 import uk.gov.hmrc.smartstub.Enumerable.instances.ninoEnumNoSpaces
 
+import scala.util.Random
+
 class BusinessPartnerRecordController @Inject()(cc: ControllerComponents) extends BackendController(cc) {
 
+  import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController._
+  import DesBusinessPartnerRecord._
+
   def getBusinessPartnerRecord(nino: String): Action[AnyContent] = Action { implicit request =>
-    if (nino.startsWith("ER400")) {
+    val result = if (nino.startsWith("ER400")) {
       BadRequest(errorResponse("INVALID_NINO", "Submission has not passed validation. Invalid parameter NINO"))
     } else if (nino.startsWith("ER404")) {
       NotFound(errorResponse("NOT_FOUND", "The remote endpoint has indicated that no data can be found"))
@@ -51,6 +54,8 @@ class BusinessPartnerRecordController @Inject()(cc: ControllerComponents) extend
     } else {
       Ok(Json.toJson(bprAutoGen.seeded(nino).get))
     }
+
+    result.withCorrelationId()
   }
 
   def errorResponse(errorCode: String, errorMessage: String): JsValue =
@@ -77,9 +82,18 @@ class BusinessPartnerRecordController @Inject()(cc: ControllerComponents) extend
       DesBusinessPartnerRecord(individual, address, DesContactDetails(Some(email)))
     }
   }
+
+
+
 }
 
 object BusinessPartnerRecordController {
+
+  implicit class ResultOps(val r: Result) extends AnyVal {
+
+    def withCorrelationId(): Result = r.withHeaders("CorrelationId" -> Random.alphanumeric.take(32).mkString(""))
+
+  }
 
   final case class DesErrorResponse(code: String, reason: String)
 
