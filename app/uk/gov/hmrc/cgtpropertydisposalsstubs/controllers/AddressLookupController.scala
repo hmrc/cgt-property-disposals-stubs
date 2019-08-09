@@ -16,6 +16,10 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
+import cats.data.Validated._
+import cats.data.{NonEmptyList, ValidatedNel}
+import cats.syntax.apply._
+
 import com.google.inject.Inject
 import play.api.libs.json.{JsArray, JsObject, Json, Writes}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
@@ -31,13 +35,14 @@ class AddressLookupController @Inject()(cc: ControllerComponents) extends Backen
     val userAgent = request.headers.get("User-Agent").getOrElse("-")
     logger.info(s"Request for address lookup made for postcode $postcode with user agent $userAgent")
 
-    if(postcode.length < 3){
-      logger.info("Returning bad request, postcode should have more than three characters in it")
-      BadRequest
-    }  else {
-      // make all letter capitals and put a space before the last three characters
+    validatePostcode(postcode).fold({
+      errors =>
+        logger.warn(s"Returning bad request: ${errors.toList.mkString("; ")}")
+        BadRequest
+    },{ p =>
+      // put a space before the last three characters
       val formattedPostcode = {
-        val (firstPart, secondPart) = postcode.toUpperCase().splitAt(postcode.length - 3)
+        val (firstPart, secondPart) = p.splitAt(p.length - 3)
         s"$firstPart $secondPart"
       }
 
@@ -49,7 +54,7 @@ class AddressLookupController @Inject()(cc: ControllerComponents) extends Backen
 
         case _ =>
           // if all the digits are zero in the postcode, return an empty array
-          val response = if (postcode.toList.filter(_.isDigit).exists(_ != '0')) {
+          val response = if (p.filter(_.isDigit).exists(_ != '0')) {
             JsArray(randomAddresses(formattedPostcode).map(a => JsObject(Map("address" -> Json.toJson(a)))))
           } else {
             JsArray()
@@ -57,7 +62,7 @@ class AddressLookupController @Inject()(cc: ControllerComponents) extends Backen
 
           Ok(response)
       }
-    }
+    })
   }
 
   def randomAddresses(postcode: String): List[Address] =
@@ -66,10 +71,23 @@ class AddressLookupController @Inject()(cc: ControllerComponents) extends Backen
       .toList
 
 
+
+  def validatePostcode(postcode: String): ValidatedNel[String,String] = {
+    def validatedFromBoolean[A](a: A)(predicate: A => Boolean, ifInvalid: => String): ValidationResult[A] =
+      if(predicate(a)) Valid(a) else Invalid(NonEmptyList.one(ifInvalid))
+
+    val cleanedPostcode = postcode.replaceAllLiterally(" ", "")
+    val lengthCheck: ValidationResult[String] = validatedFromBoolean(cleanedPostcode)(_.length < 3, "postcode should have more than three characters in it")
+    val lowerCaseLetterCheck: ValidationResult[String] = validatedFromBoolean(cleanedPostcode)(_.exists(_.isLower), "postcode should only have upper case letters")
+
+    (lengthCheck, lowerCaseLetterCheck).mapN{ case _ => cleanedPostcode}
+  }
+
 }
 
 object AddressLookupController {
 
+  type ValidationResult[A] = ValidatedNel[String, A]
 
   final case class Country(code: String)
 
