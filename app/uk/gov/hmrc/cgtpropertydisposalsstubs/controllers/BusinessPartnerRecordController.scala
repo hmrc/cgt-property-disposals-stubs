@@ -50,7 +50,8 @@ class BusinessPartnerRecordController @Inject()(cc: ControllerComponents) extend
       Ok(Json.toJson(DesBusinessPartnerRecord(
         DesIndividual("John", "Wick", LocalDate.of(2000, 1, 1)),
         DesAddress("3rd Wick Street", None, None, None, "JW123ST", "GB"),
-        DesContactDetails(Some("testCGT@email.com"))
+        DesContactDetails(Some("testCGT@email.com")),
+        "1234567890"
       )))
     } else {
       Ok(Json.toJson(bprAutoGen.seeded(nino).get))
@@ -81,9 +82,10 @@ class BusinessPartnerRecordController @Inject()(cc: ControllerComponents) extend
     for {
       individual <- AutoGen[DesIndividual]
       address <- addressGen
+      sapNumber <- Gen.listOfN(10, Gen.numChar).map(_.mkString(""))
     } yield {
       val email = s"${individual.firstName.toLowerCase}.${individual.lastName.toLowerCase}@email.com"
-      DesBusinessPartnerRecord(individual, address, DesContactDetails(Some(email)))
+      DesBusinessPartnerRecord(individual, address, DesContactDetails(Some(email)), sapNumber)
     }
   }
 
@@ -104,7 +106,8 @@ object BusinessPartnerRecordController {
   final case class DesBusinessPartnerRecord(
                                              individual: DesIndividual,
                                              address: DesAddress,
-                                             contactDetails: DesContactDetails
+                                             contactDetails: DesContactDetails,
+                                             sapNumber : String
                                            )
 
   object DesBusinessPartnerRecord {
@@ -130,7 +133,6 @@ object BusinessPartnerRecordController {
     implicit val individualWrites: Writes[DesIndividual] = Json.writes[DesIndividual]
     implicit val contactDetailsWrites: Writes[DesContactDetails] = Json.writes[DesContactDetails]
     implicit val bprWrites: Writes[DesBusinessPartnerRecord] = Json.writes[DesBusinessPartnerRecord]
-
   }
 
 
