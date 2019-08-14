@@ -46,6 +46,7 @@ class SubscriptionController @Inject()(cc: ControllerComponents)(implicit ec: Ex
 
           case _ =>
             val cgtRef =  Random.alphanumeric.take(20).toList.mkString("").toUpperCase
+            logger.info(s"Returning successful subscribe response with cgt reference number $cgtRef")
             Ok(Json.toJson(SubscriptionResponse(cgtRef)))
         }
       )
