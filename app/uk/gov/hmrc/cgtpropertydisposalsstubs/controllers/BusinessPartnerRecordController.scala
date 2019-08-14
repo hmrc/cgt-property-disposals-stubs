@@ -18,6 +18,8 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import java.time.LocalDate
 
+import cats.syntax.either._
+
 import com.google.inject.Inject
 import org.scalacheck.Gen
 import play.api.libs.json.{JsValue, Json, Writes}
@@ -36,26 +38,10 @@ class BusinessPartnerRecordController @Inject()(cc: ControllerComponents) extend
   import DesBusinessPartnerRecord._
 
   def getBusinessPartnerRecord(nino: String): Action[AnyContent] = Action { implicit request =>
-    val result = if (nino.startsWith("ER400")) {
-      BadRequest(errorResponse("INVALID_NINO", "Submission has not passed validation. Invalid parameter NINO"))
-    } else if (nino.startsWith("ER404")) {
-      NotFound(errorResponse("NOT_FOUND", "The remote endpoint has indicated that no data can be found"))
-    } else if (nino.startsWith("ER409")) {
-      Conflict(errorResponse("CONFLICT", "The remote endpoint has indicated Duplicate Submission"))
-    } else if (nino.startsWith("ER500")) {
-      InternalServerError(errorResponse("SERVER_ERROR", "DES is currently experiencing problems that require live service intervention"))
-    } else if (nino.startsWith("ER503")) {
-      ServiceUnavailable(errorResponse("SERVICE_UNAVAILABLE", "Dependent systems are currently not responding"))
-    } else if (nino.equals("CG123456D")) {
-      Ok(Json.toJson(DesBusinessPartnerRecord(
-        DesIndividual("John", "Wick", LocalDate.of(2000, 1, 1)),
-        DesAddress("3rd Wick Street", None, None, None, "JW123ST", "GB"),
-        DesContactDetails(Some("testCGT@email.com")),
-        "1234567890"
-      )))
-    } else {
-      Ok(Json.toJson(bprAutoGen.seeded(nino).get))
-    }
+    val result =
+      SubscriptionProfiles.getProfile(Left(nino))
+        .map(_.bprResponse.map(bpr => Ok(Json.toJson(bpr))).merge)
+        .getOrElse(Ok(Json.toJson(bprAutoGen.seeded(nino).get)))
 
     val id = Random.alphanumeric.take(32).mkString("")
 

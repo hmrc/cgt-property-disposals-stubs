@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
+import cats.data.EitherT
+import cats.instances.option._
 import com.google.inject.{Inject, Singleton}
 import play.api.libs.json.{Json, Writes}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
@@ -29,7 +31,6 @@ import scala.util.Random
 @Singleton
 class SubscriptionController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
-
   def subscribe(): Action[AnyContent] = Action { implicit request =>
     request.body.asJson.fold[Result]{
       logger.warn("Could not find JSON in body for subscribe request")
@@ -39,22 +40,23 @@ class SubscriptionController @Inject()(cc: ControllerComponents)(implicit ec: Ex
         { e =>
           logger.warn(s"Could not find sap number in json for subscribe request: $e")
           BadRequest
-        }, {
-          case statusRegex(statusString) =>
-            logger.info(s"Returning status $statusString to subscribe request")
-            Status(statusString.toInt)
+        }, { sapNumber =>
 
-          case _ =>
-            val cgtRef =  Random.alphanumeric.take(20).toList.mkString("").toUpperCase
-            logger.info(s"Returning successful subscribe response with cgt reference number $cgtRef")
-            Ok(Json.toJson(SubscriptionResponse(cgtRef)))
+          val result =
+            EitherT(SubscriptionProfiles.getProfile(Right(sapNumber)).flatMap(_.subscriptionResponse))
+            .map(subscriptionResponse => Ok(Json.toJson(subscriptionResponse)))
+            .merge
+            .getOrElse(Ok(Json.toJson(SubscriptionResponse(randomCgtReferenceId()))))
+
+            logger.info(s"Returning result $result to subscribe request for sap number $sapNumber")
+            result
         }
       )
     }
   }
 
-  val statusRegex = "555(\\d\\d\\d)\\d{4}".r
-
+  def randomCgtReferenceId(): String =
+    Random.alphanumeric.take(20).toList.mkString("").toUpperCase
 
 }
 
