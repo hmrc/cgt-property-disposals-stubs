@@ -27,11 +27,11 @@ import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordCo
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.SubscriptionController.SubscriptionResponse
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.SubscriptionProfiles.NINO
 
-case class Profile(ninoPredicate: NINO => Boolean,
-                   bprResponse: Either[Result,DesBusinessPartnerRecord],
-                   subscriptionResponse: Option[Either[Result,SubscriptionResponse]]
-                  )
-
+case class Profile(
+    ninoPredicate: NINO => Boolean,
+    bprResponse: Either[Result, DesBusinessPartnerRecord],
+    subscriptionResponse: Option[Either[Result, SubscriptionResponse]]
+)
 
 object SubscriptionProfiles {
 
@@ -39,23 +39,23 @@ object SubscriptionProfiles {
 
   type SapNumber = String
 
-  def getProfile(id: Either[NINO,SapNumber]): Option[Profile] = id match {
-    case Left(nino) => profiles.find(_.ninoPredicate(nino))
+  def getProfile(id: Either[NINO, SapNumber]): Option[Profile] = id match {
+    case Left(nino)       => profiles.find(_.ninoPredicate(nino))
     case Right(sapNumber) => profiles.find(_.bprResponse.exists(_.sapNumber == sapNumber))
   }
 
   private val profiles: List[Profile] = {
-    def bpr(sapNumber: String) = DesBusinessPartnerRecord(
-      DesIndividual("John", "Wick", LocalDate.of(2000, 1, 1)),
-      DesAddress("3rd Wick Street", None, None, None, "JW123ST", "GB"),
-      DesContactDetails(Some("testCGT@email.com")),
-      sapNumber
-    )
+      def bpr(sapNumber: String) = DesBusinessPartnerRecord(
+        DesIndividual("John", "Wick", LocalDate.of(2000, 1, 1)),
+        DesAddress("3rd Wick Street", None, None, None, "JW123ST", "GB"),
+        DesContactDetails(Some("testCGT@email.com")),
+        sapNumber
+      )
 
     val subscriptionResponse = SubscriptionResponse(List.fill(20)("A").mkString(""))
 
-    def errorResponse(errorCode: String, errorMessage: String): JsValue =
-    Json.toJson(DesErrorResponse(errorCode, errorMessage))
+      def errorResponse(errorCode: String, errorMessage: String): JsValue =
+        Json.toJson(DesErrorResponse(errorCode, errorMessage))
 
     List(
       Profile(_ == "CG123456D", Right(bpr("1234567890")), Some(Right(subscriptionResponse))),

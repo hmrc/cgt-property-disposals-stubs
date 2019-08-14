@@ -29,13 +29,13 @@ import scala.concurrent.ExecutionContext
 import scala.util.Random
 
 @Singleton
-class SubscriptionController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
+class SubscriptionController @Inject() (cc: ControllerComponents)(implicit ec: ExecutionContext) extends BackendController(cc) with Logging {
 
   def subscribe(): Action[AnyContent] = Action { implicit request =>
-    request.body.asJson.fold[Result]{
+    request.body.asJson.fold[Result] {
       logger.warn("Could not find JSON in body for subscribe request")
       BadRequest
-    }{ json =>
+    } { json =>
       (json \ "sapNumber").validate[String].fold[Result](
         { e =>
           logger.warn(s"Could not find sap number in json for subscribe request: $e")
@@ -44,12 +44,12 @@ class SubscriptionController @Inject()(cc: ControllerComponents)(implicit ec: Ex
 
           val result =
             EitherT(SubscriptionProfiles.getProfile(Right(sapNumber)).flatMap(_.subscriptionResponse))
-            .map(subscriptionResponse => Ok(Json.toJson(subscriptionResponse)))
-            .merge
-            .getOrElse(Ok(Json.toJson(SubscriptionResponse(randomCgtReferenceId()))))
+              .map(subscriptionResponse => Ok(Json.toJson(subscriptionResponse)))
+              .merge
+              .getOrElse(Ok(Json.toJson(SubscriptionResponse(randomCgtReferenceId()))))
 
-            logger.info(s"Returning result $result to subscribe request for sap number $sapNumber")
-            result
+          logger.info(s"Returning result $result to subscribe request for sap number $sapNumber")
+          result
         }
       )
     }
@@ -60,13 +60,13 @@ class SubscriptionController @Inject()(cc: ControllerComponents)(implicit ec: Ex
 
 }
 
-object  SubscriptionController {
+object SubscriptionController {
 
-  case class SubscriptionResponse( cgtReferenceNumber : String)
+  case class SubscriptionResponse(cgtReferenceNumber: String)
 
-    object SubscriptionResponse {
+  object SubscriptionResponse {
 
-      implicit val write : Writes[SubscriptionResponse] = Json.writes[SubscriptionResponse]
+    implicit val write: Writes[SubscriptionResponse] = Json.writes[SubscriptionResponse]
 
-    }
+  }
 }

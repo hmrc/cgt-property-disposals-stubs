@@ -32,7 +32,7 @@ import uk.gov.hmrc.smartstub.Enumerable.instances.ninoEnumNoSpaces
 
 import scala.util.Random
 
-class BusinessPartnerRecordController @Inject()(cc: ControllerComponents) extends BackendController(cc) with Logging {
+class BusinessPartnerRecordController @Inject() (cc: ControllerComponents) extends BackendController(cc) with Logging {
 
   import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController._
   import DesBusinessPartnerRecord._
@@ -53,13 +53,13 @@ class BusinessPartnerRecordController @Inject()(cc: ControllerComponents) extend
     Json.toJson(DesErrorResponse(errorCode, errorMessage))
 
   val bprAutoGen: Gen[DesBusinessPartnerRecord] = {
-    val addressGen: Gen[DesAddress] = for{
+    val addressGen: Gen[DesAddress] = for {
       addressLines <- Gen.ukAddress
       postcode <- Gen.postcode
     } yield {
       val (l1, l2) = addressLines match {
-        case Nil => ("1 the Street", None)
-        case a1 :: Nil => (a1, None)
+        case Nil           => ("1 the Street", None)
+        case a1 :: Nil     => (a1, None)
         case a1 :: a2 :: _ => (a1, Some(a2))
       }
       DesAddress(l1, l2, None, None, postcode, "GB")
@@ -75,8 +75,6 @@ class BusinessPartnerRecordController @Inject()(cc: ControllerComponents) extend
     }
   }
 
-
-
 }
 
 object BusinessPartnerRecordController {
@@ -90,28 +88,28 @@ object BusinessPartnerRecordController {
   import DesBusinessPartnerRecord._
 
   final case class DesBusinessPartnerRecord(
-                                             individual: DesIndividual,
-                                             address: DesAddress,
-                                             contactDetails: DesContactDetails,
-                                             sapNumber : String
-                                           )
+      individual: DesIndividual,
+      address: DesAddress,
+      contactDetails: DesContactDetails,
+      sapNumber: String
+  )
 
   object DesBusinessPartnerRecord {
 
     final case class DesAddress(
-                                 addressLine1: String,
-                                 addressLine2: Option[String],
-                                 addressLine3: Option[String],
-                                 addressLine4: Option[String],
-                                 postalCode: String,
-                                 countryCode: String
-                               )
+        addressLine1: String,
+        addressLine2: Option[String],
+        addressLine3: Option[String],
+        addressLine4: Option[String],
+        postalCode: String,
+        countryCode: String
+    )
 
     final case class DesIndividual(
-                                    firstName: String,
-                                    lastName: String,
-                                    dateOfBirth: LocalDate
-                                  )
+        firstName: String,
+        lastName: String,
+        dateOfBirth: LocalDate
+    )
 
     final case class DesContactDetails(emailAddress: Option[String])
 
@@ -120,6 +118,5 @@ object BusinessPartnerRecordController {
     implicit val contactDetailsWrites: Writes[DesContactDetails] = Json.writes[DesContactDetails]
     implicit val bprWrites: Writes[DesBusinessPartnerRecord] = Json.writes[DesBusinessPartnerRecord]
   }
-
 
 }
