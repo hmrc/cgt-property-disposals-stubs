@@ -41,7 +41,7 @@ class EnrolmentStoreProxyController @Inject()(
         .validate[EnrolmentRequest]
         .fold(
           { error =>
-            logger.warn(s"Invalid JSON payload: [payload : $error")
+            logger.warn(s"Invalid JSON payload: [payload : $error]")
             BadRequest
           }, { enrolmentAction =>
             (groupId, enrolmentKey) match {
