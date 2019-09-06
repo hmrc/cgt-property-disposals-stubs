@@ -15,4 +15,4 @@ GET         /email-verification/verification-request    uk.gov.hmrc.cgtpropertyd
 
 
 ## Adddress Lookup
-GET         /v2/uk/addresses                            uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.AddressLookupController.lookupAddresses(postcode:String)
+GET         /v2/uk/addresses                            uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.AddressLookupController.lookupAddresses(postcode:String, filter:Option[String])

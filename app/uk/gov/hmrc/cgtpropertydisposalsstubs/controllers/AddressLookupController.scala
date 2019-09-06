@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
+import java.net.URLDecoder
+
 import cats.data.Validated._
 import cats.data.{NonEmptyList, ValidatedNel}
 import cats.syntax.apply._
@@ -30,7 +32,7 @@ class AddressLookupController @Inject()(cc: ControllerComponents) extends Backen
 
   val statusRegex = """E(\d\d \d)RR""".r
 
-  def lookupAddresses(postcode: String): Action[AnyContent] = Action { implicit request =>
+  def lookupAddresses(postcode: String, filter: Option[String] = None): Action[AnyContent] = Action { implicit request =>
     val userAgent = request.headers.get("User-Agent").getOrElse("-")
     logger.info(s"Request for address lookup made for postcode $postcode with user agent $userAgent")
 
@@ -38,7 +40,7 @@ class AddressLookupController @Inject()(cc: ControllerComponents) extends Backen
       { errors =>
         logger.warn(s"Returning bad request: ${errors.toList.mkString("; ")}")
         BadRequest
-      }, { p =>
+      },{ p =>
         // put a space before the last three characters
         val formattedPostcode = {
           val (firstPart, secondPart) = p.splitAt(p.length - 3)
@@ -54,7 +56,10 @@ class AddressLookupController @Inject()(cc: ControllerComponents) extends Backen
           case _ =>
             // if all the digits are zero in the postcode, return an empty array
             val response = if (p.filter(_.isDigit).exists(_ != '0')) {
-              JsArray(randomAddresses(formattedPostcode).map(a => JsObject(Map("address" -> Json.toJson(a)))))
+              filter.map(f => URLDecoder.decode(f, "UTF-8")) match {
+                case Some(f) => JsArray(Seq(JsObject(Map("address" -> Json.toJson(randomAddress(formattedPostcode, f))))))
+                case _ => JsArray(randomAddresses(formattedPostcode).map(a => JsObject(Map("address" -> Json.toJson(a)))))
+              }
             } else {
               JsArray()
             }
@@ -70,7 +75,11 @@ class AddressLookupController @Inject()(cc: ControllerComponents) extends Backen
       .map(i => Address(List(s"$i the Street"), "Townsville", Some("Countyshire"), postcode, Country("GB")))
       .toList
 
-  def validatePostcode(postcode: String): ValidatedNel[String, String] = {
+
+  def randomAddress(postcode: String, filter: String): Address =
+    Address(List(s"$filter", "Street Road"), "Townsville", Some("Countyshire"), postcode, Country("GB"))
+
+  def validatePostcode(postcode: String): ValidatedNel[String,String] = {
     def validatedFromBoolean[A](a: A)(predicate: A => Boolean, ifInvalid: => String): ValidationResult[A] =
       if (predicate(a)) Valid(a) else Invalid(NonEmptyList.one(ifInvalid))
 
@@ -92,12 +101,12 @@ object AddressLookupController {
   final case class Country(code: String)
 
   final case class Address(
-    lines: List[String],
-    town: String,
-    county: Option[String],
-    postcode: String,
-    country: Country
-  )
+                            lines: List[String],
+                            town: String,
+                            county: Option[String],
+                            postcode: String,
+                            country: Country
+                          )
 
   final case class AddressLookupResponse(addresses: List[Address])
 
