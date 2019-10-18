@@ -17,23 +17,22 @@
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import cats.syntax.either._
-import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import play.api.mvc.Results._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord.{DesAddress, DesContactDetails, DesIndividual, DesOrganisation}
-import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.{DesBusinessPartnerRecord, DesErrorResponse, bprErrorResponse}
+import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.{DesBusinessPartnerRecord, bprErrorResponse}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.SubscriptionController.SubscriptionResponse
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{NINO, SAUTR, SapNumber}
 
 case class Profile(
-                    predicate: Either[SAUTR,NINO] => Boolean,
-                    bprResponse:  Either[Result, DesBusinessPartnerRecord],
-                    subscriptionResponse: Option[Either[Result, SubscriptionResponse]]
+  predicate: Either[SAUTR, NINO] => Boolean,
+  bprResponse: Either[Result, DesBusinessPartnerRecord],
+  subscriptionResponse: Option[Either[Result, SubscriptionResponse]]
 )
 
 object SubscriptionProfiles {
 
-  implicit class EitherOps[A,B](val e: Either[A,B]) extends AnyVal {
+  implicit class EitherOps[A, B](val e: Either[A, B]) extends AnyVal {
 
     def isRightAnd(p: B => Boolean): Boolean = e.exists(p)
 
@@ -41,7 +40,7 @@ object SubscriptionProfiles {
 
   }
 
-  def getProfile(id: Either[SAUTR,NINO]): Option[Profile] =
+  def getProfile(id: Either[SAUTR, NINO]): Option[Profile] =
     profiles.find(_.predicate(id))
 
   def getProfile(sapNumber: SapNumber): Option[Profile] =
@@ -70,7 +69,6 @@ object SubscriptionProfiles {
       )
     }
 
-
     List(
       Profile(
         _ === Right(NINO("CG123456D")),
@@ -84,24 +82,27 @@ object SubscriptionProfiles {
       ),
       Profile(
         _.isRightAnd(_.value.startsWith("EM000")),
-        Right(lukeBishopBpr.copy(
-          contactDetails = lukeBishopContactDetails.copy(emailAddress = None))),
+        Right(lukeBishopBpr.copy(contactDetails = lukeBishopContactDetails.copy(emailAddress = None))),
         None
       ),
       Profile(
         _.isLeftAnd(_.value.endsWith("89")),
-        Right(lukeBishopBpr.copy(
-          contactDetails = lukeBishopContactDetails.copy(emailAddress = None),
-          organisation = Some(DesOrganisation("Plip Plop Trusts")),
-          individual = None
-        )),
+        Right(
+          lukeBishopBpr.copy(
+            contactDetails = lukeBishopContactDetails.copy(emailAddress = None),
+            organisation   = Some(DesOrganisation("Plip Plop Trusts")),
+            individual     = None
+          )
+        ),
         None
       ),
       Profile(
         _.isLeftAnd(_.value.endsWith("99")),
-        Right(lukeBishopBpr.copy(
-          contactDetails = lukeBishopContactDetails.copy(emailAddress = None)
-        )),
+        Right(
+          lukeBishopBpr.copy(
+            contactDetails = lukeBishopContactDetails.copy(emailAddress = None)
+          )
+        ),
         None
       ),
       Profile(
@@ -143,12 +144,17 @@ object SubscriptionProfiles {
       Profile(_.isRightAnd(_.value.startsWith("ES400")), Right(bpr(SapNumber("0000000400"))), Some(Left(BadRequest))),
       Profile(_.isRightAnd(_.value.startsWith("ES404")), Right(bpr(SapNumber("0000000404"))), Some(Left(NotFound))),
       Profile(_.isRightAnd(_.value.startsWith("ES409")), Right(bpr(SapNumber("0000000409"))), Some(Left(Conflict))),
-      Profile(_.isRightAnd(_.value.startsWith("ES500")), Right(bpr(SapNumber("0000000500"))), Some(Left(InternalServerError))),
-      Profile(_.isRightAnd(_.value.startsWith("ES503")), Right(bpr(SapNumber("0000000503"))), Some(Left(ServiceUnavailable)))
+      Profile(
+        _.isRightAnd(_.value.startsWith("ES500")),
+        Right(bpr(SapNumber("0000000500"))),
+        Some(Left(InternalServerError))
+      ),
+      Profile(
+        _.isRightAnd(_.value.startsWith("ES503")),
+        Right(bpr(SapNumber("0000000503"))),
+        Some(Left(ServiceUnavailable))
+      )
     )
   }
-
-
-
 
 }

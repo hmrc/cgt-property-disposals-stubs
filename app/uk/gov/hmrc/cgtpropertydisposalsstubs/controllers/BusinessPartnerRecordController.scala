@@ -78,7 +78,7 @@ class BusinessPartnerRecordController @Inject()(cc: ControllerComponents)(
             logger.warn(s"Could not read JSON in BPR request: $e")
             BadRequest
           }, { bprRequest =>
-            val result =
+            val result: Result =
               SubscriptionProfiles
                 .getProfile(id)
                 .map(_.bprResponse.map(bpr => Ok(Json.toJson(bpr))).merge)
@@ -164,6 +164,7 @@ class BusinessPartnerRecordController @Inject()(cc: ControllerComponents)(
 
 object BusinessPartnerRecordController {
 
+  //TODO: factor out
   final case class Individual(firstName: String, lastName: String)
 
   final case class BprRequest(
@@ -200,6 +201,7 @@ object BusinessPartnerRecordController {
       lastName: String
     )
 
+    //TODO; take out
     final case class DesAddress(
       addressLine1: String,
       addressLine2: Option[String],

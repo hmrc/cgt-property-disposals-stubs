@@ -17,30 +17,47 @@
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import cats.data.EitherT
-import cats.instances.option._
+import cats.implicits._
 import com.google.inject.{Inject, Singleton}
 import org.scalacheck.Gen
 import play.api.libs.json.{Json, Writes}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.SubscriptionController.SubscriptionResponse
-import uk.gov.hmrc.cgtpropertydisposalsstubs.models.SapNumber
+import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{CgtReference, SapNumber}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import uk.gov.hmrc.smartstub._
 
 import scala.concurrent.ExecutionContext
+import scala.util.Random
 
 @Singleton
 class SubscriptionController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionContext)
     extends BackendController(cc)
     with Logging {
 
+  def getSubscriptionDetails(regime: String, id: String): Action[AnyContent] = Action { implicit request =>
+    val result = SubscriptionDisplayProfiles
+      .getDisplayDetails(id)
+      .map(_.subscriptionDisplayResponse.map(displayDetails => Ok(Json.toJson(displayDetails))).merge)
+      .getOrElse {
+        Ok(Json.toJson(SubscriptionDisplayProfiles.individualSubscriptionDisplayDetails))
+      }
+
+    val correlationId = Random.alphanumeric.take(32).mkString("")
+    logger.info(
+      s"Received Subscription display request for id $id. Returning result " +
+        s"${result.toString()} with correlation id $correlationId"
+    )
+    result.withHeaders("CorrelationId" -> correlationId)
+  }
+
   def subscribe(): Action[AnyContent] = Action { implicit request =>
     request.body.asJson.fold[Result] {
       logger.warn("Could not find JSON in body for subscribe request")
       BadRequest
     } { json =>
-      (json \ "identity" \ "idValue" )
+      (json \ "identity" \ "idValue")
         .validate[SapNumber]
         .fold[Result](
           { e =>
@@ -70,13 +87,20 @@ class SubscriptionController @Inject()(cc: ControllerComponents)(implicit ec: Ex
     override def asLong(i: SapNumber): Long = i.value.toLong
   }
 
-  def randomCgtReferenceId(sapNumber:
-                           SapNumber): String =
+  def randomCgtReferenceId(sapNumber: SapNumber): String =
     cgtReferenceIdGen.seeded(sapNumber).get
 
 }
 
 object SubscriptionController {
+
+  case class SubscribedResponse(regime: String, cgtReference: CgtReference)
+
+  object SubscribedResponse {
+
+    implicit val write: Writes[SubscribedResponse] = Json.writes[SubscribedResponse]
+
+  }
 
   case class SubscriptionResponse(cgtReferenceNumber: String)
 
@@ -85,4 +109,5 @@ object SubscriptionController {
     implicit val write: Writes[SubscriptionResponse] = Json.writes[SubscriptionResponse]
 
   }
+
 }

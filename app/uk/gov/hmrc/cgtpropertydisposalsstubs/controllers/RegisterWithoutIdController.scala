@@ -18,7 +18,7 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import com.google.inject.Inject
 import org.scalacheck.Gen
-import play.api.libs.json.{JsError, JsSuccess, Json, Reads, Writes}
+import play.api.libs.json._
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.RegisterWithoutIdController.{RegistrationRequest, Response}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.SapNumber
@@ -26,7 +26,6 @@ import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 
 import scala.concurrent.ExecutionContext
-import scala.util.Random
 import scala.util.matching.Regex
 
 class RegisterWithoutIdController @Inject()(
@@ -45,7 +44,7 @@ class RegisterWithoutIdController @Inject()(
           logger.info(s"Received register without id request with body $registrationRequest")
           registrationRequest.address.line1 match {
             case statusRegex(status) => Status(status.toInt)
-            case _ => Ok(Json.toJson(Response(randomSapNumber())))
+            case _                   => Ok(Json.toJson(Response(randomSapNumber())))
           }
 
         case JsError(errors) =>
@@ -55,11 +54,12 @@ class RegisterWithoutIdController @Inject()(
 
     }
 
-
   }
 
   private def randomSapNumber(): SapNumber =
-    Gen.listOfN(10, Gen.numChar).map(_.mkString(""))
+    Gen
+      .listOfN(10, Gen.numChar)
+      .map(_.mkString(""))
       .sample
       .map(SapNumber(_))
       .getOrElse(sys.error("Could not generate sap number"))
@@ -71,26 +71,26 @@ class RegisterWithoutIdController @Inject()(
 object RegisterWithoutIdController {
 
   final case class RegistrationRequest(
-                                        regime: String,
-                                        isAnAgent: Boolean,
-                                        isAGroup: Boolean,
-                                        individual: RegistrationIndividual,
-                                        address: RegistrationAddress,
-                                        contactDetails: RegistrationContactDetails
-                                      )
+    regime: String,
+    isAnAgent: Boolean,
+    isAGroup: Boolean,
+    individual: RegistrationIndividual,
+    address: RegistrationAddress,
+    contactDetails: RegistrationContactDetails
+  )
 
   final case class RegistrationIndividual(firstName: String, lastName: String)
 
   final case class RegistrationContactDetails(emailAddress: String)
 
   final case class RegistrationAddress(
-                                        line1: String,
-                                        line2: Option[String],
-                                        line3: Option[String],
-                                        line4: Option[String],
-                                        postalCode: Option[String],
-                                        countryCode: String
-                                      )
+    line1: String,
+    line2: Option[String],
+    line3: Option[String],
+    line4: Option[String],
+    postalCode: Option[String],
+    countryCode: String
+  )
 
   final case class Response(sapNumber: SapNumber)
 
