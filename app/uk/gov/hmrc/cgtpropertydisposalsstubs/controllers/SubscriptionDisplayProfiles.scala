@@ -94,15 +94,15 @@ object SubscriptionDisplayProfiles {
 
   private val subscriptionDisplayProfiles = List(
     SubscriptionDisplay(
-      _ === "XACGTP123456789",
+      _ === "XACGTP123456701",
       Right(individualSubscriptionDisplayDetails)
     ),
     SubscriptionDisplay(
-      _ === "XACGTP123456790",
+      _ === "XACGTP123456702",
       Right(trusteeSubscriptionDisplayDetails)
     ),
     SubscriptionDisplay(
-      id => id.startsWith("ERG400"),
+      _ === "XACGTP123456703",
       Left(
         BadRequest(
           desErrorResponse("INVALID_REGIME", "Submission has not passed validation. Invalid parameter regimeValue")
@@ -110,7 +110,7 @@ object SubscriptionDisplayProfiles {
       )
     ),
     SubscriptionDisplay(
-      id => id.startsWith("EID400"),
+      _ === "XACGTP123456704",
       Left(
         BadRequest(
           desErrorResponse("INVALID_IDTYPE", "Submission has not passed validation. Invalid parameter idType.")
@@ -118,7 +118,7 @@ object SubscriptionDisplayProfiles {
       )
     ),
     SubscriptionDisplay(
-      id => id.startsWith("ERQ400"),
+      _ === "XACGTP123456705",
       Left(
         BadRequest(
           desErrorResponse(
@@ -129,7 +129,7 @@ object SubscriptionDisplayProfiles {
       )
     ),
     SubscriptionDisplay(
-      id => id.startsWith("ECID400"),
+      _ === "XACGTP123456706",
       Left(
         BadRequest(
           desErrorResponse("INVALID_CORRELATION", "Submission has not passed validation. Invalid CorrelationId.")
@@ -137,13 +137,13 @@ object SubscriptionDisplayProfiles {
       )
     ),
     SubscriptionDisplay(
-      id => id.startsWith("ER404"),
+      _ === "XACGTP123456707",
       Left(
         BadRequest(desErrorResponse("NOT_FOUND", "Data not found for the provided Registration Number"))
       )
     ),
     SubscriptionDisplay(
-      id => id.startsWith("ER500"),
+      _ === "XACGTP123456708",
       Left(
         BadRequest(
           desErrorResponse(
@@ -154,7 +154,7 @@ object SubscriptionDisplayProfiles {
       )
     ),
     SubscriptionDisplay(
-      id => id.startsWith("ER503"),
+      _ === "XACGTP123456709",
       Left(
         BadRequest(
           desErrorResponse("SERVICE_UNAVAILABLE", "Dependent systems are currently not responding")
