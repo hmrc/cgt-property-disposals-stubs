@@ -35,7 +35,7 @@ class SubscriptionController @Inject()(cc: ControllerComponents)(implicit ec: Ex
     extends BackendController(cc)
     with Logging {
 
-  def getSubscriptionDetails(regime: String, id: String): Action[AnyContent] = Action { implicit request =>
+  def getSubscriptionDetails(id: String): Action[AnyContent] = Action { implicit request =>
     val result = SubscriptionDisplayProfiles
       .getDisplayDetails(id)
       .map(_.subscriptionDisplayResponse.map(displayDetails => Ok(Json.toJson(displayDetails))).merge)
