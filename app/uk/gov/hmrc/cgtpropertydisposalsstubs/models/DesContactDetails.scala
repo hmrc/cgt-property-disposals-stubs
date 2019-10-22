@@ -16,12 +16,16 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.models
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.Format
+import play.api.libs.json.Json
 
-final case class TelephoneNumber(value: String) extends AnyVal
+case class DesContactDetails(
+  contactName: String,
+  phoneNumber: Option[String],
+  mobileNumber: Option[String],
+  faxNumber: Option[String],
+  emailAddress: Option[String]
+)
 
-object TelephoneNumber {
-  implicit val format: Format[TelephoneNumber] =
-    implicitly[Format[String]].inmap(TelephoneNumber(_), _.value)
+object DesContactDetails {
+  implicit val format = Json.format[DesContactDetails]
 }

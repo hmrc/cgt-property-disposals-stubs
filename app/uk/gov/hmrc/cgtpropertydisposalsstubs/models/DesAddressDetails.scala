@@ -16,19 +16,17 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.models
 
-import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.cgtpropertydisposalsstubs.models.EitherFormat.eitherFormat
+import play.api.libs.json.Json
 
-final case class SubscribedDetails(
-  name: Either[TrustName, IndividualName],
-  emailAddress: Email,
-  address: Address,
-  contactName: ContactName,
-  cgtReference: CgtReference,
-  telephoneNumber: Option[TelephoneNumber],
-  registeredWithId: Boolean
+final case class DesAddressDetails(
+  addressLine1: String,
+  addressLine2: Option[String],
+  addressLine3: Option[String],
+  addressLine4: Option[String],
+  postalCode: String,
+  countryCode: String
 )
 
-object SubscribedDetails {
-  implicit val format: OFormat[SubscribedDetails] = Json.format[SubscribedDetails]
+object DesAddressDetails {
+  implicit val format = Json.format[DesAddressDetails]
 }

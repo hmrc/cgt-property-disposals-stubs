@@ -16,12 +16,10 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.models
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json.Json
 
-final case class TrustName(value: String) extends AnyVal
+final case class DesTrustee(typeOfPerson: String, organisationName: String)
 
-object TrustName {
-
-  implicit val format: Format[TrustName] = Json.format[TrustName]
-
+object DesTrustee {
+  implicit val format = Json.format[DesTrustee]
 }

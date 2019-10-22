@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.cgtpropertydisposalsstubs.models.des
+package uk.gov.hmrc.cgtpropertydisposalsstubs.models
 
 import play.api.libs.json.Json
 
-final case class Trustee(typeOfPerson: String, organisationName: String)
+final case class DesIndividual(typeOfPerson: String, firstName: String, lastName: String)
 
-object Trustee {
-  implicit val format = Json.format[Trustee]
+object DesIndividual {
+  implicit val format = Json.format[DesIndividual]
 }

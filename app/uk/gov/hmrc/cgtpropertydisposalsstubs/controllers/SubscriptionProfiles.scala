@@ -19,10 +19,10 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 import cats.syntax.either._
 import play.api.mvc.Result
 import play.api.mvc.Results._
-import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord.{DesAddress, DesContactDetails, DesIndividual, DesOrganisation}
+import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord.{DesContactDetails, DesIndividual, DesOrganisation}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.{DesBusinessPartnerRecord, bprErrorResponse}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.SubscriptionController.SubscriptionResponse
-import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{NINO, SAUTR, SapNumber}
+import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{DesAddressDetails, NINO, SAUTR, SapNumber}
 
 case class Profile(
   predicate: Either[SAUTR, NINO] => Boolean,
@@ -48,7 +48,7 @@ object SubscriptionProfiles {
 
   private val profiles: List[Profile] = {
     def bpr(sapNumber: SapNumber) = DesBusinessPartnerRecord(
-      DesAddress("3rd Wick Street", None, None, None, "JW123ST", "GB"),
+      DesAddressDetails("3rd Wick Street", None, None, None, "JW123ST", "GB"),
       DesContactDetails(Some("testCGT@email.com")),
       sapNumber,
       None,
@@ -61,7 +61,7 @@ object SubscriptionProfiles {
       val contactDetails = DesContactDetails(Some("luke.bishop@email.com"))
 
       contactDetails -> DesBusinessPartnerRecord(
-        DesAddress("65 Tuckers Road", Some("North London"), None, None, "NR38 3EX", "GB"),
+        DesAddressDetails("65 Tuckers Road", Some("North London"), None, None, "NR38 3EX", "GB"),
         contactDetails,
         SapNumber("0100042628"),
         None,

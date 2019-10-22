@@ -24,14 +24,14 @@ import com.google.inject.Inject
 import org.scalacheck.Gen
 import play.api.libs.json.{JsValue, Json, Reads, Writes}
 import play.api.mvc._
-import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{NINO, SAUTR, SapNumber}
+import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{DesAddressDetails, NINO, SAUTR, SapNumber}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import uk.gov.hmrc.smartstub.Enumerable.instances.ninoEnumNoSpaces
 import uk.gov.hmrc.smartstub.{PatternContext, _}
 
-import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration._
+import scala.concurrent.{Await, ExecutionContext}
 import scala.util.Random
 
 class BusinessPartnerRecordController @Inject()(cc: ControllerComponents)(
@@ -54,7 +54,7 @@ class BusinessPartnerRecordController @Inject()(cc: ControllerComponents)(
   def getBusinessPartnerRecord(entityType: String, idType: String, idValue: String): Action[AnyContent] = Action {
     implicit request =>
       (entityType, idType) match {
-        case ("individual", "nino")    => handleRequest(request, Right(NINO(idValue)), true)
+        case ("individual", "nino")  => handleRequest(request, Right(NINO(idValue)), true)
         case ("individual", "utr")   => handleRequest(request, Left(SAUTR(idValue)), true)
         case ("organisation", "utr") => handleRequest(request, Left(SAUTR(idValue)), false)
         case _ =>
@@ -123,7 +123,7 @@ class BusinessPartnerRecordController @Inject()(cc: ControllerComponents)(
     Json.toJson(DesErrorResponse(errorCode, errorMessage))
 
   def bprGen(isAnIndividual: Boolean, id: Either[SAUTR, NINO]): Gen[DesBusinessPartnerRecord] = {
-    val addressGen: Gen[DesAddress] = for {
+    val addressGen: Gen[DesAddressDetails] = for {
       addressLines <- Gen.ukAddress
       postcode     <- Gen.postcode
     } yield {
@@ -138,7 +138,7 @@ class BusinessPartnerRecordController @Inject()(cc: ControllerComponents)(
         case _                                            => None                                -> "GB"
       }
 
-      DesAddress(l1, l2, l3, None, postcode, countryCode)
+      DesAddressDetails(l1, l2, l3, None, postcode, countryCode)
     }
 
     for {
@@ -164,7 +164,6 @@ class BusinessPartnerRecordController @Inject()(cc: ControllerComponents)(
 
 object BusinessPartnerRecordController {
 
-  //TODO: factor out
   final case class Individual(firstName: String, lastName: String)
 
   final case class BprRequest(
@@ -183,7 +182,7 @@ object BusinessPartnerRecordController {
   import DesBusinessPartnerRecord._
 
   final case class DesBusinessPartnerRecord(
-    address: DesAddress,
+    address: DesAddressDetails,
     contactDetails: DesContactDetails,
     sapNumber: SapNumber,
     organisation: Option[DesOrganisation],
@@ -201,23 +200,12 @@ object BusinessPartnerRecordController {
       lastName: String
     )
 
-    //TODO; take out
-    final case class DesAddress(
-      addressLine1: String,
-      addressLine2: Option[String],
-      addressLine3: Option[String],
-      addressLine4: Option[String],
-      postalCode: String,
-      countryCode: String
-    )
-
     final case class DesContactDetails(emailAddress: Option[String])
 
     implicit val individualReads: Reads[Individual]              = Json.reads[Individual]
     implicit val bprRequestReads: Reads[BprRequest]              = Json.reads[BprRequest]
     implicit val organisationWrites: Writes[DesOrganisation]     = Json.writes[DesOrganisation]
     implicit val individualWrites: Writes[DesIndividual]         = Json.writes[DesIndividual]
-    implicit val addressWrites: Writes[DesAddress]               = Json.writes[DesAddress]
     implicit val contactDetailsWrites: Writes[DesContactDetails] = Json.writes[DesContactDetails]
     implicit val bprWrites: Writes[DesBusinessPartnerRecord]     = Json.writes[DesBusinessPartnerRecord]
   }

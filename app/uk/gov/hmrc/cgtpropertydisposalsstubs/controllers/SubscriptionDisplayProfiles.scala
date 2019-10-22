@@ -16,21 +16,25 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 import cats.implicits._
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import uk.gov.hmrc.cgtpropertydisposalsstubs.models.des._
+import play.api.mvc.Results.BadRequest
+import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesErrorResponse
+import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.SubscriptionController.{DesSubscriptionDisplayDetails, SubscriptionDetails}
+import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{DesAddressDetails, DesContactDetails, DesIndividual, DesTrustee}
 
 case class SubscriptionDisplay(
   predicate: String => Boolean,
-  subscriptionDisplayResponse: Either[Result, SubscriptionDisplayDetails]
+  subscriptionDisplayResponse: Either[Result, DesSubscriptionDisplayDetails]
 )
 
 object SubscriptionDisplayProfiles {
 
-  val individualSubscriptionDisplayDetails = SubscriptionDisplayDetails(
+  val individualSubscriptionDisplayDetails = DesSubscriptionDisplayDetails(
     regime = "CGT",
     subscriptionDetails = SubscriptionDetails(
       individual = Some(
-        Individual(
+        DesIndividual(
           "Individual",
           "Luke",
           "Bishop"
@@ -38,49 +42,49 @@ object SubscriptionDisplayProfiles {
       ),
       None,
       true,
-      AddressDetails(
+      DesAddressDetails(
         "100 Sutton Street",
         Some("Wokingham"),
         Some("Surrey"),
         Some("London"),
-        "GB",
-        "DH14EJ"
+        "DH14EJ",
+        "GB"
       ),
-      ContactDetails(
+      DesContactDetails(
         "Stephen Wood",
-        "(+013)32752856",
-        "(+44)7782565326",
-        "01332754256",
-        "stephen@abc.co.uk"
+        Some("(+013)32752856"),
+        Some("(+44)7782565326"),
+        Some("01332754256"),
+        Some("stephen@abc.co.uk")
       )
     )
   )
 
-  val trusteeSubscriptionDisplayDetails = SubscriptionDisplayDetails(
+  val trusteeSubscriptionDisplayDetails = DesSubscriptionDisplayDetails(
     regime = "CGT",
     subscriptionDetails = SubscriptionDetails(
       None,
       trustee = Some(
-        Trustee(
+        DesTrustee(
           "Trustee",
           "ABC Trust"
         )
       ),
       true,
-      AddressDetails(
-        "100 Sutton Street",
-        Some("Wokingham"),
-        Some("Surrey"),
-        Some("London"),
-        "GB",
-        "DH14EJ"
+      DesAddressDetails(
+        "101 Kiwi Street",
+        None,
+        None,
+        Some("Christchurch"),
+        "",
+        "NZ"
       ),
-      ContactDetails(
+      DesContactDetails(
         "Stephen Wood",
-        "(+013)32752856",
-        "(+44)7782565326",
-        "01332754256",
-        "stephen@abc.co.uk"
+        Some("(+013)32752856"),
+        Some("(+44)7782565326"),
+        Some("01332754256"),
+        Some("stephen@abc.co.uk")
       )
     )
   )
@@ -92,7 +96,73 @@ object SubscriptionDisplayProfiles {
     SubscriptionDisplay(
       _ === "XACGTP123456789",
       Right(individualSubscriptionDisplayDetails)
+    ),
+    SubscriptionDisplay(
+      _ === "XACGTP123456790",
+      Right(trusteeSubscriptionDisplayDetails)
+    ),
+    SubscriptionDisplay(
+      id => id.startsWith("ERG400"),
+      Left(
+        BadRequest(
+          desErrorResponse("INVALID_REGIME", "Submission has not passed validation. Invalid parameter regimeValue")
+        )
+      )
+    ),
+    SubscriptionDisplay(
+      id => id.startsWith("EID400"),
+      Left(
+        BadRequest(
+          desErrorResponse("INVALID_IDTYPE", "Submission has not passed validation. Invalid parameter idType.")
+        )
+      )
+    ),
+    SubscriptionDisplay(
+      id => id.startsWith("ERQ400"),
+      Left(
+        BadRequest(
+          desErrorResponse(
+            "INVALID_IDREQUEST",
+            "Submission has not passed validation. Request not implemented by the backend."
+          )
+        )
+      )
+    ),
+    SubscriptionDisplay(
+      id => id.startsWith("ECID400"),
+      Left(
+        BadRequest(
+          desErrorResponse("INVALID_CORRELATION", "Submission has not passed validation. Invalid CorrelationId.")
+        )
+      )
+    ),
+    SubscriptionDisplay(
+      id => id.startsWith("ER404"),
+      Left(
+        BadRequest(desErrorResponse("NOT_FOUND", "Data not found for the provided Registration Number"))
+      )
+    ),
+    SubscriptionDisplay(
+      id => id.startsWith("ER500"),
+      Left(
+        BadRequest(
+          desErrorResponse(
+            "SERVER_ERROR",
+            "DES is currently experiencing problems that require live service intervention"
+          )
+        )
+      )
+    ),
+    SubscriptionDisplay(
+      id => id.startsWith("ER503"),
+      Left(
+        BadRequest(
+          desErrorResponse("SERVICE_UNAVAILABLE", "Dependent systems are currently not responding")
+        )
+      )
     )
   )
+
+  private def desErrorResponse(code: String, reason: String): JsValue = Json.toJson(DesErrorResponse(code, reason))
 
 }
