@@ -43,8 +43,10 @@ class RegisterWithoutIdController @Inject()(
         case JsSuccess(registrationRequest, _) =>
           logger.info(s"Received register without id request with body $registrationRequest")
           registrationRequest.address.line1 match {
-            case statusRegex(status) => Status(status.toInt)
-            case _                   => Ok(Json.toJson(Response(randomSapNumber())))
+            case registrationStatusRegex(status) => Status(status.toInt)
+            case subscriptionStatusRegex(status) =>
+              Ok(Json.toJson(Response(SubscriptionProfiles.sapNumberForSubscriptionStatus(status.toInt))))
+            case _ => Ok(Json.toJson(Response(randomSapNumber())))
           }
 
         case JsError(errors) =>
@@ -64,7 +66,9 @@ class RegisterWithoutIdController @Inject()(
       .map(SapNumber(_))
       .getOrElse(sys.error("Could not generate sap number"))
 
-  private val statusRegex: Regex = """Fail Registration (\d{3})""".r
+  private val registrationStatusRegex: Regex = """Fail Registration (\d{3})""".r
+
+  private val subscriptionStatusRegex: Regex = """Fail Subscription (\d{3})""".r
 
 }
 
