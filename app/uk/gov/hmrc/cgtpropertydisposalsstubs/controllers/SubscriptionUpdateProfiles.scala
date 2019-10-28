@@ -46,11 +46,11 @@ object SubscriptionUpdateProfiles {
 
   private val updates = List(
     SubscriptionUpdateProfile(
-      _ === "XACGTP123456701",
+      _ === "XACGTP123456711",
       Right(desUpdate)
     ),
     SubscriptionUpdateProfile(
-      _ === "XACGTP123456702",
+      _ === "XACGTP123456712",
       Left(
         BadRequest(
           desErrorResponse("INVALID_REGIME", "Submission has not passed validation. Invalid parameter regimeValue")
@@ -58,13 +58,13 @@ object SubscriptionUpdateProfiles {
       )
     ),
     SubscriptionUpdateProfile(
-      _ === "XACGTP123456703",
+      _ === "XACGTP123456713",
       Left(
         BadRequest(desErrorResponse("INVALID_IDTYPE", "Submission has not passed validation. Invalid parameter idType"))
       )
     ),
     SubscriptionUpdateProfile(
-      _ === "XACGTP123456704",
+      _ === "XACGTP123456714",
       Left(
         BadRequest(
           desErrorResponse("INVALID_IDVALUE", "Submission has not passed validation. Invalid parameter idValue")
@@ -72,7 +72,7 @@ object SubscriptionUpdateProfiles {
       )
     ),
     SubscriptionUpdateProfile(
-      _ === "XACGTP123456705",
+      _ === "XACGTP123456715",
       Left(
         BadRequest(
           desErrorResponse(
@@ -83,7 +83,7 @@ object SubscriptionUpdateProfiles {
       )
     ),
     SubscriptionUpdateProfile(
-      _ === "XACGTP123456706",
+      _ === "XACGTP123456716",
       Left(
         BadRequest(
           desErrorResponse(
@@ -94,7 +94,7 @@ object SubscriptionUpdateProfiles {
       )
     ),
     SubscriptionUpdateProfile(
-      _ === "XACGTP123456707",
+      _ === "XACGTP123456717",
       Left(
         BadRequest(
           desErrorResponse(
@@ -105,7 +105,7 @@ object SubscriptionUpdateProfiles {
       )
     ),
     SubscriptionUpdateProfile(
-      _ === "XACGTP123456708",
+      _ === "XACGTP123456718",
       Left(
         NotFound(
           desErrorResponse(
@@ -116,7 +116,7 @@ object SubscriptionUpdateProfiles {
       )
     ),
     SubscriptionUpdateProfile(
-      _ === "XACGTP123456709",
+      _ === "XACGTP123456719",
       Left(
         InternalServerError(
           desErrorResponse(
@@ -127,7 +127,7 @@ object SubscriptionUpdateProfiles {
       )
     ),
     SubscriptionUpdateProfile(
-      _ === "XACGTP123456710",
+      _ === "XACGTP123456720",
       Left(
         ServiceUnavailable(
           desErrorResponse(

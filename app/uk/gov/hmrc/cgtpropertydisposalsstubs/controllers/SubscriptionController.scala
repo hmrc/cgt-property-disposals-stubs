@@ -58,8 +58,8 @@ class SubscriptionController @Inject()(cc: ControllerComponents)(implicit ec: Ex
           { e =>
             logger.warn(s"Could not validate subscription update body: $e")
             BadRequest
-          }, { _ =>
-            val result =
+          }, { subscriptionUpdateRequest =>
+            val result: Result =
               EitherT(
                 SubscriptionUpdateProfiles
                   .updateSubscriptionDetails(id)
@@ -71,11 +71,11 @@ class SubscriptionController @Inject()(cc: ControllerComponents)(implicit ec: Ex
                     Json.toJson(
                       SubscriptionUpdateResponse(
                         "CGT",
-                        LocalDateTime.of(2015, 12, 17, 9, 30, 47).toString,
+                        LocalDateTime.now().toString,
                         "0134567910",
-                        "XXCGTP123456789",
-                        "GB",
-                        None
+                        id,
+                        subscriptionUpdateRequest.subscriptionDetails.addressDetails.countryCode,
+                        subscriptionUpdateRequest.subscriptionDetails.addressDetails.postalCode
                       )
                     )
                   )
