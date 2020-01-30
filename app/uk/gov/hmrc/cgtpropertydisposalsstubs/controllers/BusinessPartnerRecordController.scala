@@ -75,7 +75,14 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(
     request: Request[AnyContent],
     id: Either[Either[TRN, SAUTR], NINO],
     isAnIndividual: Boolean
-  ): Result =
+  ): Result = {
+    def getResult(bpr: DesBusinessPartnerRecord, bprRequest: BprRequest): Result =
+      if (bprRequest.requiresNameMatch) {
+        doNameMatch(bprRequest, isAnIndividual, bpr)
+      } else {
+        Ok(Json.toJson(bpr))
+      }
+
     request.body.asJson.fold[Result] {
       logger.warn("Could not find JSON in request body for BPR request")
       BadRequest
@@ -90,16 +97,12 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(
             val result: Result =
               SubscriptionProfiles
                 .getProfile(id)
-                .map(_.bprResponse.map(bpr => Ok(Json.toJson(bpr))).merge)
+                .map(_.bprResponse.map{ bpr =>
+                  getResult(bpr, bprRequest)
+                }.merge)
                 .getOrElse {
                   val bpr = bprGen(isAnIndividual, id).seeded(id).get
-
-                  if (bprRequest.requiresNameMatch) {
-                    doNameMatch(bprRequest, isAnIndividual, bpr)
-                  } else {
-                    Ok(Json.toJson(bpr))
-                  }
-
+                  getResult(bpr, bprRequest)
                 }
 
             val correlationId = Random.alphanumeric.take(32).mkString("")
@@ -112,6 +115,7 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(
           }
         )
     }
+  }
 
   def doNameMatch(bprRequest: BprRequest, isAnIndividual: Boolean, bpr: DesBusinessPartnerRecord): Result = {
     def doNameMatch[A](requestField: Option[A])(nameMatches: A => Boolean): Result =
@@ -140,9 +144,14 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(
         }
       )
     } else {
-      doNameMatch(bprRequest.organisation)(requestOrganisation =>
+      doNameMatch(bprRequest.organisation) { requestOrganisation =>
+
+        println(requestOrganisation)
+        println(bprRequest.organisation)
+
         bpr.organisation.exists { organisationFound =>
           val matches = organisationFound.organisationName === requestOrganisation.organisationName
+          println(matches)
           if (!matches)
             logger.info(
               s"Organisation name in BPR request '${requestOrganisation.organisationName}' " +
@@ -150,7 +159,7 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(
             )
           matches
         }
-      )
+      }
     }
   }
 
