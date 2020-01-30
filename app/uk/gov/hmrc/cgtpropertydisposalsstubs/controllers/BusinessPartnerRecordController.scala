@@ -18,7 +18,6 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import akka.stream.Materializer
 import cats.instances.string._
-import cats.syntax.either._
 import cats.syntax.eq._
 import com.google.inject.Inject
 import org.scalacheck.Gen
