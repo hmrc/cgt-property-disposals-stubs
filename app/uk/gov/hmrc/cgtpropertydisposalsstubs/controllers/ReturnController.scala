@@ -19,39 +19,49 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 import java.time.LocalDate
 
 import com.google.inject.{Inject, Singleton}
+import org.scalacheck.Gen
 import play.api.libs.json.{JsResult, JsValue, Json}
 import play.api.mvc.{Action, ControllerComponents}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{DesReturnResponse, PPDReturnResponseDetails}
+import uk.gov.hmrc.cgtpropertydisposalsstubs.util.GenUtils.sample
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class ReturnController @Inject()(cc: ControllerComponents)(implicit ec: ExecutionContext)
+class ReturnController @Inject()(cc: ControllerComponents)
   extends BackendController(cc)
     with Logging {
 
   def createReturn(cgtReferenceNumber: String): Action[JsValue] = Action(parse.json) { request =>
-    val submittedReturn: JsResult[(BigDecimal,String)] = for {
-      a  <- (request.body \ "ppdReturnDetails" \ "returnDetails" \ "totalLiability" ).validate[BigDecimal]
+    val submittedReturn: JsResult[(BigDecimal, String)] = for {
+      a <- (request.body \ "ppdReturnDetails" \ "returnDetails" \ "totalLiability").validate[BigDecimal]
       d <- (request.body \ "ppdReturnDetails" \ "returnDetails" \ "completionDate").validate[String]
-    } yield (a,d)
+    } yield (a, d)
 
-    val r:(BigDecimal,String) = submittedReturn.asOpt.getOrElse((BigDecimal(0),"2020-02-20"))
-
-    Ok(
-      Json.toJson(prepareDesReturnRespose(cgtReferenceNumber, r._1, r._2))
-    )
+    submittedReturn.fold({
+      e =>
+        logger.warn(s"Could not parse request body: $e")
+        BadRequest
+    }, { case (amountDue, completionDate) =>
+      Ok(
+        Json.toJson(prepareDesReturnRespose(cgtReferenceNumber, amountDue, completionDate))
+      )
+    })
   }
 
-  def prepareDesReturnRespose(cgtReferenceNumber:String, amount:BigDecimal, dueDate:String): DesReturnResponse = {
+  private def prepareDesReturnRespose(
+    cgtReferenceNumber: String,
+    amountDue: BigDecimal,
+    completionDate: String
+  ): DesReturnResponse = {
     val ppdReturnResponseDetails = PPDReturnResponseDetails(
       chargeType = "Late Penalty",
-      chargeReference = "XCRG1234567890",
-      amount = amount.toDouble,
-      dueDate = LocalDate.parse(dueDate).plusDays(30),
-      formBundleNumber = "123456789012",
+      chargeReference = s"XCRG${nRandomDigits(10)}",
+      amount = amountDue.toDouble,
+      dueDate = dueDate(completionDate),
+      formBundleNumber = nRandomDigits(12),
       cgtReferenceNumber = cgtReferenceNumber
     )
     DesReturnResponse(
@@ -59,5 +69,11 @@ class ReturnController @Inject()(cc: ControllerComponents)(implicit ec: Executio
       ppdReturnResponseDetails = ppdReturnResponseDetails
     )
   }
+
+  private def dueDate(completionDate: String): LocalDate =
+    LocalDate.parse(completionDate).plusDays(30)
+
+  private def nRandomDigits(n: Int): String =
+    List.fill(n)(sample(Gen.numChar)).mkString("")
 
 }
