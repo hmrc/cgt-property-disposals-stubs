@@ -27,14 +27,12 @@ import uk.gov.hmrc.cgtpropertydisposalsstubs.util.GenUtils.sample
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.controller.BackendController
 
-import scala.concurrent.ExecutionContext
-
 @Singleton
 class ReturnController @Inject()(cc: ControllerComponents)
   extends BackendController(cc)
     with Logging {
 
-  def createReturn(cgtReferenceNumber: String): Action[JsValue] = Action(parse.json) { request =>
+  def submitReturn(cgtReferenceNumber: String): Action[JsValue] = Action(parse.json) { request =>
     val submittedReturn: JsResult[(BigDecimal, String)] = for {
       a <- (request.body \ "ppdReturnDetails" \ "returnDetails" \ "totalLiability").validate[BigDecimal]
       d <- (request.body \ "ppdReturnDetails" \ "returnDetails" \ "completionDate").validate[String]
