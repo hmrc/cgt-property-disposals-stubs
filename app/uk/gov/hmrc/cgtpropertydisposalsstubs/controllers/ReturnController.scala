@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime}
 
 import com.google.inject.{Inject, Singleton}
 import org.scalacheck.Gen
@@ -63,7 +63,7 @@ class ReturnController @Inject()(cc: ControllerComponents)
       cgtReferenceNumber = cgtReferenceNumber
     )
     DesReturnResponse(
-      processingDate = LocalDate.now(),
+      processingDate = LocalDateTime.now(),
       ppdReturnResponseDetails = ppdReturnResponseDetails
     )
   }

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.models
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime}
 
 import play.api.libs.json.{Format, Json}
 
@@ -30,7 +30,7 @@ final case class PPDReturnResponseDetails(
 )
 
 final case class DesReturnResponse (
-  processingDate: LocalDate,
+  processingDate: LocalDateTime,
   ppdReturnResponseDetails: PPDReturnResponseDetails
 )
 
