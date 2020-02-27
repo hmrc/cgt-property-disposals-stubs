@@ -25,6 +25,3 @@ GET         /email-verification/verification-request                         uk.
 
 ## Adddress Lookup
 GET         /v2/uk/addresses                                                 uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.AddressLookupController.lookupAddresses(postcode:String)
-
-# Create Return
-POST        /capital-gains-tax/cgt-reference/:cgtReferenceNumber/return      uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.ReturnController.submitReturn(cgtReferenceNumber:String)
