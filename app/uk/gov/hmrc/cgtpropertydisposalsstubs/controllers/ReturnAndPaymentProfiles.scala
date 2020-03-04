@@ -28,8 +28,7 @@ object ReturnAndPaymentProfiles {
   final case class AccountProfile(cgtReferencePredicate: String => Boolean, returns: List[ReturnProfile])
 
   val account1: AccountProfile = {
-    val return1 =
-    {
+    val return1 = {
       val chargeReference = "XCRG1111111111"
       ReturnProfile(
         ReturnSummary(
@@ -57,8 +56,7 @@ object ReturnAndPaymentProfiles {
       )
     }
 
-    val return2 =
-    {
+    val return2 = {
       val chargeReference = "XCRG2222222222"
 
       ReturnProfile(
@@ -92,10 +90,9 @@ object ReturnAndPaymentProfiles {
       )
     }
 
-     val return3 =
-    {
+    val return3 = {
       val originalChargeReference = "XCRG3333333333"
-      val penaltyChargeReference = "XCRG4444444444"
+      val penaltyChargeReference  = "XCRG4444444444"
 
       ReturnProfile(
         ReturnSummary(
@@ -132,6 +129,7 @@ object ReturnAndPaymentProfiles {
               List(
                 DesFinancialTransactionItem(
                   BigDecimal("4.99"),
+                  "TPS RECEIPTS BY DEBIT CARD",
                   LocalDate.of(2020, 2, 23)
                 )
               )
@@ -145,10 +143,12 @@ object ReturnAndPaymentProfiles {
               List(
                 DesFinancialTransactionItem(
                   BigDecimal("2"),
+                  "PAYMENTS MADE BY CHEQUE",
                   LocalDate.of(2020, 2, 24)
                 ),
                 DesFinancialTransactionItem(
                   BigDecimal("3"),
+                  "CREDIT FOR INTERNET RECEIPTS",
                   LocalDate.of(2020, 2, 23)
                 )
               )
@@ -157,7 +157,7 @@ object ReturnAndPaymentProfiles {
         )
       )
     }
-    AccountProfile( _.endsWith("1"), List(return1, return2, return3))
+    AccountProfile(_.endsWith("1"), List(return1, return2, return3))
   }
 
   val account2: AccountProfile = {
@@ -188,7 +188,7 @@ object ReturnAndPaymentProfiles {
         )
       )
     }
-    AccountProfile( _.endsWith("0"), List(return1))
+    AccountProfile(_.endsWith("0"), List(return1))
 
   }
 
@@ -196,6 +196,5 @@ object ReturnAndPaymentProfiles {
 
   def getProfile(cgtReference: String): Option[AccountProfile] =
     profiles.find(_.cgtReferencePredicate(cgtReference))
-
 
 }

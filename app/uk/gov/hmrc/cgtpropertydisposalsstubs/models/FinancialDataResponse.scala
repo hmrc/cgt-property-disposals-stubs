@@ -38,7 +38,8 @@ object FinancialTransaction {
 }
 
 final case class DesFinancialTransactionItem(
-  amount: BigDecimal,
+  paymentAmount: BigDecimal,
+  paymentMethod: String,
   clearingDate: LocalDate
 )
 
