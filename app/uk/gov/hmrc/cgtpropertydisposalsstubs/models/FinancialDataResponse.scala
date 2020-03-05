@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.models
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.LocalDate
 
 import play.api.libs.json.{Json, OFormat, Writes}
 

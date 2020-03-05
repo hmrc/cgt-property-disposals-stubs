@@ -37,12 +37,9 @@ object ReturnAndPaymentProfiles {
           LocalDate.of(2020, 1, 25),
           None,
           "2019",
-          None,
-          BigDecimal("14.99"),
-          BigDecimal("14.99"),
           DesAddressDetails("2 Not sure Where", Some("Don't know what I'm doing"), None, None, "ZZ0 0ZZ", "GB"),
           List(
-            Charge("CGT PPD Return UK Resident", BigDecimal("14.99"), LocalDate.of(2020, 2, 24), chargeReference)
+            Charge("CGT PPD Return UK Resident", LocalDate.of(2020, 2, 24), chargeReference)
           )
         ),
         List(
@@ -66,14 +63,10 @@ object ReturnAndPaymentProfiles {
           LocalDate.of(2020, 1, 24),
           None,
           "2019",
-          None,
-          BigDecimal("9.99"),
-          BigDecimal("0"),
           DesAddressDetails("14 Something Something Something", Some("That Other Place"), None, None, "ZZ0 0ZZ", "GB"),
           List(
             Charge(
               "CGT PPD Return UK Resident",
-              BigDecimal("0"),
               LocalDate.of(2020, 2, 23),
               chargeReference
             )
@@ -101,20 +94,15 @@ object ReturnAndPaymentProfiles {
           LocalDate.of(2020, 1, 24),
           None,
           "2019",
-          None,
-          BigDecimal("9.99"),
-          BigDecimal("1000000"),
           DesAddressDetails("14 Something Something Something", Some("That Other Place"), None, None, "ZZ0 0ZZ", "GB"),
           List(
             Charge(
               "CGT PPD Return UK Resident",
-              BigDecimal("9.99"),
               LocalDate.of(2020, 2, 23),
               originalChargeReference
             ),
             Charge(
               "CGT PPD Late Filing penalty",
-              BigDecimal("1000005"),
               LocalDate.of(2020, 2, 27),
               penaltyChargeReference
             )
@@ -170,12 +158,9 @@ object ReturnAndPaymentProfiles {
           LocalDate.of(2020, 1, 25),
           None,
           "2019",
-          None,
-          BigDecimal("0"),
-          BigDecimal("0"),
           DesAddressDetails("2 Not sure Where", Some("Don't know what I'm doing"), None, None, "ZZ0 0ZZ", "GB"),
           List(
-            Charge("CGT PPD Return UK Resident", BigDecimal("0"), LocalDate.of(2020, 2, 24), chargeReference)
+            Charge("CGT PPD Return UK Resident", LocalDate.of(2020, 2, 24), chargeReference)
           )
         ),
         List(
