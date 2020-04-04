@@ -74,7 +74,7 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
   }
 
   def displayReturn(cgtReference: String, submissionId: String): Action[AnyContent] = Action { implicit request =>
-    val desReturn = if (cgtReference.init.endsWith("2")) dummyMultipleDisposalsReturn else dummySingleDisposalReturn
+    val desReturn = if (cgtReference.endsWith("2")) dummyMultipleDisposalsReturn else dummySingleDisposalReturn
     Ok(Json.toJson(desReturn))
   }
 
@@ -163,7 +163,7 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
       false,
       true,
       true,
-      Some("HK"),
+      Some("NZ"),
       Some("123456789"),
       None,
       None,
