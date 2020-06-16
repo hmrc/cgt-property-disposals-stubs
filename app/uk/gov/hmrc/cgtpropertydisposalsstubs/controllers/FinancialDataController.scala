@@ -34,7 +34,7 @@ class FinancialDataController @Inject() (cc: ControllerComponents) extends Backe
     dateTo: String
   ): Action[AnyContent] = Action { _ =>
     logger.info(s"""
-        idType = $idType, idNumber = $idNumber,
+        Get financial data called with parameters: idType = $idType, idNumber = $idNumber,
         regimeType = $regimeType, dateFrom = $dateFrom, dateTo = $dateTo
       """)
 

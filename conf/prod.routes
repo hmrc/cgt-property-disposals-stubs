@@ -1,6 +1,7 @@
 # Add all the application routes to the app.routes file
-->         /cgt-property-disposals-stubs                            app.Routes
 ->         /                                                        health.Routes
+
+GET        /admin/metrics                                           com.kenshoo.play.metrics.MetricsController.metrics
 
 ## ETMP
 POST        /registration/02.00.00/individual                                uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.RegisterWithoutIdController.registerWithoutId
