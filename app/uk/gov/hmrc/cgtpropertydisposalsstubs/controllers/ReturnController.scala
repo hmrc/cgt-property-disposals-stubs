@@ -21,7 +21,7 @@ import java.time.{LocalDate, LocalDateTime}
 
 import cats.instances.bigDecimal._
 import cats.syntax.eq._
-import com.eclipsesource.schema.drafts.Version7
+import com.eclipsesource.schema.drafts.Version4
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.google.inject.{Inject, Singleton}
 import org.scalacheck.Gen
@@ -42,7 +42,7 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
   def submitReturn(cgtReferenceNumber: String): Action[JsValue] =
     Action(parse.json) { request =>
 
-      import Version7._
+      import Version4._
       val schemaToBeValidated = Json
         .fromJson[SchemaType](
           Json.parse(
@@ -55,7 +55,7 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
         )
         .get
 
-      val validator = SchemaValidator(Some(Version7))
+      val validator = SchemaValidator(Some(Version4))
 
       val submittedReturn: JsResult[(BigDecimal, LocalDate, JsValue)] = for {
         a <- (request.body \ "ppdReturnDetails" \ "returnDetails" \ "totalYTDLiability").validate[BigDecimal]
