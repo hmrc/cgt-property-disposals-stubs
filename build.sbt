@@ -6,6 +6,7 @@ val appName = "cgt-property-disposals-stubs"
 
 addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
 addCommandAlias("check", "all scalafmtSbtCheck scalafmtCheck test:scalafmtCheck")
+addCommandAlias("fix", "all compile:scalafix test:scalafix")
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
@@ -23,6 +24,7 @@ lazy val microservice = Project(appName, file("."))
     ),
     scalacOptions in Test --= Seq("-Ywarn-value-discard")
   )
+  .settings(addCompilerPlugin(scalafixSemanticdb))
   .settings(scalaVersion := "2.12.10")
   .settings(publishingSettings: _*)
   .settings(Compile / resourceDirectory := baseDirectory.value / "/conf")

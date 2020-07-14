@@ -1,7 +1,7 @@
 # Add all the application routes to the app.routes file
-->         /                                                        health.Routes
+->         /                                                                 health.Routes
 
-GET        /admin/metrics                                           com.kenshoo.play.metrics.MetricsController.metrics
+GET        /admin/metrics                                                    com.kenshoo.play.metrics.MetricsController.metrics
 
 ## ETMP
 POST        /registration/02.00.00/individual                                uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.RegisterWithoutIdController.registerWithoutId
@@ -15,15 +15,19 @@ POST        /capital-gains-tax/cgt-reference/:cgtReferenceNumber/return      uk.
 GET         /capital-gains-tax/returns/:cgtReference                         uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.ReturnController.listReturns(cgtReference: String, fromDate: String, toDate: String)
 GET         /capital-gains-tax/:cgtReference/:submissionId/return            uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.ReturnController.displayReturn(cgtReference: String, submissionId: String)
 
-GET        /enterprise/financial-data/:idType/:idNumber/:regimeType          uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.FinancialDataController.getFinancialData(idType: String, idNumber: String, regimeType: String,dateFrom:String,dateTo:String)
+GET         /enterprise/financial-data/:idType/:idNumber/:regimeType         uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.FinancialDataController.getFinancialData(idType: String, idNumber: String, regimeType: String,dateFrom:String,dateTo:String)
 
 ## Email Verification
 POST        /email-verification/verification-requests                        uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.EmailVerificationController.verifyEmail()
 GET         /email-verification/verification-request                         uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.EmailVerificationController.getEmailVerificationRequest(email: String)
 
-
-## Adddress Lookup
+## Address Lookup
 GET         /v2/uk/addresses                                                 uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.AddressLookupController.lookupAddresses(postcode:String)
 
 ## GForms
 POST       /gform/dms/submit-with-attachments                                uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.GFormController.submitToDmsWithAttachments()
+
+## Upscan
+POST       /upscan/v2/initiate                                               uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.UpscanController.initiate()
+POST       /upscan/upload                                                    uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.UpscanController.upload()
+GET        /upscan/download                                                  uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.UpscanController.download()
