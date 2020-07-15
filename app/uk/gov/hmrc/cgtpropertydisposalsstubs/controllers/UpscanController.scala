@@ -50,7 +50,7 @@ class UpscanController @Inject() (cc: ControllerComponents, wsClient: WSClient)
               val upscanUploadMeta = UpscanUploadMeta(
                 UUID.randomUUID().toString,
                 UploadRequest(
-                  href = "http://localhost:7022/upscan/upload",
+                  href = s"${routes.UpscanController.upload().absoluteURL()}",
                   fields = Map(
                     "success_action_redirect" -> upscanMeta.successRedirect,
                     "error_action_redirect"   -> upscanMeta.errorRedirect,
