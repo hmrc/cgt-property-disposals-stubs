@@ -22,6 +22,7 @@ import java.util
 import java.util.UUID
 
 import cats.data.EitherT
+import cats.effect.{IO, Resource}
 import com.google.inject.Inject
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import play.api.libs.ws.WSClient
@@ -34,7 +35,6 @@ import uk.gov.hmrc.play.bootstrap.controller.BackendController
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.control.NonFatal
-import scala.util.{Failure, Success, Try}
 
 class UpscanController @Inject() (cc: ControllerComponents, wsClient: WSClient)
     extends BackendController(cc)
@@ -97,21 +97,32 @@ class UpscanController @Inject() (cc: ControllerComponents, wsClient: WSClient)
   // mimics the s3 cloud service
   def download() =
     Action {
-      Try {
-        val out   = new FileWriter("/tmp/uploadedFile.txt")
-        val chars = new Array[Char](3145728)
-        util.Arrays.fill(chars, '.')
-        chars(3145727) = '\n'
-        out.write(chars)
-      } match {
-        case Failure(_) =>
-          logger.warn("failed to serve file for download")
-          InternalServerError
-        case Success(_) =>
-          Ok.sendFile(new java.io.File("/tmp/uploadedFile.txt"))
+      val resource = Resource.make {
+        IO(new FileWriter("/tmp/uploadedFile.txt"))
+      } { out =>
+        IO(out.close())
       }
+      resource
+        .use(out =>
+          IO {
+            val chars = new Array[Char](3145728)
+            util.Arrays.fill(chars, '.')
+            chars(3145727) = '\n'
+            out.write(chars)
+          }
+        )
+        .attempt
+        .map {
+          case Left(e) =>
+            logger.warn(s"failed to serve file for download:$e")
+            InternalServerError
+          case Right(_) =>
+            Ok.sendFile(new java.io.File("/tmp/uploadedFile.txt"))
+        }
+        .unsafeRunSync
     }
 
+  // mimic notify service
   def makeCallBackRequest(callbackUrl: String)(implicit request: Request[_]): EitherT[Future, Error, Unit] = {
     val upscanResponse =
       s"""
