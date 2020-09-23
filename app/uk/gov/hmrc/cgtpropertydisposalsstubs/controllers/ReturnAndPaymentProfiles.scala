@@ -421,7 +421,15 @@ object ReturnAndPaymentProfiles {
           "2020",
           DesAddressDetails("2 Not sure Where", Some("Don't know what I'm doing"), None, None, Some("ZZ0 0ZZ"), "GB"),
           BigDecimal("1725"),
-          None
+          Some(
+            List(
+              Charge(
+                "CGT PPD Return UK Resident",
+                LocalDate.of(2022, 1, 31),
+                chargeReference
+              )
+            )
+          )
         ),
         List(
           FinancialTransaction(
