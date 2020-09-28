@@ -517,7 +517,7 @@ object ReturnAndPaymentProfiles {
 
   }
 
-  private val profiles: List[AccountProfile] = List(account1, account2)
+  private val profiles: List[AccountProfile] = List(account2, account1)
 
   def getProfile(cgtReference: String): Option[AccountProfile] =
     profiles.find(_.cgtReferencePredicate(cgtReference))
