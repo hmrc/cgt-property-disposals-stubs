@@ -54,6 +54,13 @@ object ReturnAndPaymentProfiles {
               List(
                 DesFinancialTransactionItem(
                   BigDecimal("23520"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2020, 6, 24))
+                ),
+                DesFinancialTransactionItem(
+                  BigDecimal("23520"),
                   Some("TPS RECEIPTS BY DEBIT CARD"),
                   Some(LocalDate.of(2020, 5, 25)),
                   Some("Reversal"),
@@ -220,6 +227,13 @@ object ReturnAndPaymentProfiles {
               List(
                 DesFinancialTransactionItem(
                   BigDecimal("650"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2020, 10, 5))
+                ),
+                DesFinancialTransactionItem(
+                  BigDecimal("650"),
                   Some("TPS RECEIPTS BY DEBIT CARD"),
                   Some(LocalDate.of(2020, 5, 25)),
                   Some("Outgoing Payment"),
@@ -292,6 +306,13 @@ object ReturnAndPaymentProfiles {
               List(
                 DesFinancialTransactionItem(
                   BigDecimal("1000"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2020, 10, 5))
+                ),
+                DesFinancialTransactionItem(
+                  BigDecimal("1000"),
                   Some("TPS RECEIPTS BY DEBIT CARD"),
                   Some(LocalDate.of(2020, 5, 25)),
                   Some("Some Unknown Clearing Reason"),
@@ -362,6 +383,13 @@ object ReturnAndPaymentProfiles {
             BigDecimal("0"),
             Some(
               List(
+                DesFinancialTransactionItem(
+                  BigDecimal("1000"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2020, 10, 5))
+                ),
                 DesFinancialTransactionItem(
                   BigDecimal("1000"),
                   Some("TPS RECEIPTS BY DEBIT CARD"),
@@ -438,6 +466,13 @@ object ReturnAndPaymentProfiles {
             BigDecimal("0"),
             Some(
               List(
+                DesFinancialTransactionItem(
+                  BigDecimal("43520"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2020, 6, 24))
+                ),
                 DesFinancialTransactionItem(
                   BigDecimal("43520"),
                   Some("Invalid Payment Method"),
