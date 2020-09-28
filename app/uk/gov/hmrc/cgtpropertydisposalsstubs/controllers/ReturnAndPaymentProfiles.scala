@@ -57,7 +57,7 @@ object ReturnAndPaymentProfiles {
                   Some("TPS RECEIPTS BY DEBIT CARD"),
                   Some(LocalDate.of(2020, 5, 25)),
                   Some("Reversal"),
-                  None
+                  Some(LocalDate.of(2020, 6, 24))
                 )
               )
             )
@@ -88,7 +88,17 @@ object ReturnAndPaymentProfiles {
             chargeReference,
             BigDecimal("23520"),
             BigDecimal("23520"),
-            None
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("23520"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2020, 6, 24))
+                )
+              )
+            )
           )
         )
       )
@@ -136,6 +146,13 @@ object ReturnAndPaymentProfiles {
             BigDecimal("1000"),
             Some(
               List(
+                DesFinancialTransactionItem(
+                  BigDecimal("1000"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2020, 10, 5))
+                )
               )
             )
           ),
@@ -143,7 +160,17 @@ object ReturnAndPaymentProfiles {
             penaltyChargeReference,
             BigDecimal("680"),
             BigDecimal("680"),
-            Some(List())
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("680"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2022, 1, 31))
+                )
+              )
+            )
           )
         )
       )
@@ -196,7 +223,7 @@ object ReturnAndPaymentProfiles {
                   Some("TPS RECEIPTS BY DEBIT CARD"),
                   Some(LocalDate.of(2020, 5, 25)),
                   Some("Outgoing Payment"),
-                  None
+                  Some(LocalDate.of(2020, 10, 5))
                 )
               )
             )
@@ -205,7 +232,17 @@ object ReturnAndPaymentProfiles {
             penaltyChargeReference,
             BigDecimal("680"),
             BigDecimal("680"),
-            Some(List())
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("680"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2022, 5, 31))
+                )
+              )
+            )
           )
         )
       )
@@ -258,7 +295,7 @@ object ReturnAndPaymentProfiles {
                   Some("TPS RECEIPTS BY DEBIT CARD"),
                   Some(LocalDate.of(2020, 5, 25)),
                   Some("Some Unknown Clearing Reason"),
-                  None
+                  Some(LocalDate.of(2020, 10, 5))
                 )
               )
             )
@@ -267,7 +304,17 @@ object ReturnAndPaymentProfiles {
             penaltyChargeReference,
             BigDecimal("680"),
             BigDecimal("680"),
-            Some(List())
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("680"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2022, 1, 31))
+                )
+              )
+            )
           )
         )
       )
@@ -320,7 +367,7 @@ object ReturnAndPaymentProfiles {
                   Some("TPS RECEIPTS BY DEBIT CARD"),
                   Some(LocalDate.of(2020, 5, 25)),
                   Some("Mass Write-Off"),
-                  None
+                  Some(LocalDate.of(2020, 10, 5))
                 )
               )
             )
@@ -336,7 +383,7 @@ object ReturnAndPaymentProfiles {
                   Some("TPS RECEIPTS BY DEBIT CARD"),
                   Some(LocalDate.of(2020, 5, 25)),
                   Some("Automatic Clearing"),
-                  None
+                  Some(LocalDate.of(2022, 1, 31))
                 )
               )
             )
@@ -396,7 +443,7 @@ object ReturnAndPaymentProfiles {
                   Some("Invalid Payment Method"),
                   Some(LocalDate.of(2020, 5, 25)),
                   Some("Write-Off"),
-                  None
+                  Some(LocalDate.of(2020, 6, 24))
                 )
               )
             )
