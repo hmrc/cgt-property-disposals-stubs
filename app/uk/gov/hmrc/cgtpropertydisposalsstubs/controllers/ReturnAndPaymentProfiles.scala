@@ -443,7 +443,7 @@ object ReturnAndPaymentProfiles {
       )
 
     val return8 = {
-      val chargeReference = "XCRG1111111111"
+      val chargeReference = "XCRG9999999999"
       ReturnProfile(
         ReturnSummary(
           "000000000001",
