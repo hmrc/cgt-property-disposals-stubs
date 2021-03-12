@@ -1012,7 +1012,7 @@ object ReturnAndPaymentProfiles {
       )
     }
 
-    AccountProfile(_.endsWith("2"), List(return1, return2, return3, return4, return5, return6, return7, return8))
+    AccountProfile(_.equals("XDCGTP123456702"), List(return1, return2, return3, return4, return5, return6, return7, return8))
   }
 
   private val profiles: List[AccountProfile] = List(account3, account2, account1)

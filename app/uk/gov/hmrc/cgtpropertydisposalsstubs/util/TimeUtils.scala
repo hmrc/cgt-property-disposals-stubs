@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.util
 
-import java.time.{LocalDate, Period}
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
+import java.time.temporal._
 import scala.util.Try
 
 object TimeUtils {
@@ -38,7 +38,9 @@ object TimeUtils {
         throw new RuntimeException(s"Could not parse toDate ('$toDate')")
 
       case (Some(from), Some(to)) =>
-        if(Period.between(from, to).getDays <= 366)
+
+        val daysDuration =  ChronoUnit.DAYS.between(from, to)
+        if( daysDuration <= 366)
           (from, to)
         else
         throw new RuntimeException("Financial data api date range over one year")
