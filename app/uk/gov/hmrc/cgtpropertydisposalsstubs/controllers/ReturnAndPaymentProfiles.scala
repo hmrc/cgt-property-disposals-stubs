@@ -732,7 +732,7 @@ object ReturnAndPaymentProfiles {
             List(
               Charge(
                 "CGT PPD Return UK Resident",
-                LocalDate.of(2020, 10, 5),
+                LocalDate.of(2020, 10, 19),
                 originalChargeReference
               ),
               Charge(
@@ -755,14 +755,14 @@ object ReturnAndPaymentProfiles {
                   None,
                   None,
                   None,
-                  Some(LocalDate.of(2020, 10, 5))
+                  Some(LocalDate.of(2020, 10, 19))
                 ),
                 DesFinancialTransactionItem(
                   BigDecimal("650"),
                   Some("TPS RECEIPTS BY DEBIT CARD"),
                   Some(LocalDate.of(2020, 5, 25)),
                   Some("Outgoing Payment"),
-                  Some(LocalDate.of(2020, 10, 5))
+                  Some(LocalDate.of(2020, 10, 19))
                 )
               )
             )
@@ -1012,7 +1012,45 @@ object ReturnAndPaymentProfiles {
       )
     }
 
-    AccountProfile(_.equals("XDCGTP123456702"), List(return1, return2, return3, return4, return5, return6, return7, return8))
+    val return9 = {
+      val chargeReference = "XCRG9999999992"
+      ReturnProfile(
+        ReturnSummary(
+          "000000000012",
+          LocalDate.of(2021, 7, 1),
+          LocalDate.of(2021, 6, 25),
+          None,
+          "2021",
+          DesAddressDetails("2 Similar Place Second", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
+          BigDecimal("47520"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 7, 24), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("47520"),
+            BigDecimal("47520"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("47520"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2021, 7, 24))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    AccountProfile(_.equals("XDCGTP123456702"), List(return1, return2, return3, return4, return5, return6, return7, return8, return9))
   }
 
   private val profiles: List[AccountProfile] = List(account3, account2, account1)
