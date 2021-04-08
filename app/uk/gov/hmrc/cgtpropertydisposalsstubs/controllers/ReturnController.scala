@@ -234,7 +234,7 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
     ReturnDetails(
       "individual",
       LocalDate.of(2020, 4, 22),
-      false,
+      true,
       68,
       BigDecimal(100),
       BigDecimal(100),
@@ -243,26 +243,14 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
       false,
       true,
       true,
-      Some("NZ"),
+      Some("GB"),
       Some("123456789"),
       None,
       None,
       None,
       None
     ),
-    Some(
-      RepresentedPersonDetails(
-        "personalRep",
-        "firstName",
-        "lastName",
-        "idType",
-        "idValue",
-        None,
-        None,
-        None,
-        None,
-        Some("test@test.com")
-      )),
+    None,
     List(
       DisposalDetails(
         LocalDate.of(2020, 4, 10),
