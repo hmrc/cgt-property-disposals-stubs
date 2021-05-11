@@ -108,9 +108,73 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
           dummyMultipleDisposalsResidentialReturn
         else if (cgtRefInit.endsWith("7") && submissionId.nonEmpty)
           dummyMultipleDisposals2021Return
+        else if (cgtRefInit.endsWith("9") && submissionId.nonEmpty)
+          dummySingleDisposalReturnForSAQuestion
         else dummySingleDisposalReturn
       Ok(Json.toJson(desReturn))
     }
+
+  val dummySingleDisposalReturnForSAQuestion = DesReturn(
+    DesReturnType(
+      "self digital",
+      "New",
+      None
+    ),
+    ReturnDetails(
+      "individual",
+      LocalDate.of(2021, 3, 20),
+      true,
+      1,
+      BigDecimal(11000),
+      BigDecimal(21000),
+      BigDecimal(31000),
+      false,
+      false,
+      false,
+      true,
+      Some("GB"),
+      None,
+      None,
+      None,
+      None,
+      None
+    ),
+    None,
+    List(
+      DisposalDetails(
+        LocalDate.of(2021, 3, 15),
+        DesAddressDetails("You know that place", None, None, None, Some("ZZ0 0ZZ"), "GB"),
+        "res",
+        "bought",
+        false,
+        BigDecimal(5000),
+        false,
+        BigDecimal(15000),
+        true,
+        Some(7300.32),
+        Some(LocalDate.of(2000, 1, 1)),
+        None,
+        Some("sold"),
+        Some(1),
+        Some(3),
+        Some(3),
+        Some(54),
+        Some(0)
+      )
+    ),
+    LossSummaryDetails(true, true, Some(BigDecimal(2300)), Some(BigDecimal(600))),
+    IncomeAllowanceDetails(BigDecimal(20000.34), Some(BigDecimal(37900)), Some(BigDecimal(500)), None),
+    Some(
+      ReliefDetails(
+        true,
+        Some(BigDecimal(6000.73)),
+        Some(1000.23),
+        None,
+        Some("none"),
+        Some(BigDecimal(0))
+      )
+    )
+  )
 
   val dummySingleDisposalReturn = DesReturn(
     DesReturnType(
