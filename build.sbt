@@ -1,5 +1,4 @@
 import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
-import uk.gov.hmrc.SbtArtifactory
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "cgt-property-disposals-stubs"
@@ -8,7 +7,7 @@ addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
 addCommandAlias("check", "all scalafmtSbtCheck scalafmtCheck test:scalafmtCheck")
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
+  .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(
     majorVersion := 0,
@@ -21,13 +20,13 @@ lazy val microservice = Project(appName, file("."))
       "-Yrangepos",
       "-language:postfixOps"
     ),
-    scalacOptions in Test --= Seq("-Ywarn-value-discard")
+    Test / scalacOptions --= Seq("-Ywarn-value-discard")
   )
-  .settings(scalaVersion := "2.12.10")
+  .settings(scalaVersion := "2.12.11")
   .settings(publishingSettings: _*)
   .settings(Compile / resourceDirectory := baseDirectory.value / "/conf")
   .configs(IntegrationTest)
   .settings(integrationTestSettings(): _*)
   .settings(resolvers += Resolver.jcenterRepo)
-  .settings(resolvers ++= Seq(Resolver.jcenterRepo, "emueller-bintray" at "http://dl.bintray.com/emueller/maven"))
+  .settings(resolvers ++= Seq(("emueller-bintray" at "http://dl.bintray.com/emueller/maven").withAllowInsecureProtocol(true)))
   .settings(PlayKeys.playDefaultPort := 7022)
