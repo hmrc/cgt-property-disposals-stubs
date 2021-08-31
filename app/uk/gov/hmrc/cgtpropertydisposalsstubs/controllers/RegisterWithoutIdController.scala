@@ -16,18 +16,16 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
-import com.eclipsesource.schema.drafts.Version4
-import com.eclipsesource.schema.{SchemaType, SchemaValidator}
+
 import com.google.inject.Inject
 import org.scalacheck.Gen
 import play.api.libs.json._
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.RegisterWithoutIdController.{RegistrationRequest, Response}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.SapNumber
-import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
+import uk.gov.hmrc.cgtpropertydisposalsstubs.util.{Logging, SchemaValidator}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import Version4._
-import scala.io.Source
+
 import scala.util.matching.Regex
 
 class RegisterWithoutIdController @Inject() (
@@ -35,24 +33,14 @@ class RegisterWithoutIdController @Inject() (
 ) extends BackendController(cc)
     with Logging {
 
-  lazy val schemaToBeValidated = Json
-    .fromJson[SchemaType](
-      Json.parse(
-        Source
-          .fromInputStream(
-            this.getClass.getResourceAsStream("/resources/register-without-id-des-schema-4.json")
-          )
-          .mkString
-      )
-    )
-    .get
+  lazy val schemaValidator= SchemaValidator.validator("/resources/register-without-id-des-schema-4.json")
 
   def registerWithoutId(): Action[AnyContent] = Action { implicit request =>
     request.body.asJson.fold[Result] {
       logger.warn("Could not find JSON in request body for register without id request")
       BadRequest
     } { json =>
-      SchemaValidator(Some(Version4)).validate(schemaToBeValidated, json)
+      schemaValidator.validate(json)
 
       json.validate[RegistrationRequest] match {
         case JsSuccess(registrationRequest, _) =>
