@@ -109,7 +109,7 @@ object EmailVerificationController {
 
     override def preStart(): Unit = {
       super.preStart()
-      cleanJob = Some(context.system.scheduler.scheduleWithFixedDelay(0.seconds, cleanFrequency, self, CleanData))
+      cleanJob = Some(context.system.scheduler.schedule(0.seconds, cleanFrequency, self, CleanData))
     }
 
     override def postStop(): Unit = {

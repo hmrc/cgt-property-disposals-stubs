@@ -18,8 +18,11 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalDateTime}
+
 import cats.instances.bigDecimal._
 import cats.syntax.eq._
+import com.eclipsesource.schema.drafts.Version4
+import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.google.inject.{Inject, Singleton}
 import org.scalacheck.Gen
 import play.api.libs.json.{JsResult, JsValue, Json}
@@ -27,24 +30,35 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesReturn._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.GenUtils.sample
-import uk.gov.hmrc.cgtpropertydisposalsstubs.util.{Logging, SchemaValidator}
+import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-
+import Version4._
+import scala.io.Source
 import scala.util.Try
 
 @Singleton
 class ReturnController @Inject() (cc: ControllerComponents) extends BackendController(cc) with Logging {
 
-  lazy val schemaValidator = SchemaValidator.validator("/resources/submit-return-des-schema-v-1-0-0.json")
+  lazy val schemaToBeValidated = Json
+    .fromJson[SchemaType](
+      Json.parse(
+        Source
+          .fromInputStream(
+            this.getClass.getResourceAsStream("/resources/submit-return-des-schema-v-1-0-0.json")
+          )
+          .mkString
+      )
+    )
+    .get
 
   def submitReturn(cgtReferenceNumber: String): Action[JsValue] =
     Action(parse.json) { request =>
-      val validator = schemaValidator
+      val validator = SchemaValidator(Some(Version4))
 
-      val submittedReturn: JsResult[(BigDecimal, LocalDate, String)] = for {
+      val submittedReturn: JsResult[(BigDecimal, LocalDate, JsValue)] = for {
         a <- (request.body \ "ppdReturnDetails" \ "returnDetails" \ "totalLiability").validate[BigDecimal]
         d <- (request.body \ "ppdReturnDetails" \ "returnDetails" \ "completionDate").validate[LocalDate]
-        e <- validator.validate(request.body)
+        e <- validator.validate(schemaToBeValidated, request.body)
       } yield (a, d, e)
 
       submittedReturn.fold(
