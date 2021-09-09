@@ -16,9 +16,11 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 
-class DummySpec extends WordSpec with Matchers {
+
+class DummySpec extends AnyWordSpecLike with Matchers {
 
   "This test" must {
     "pass" in {
