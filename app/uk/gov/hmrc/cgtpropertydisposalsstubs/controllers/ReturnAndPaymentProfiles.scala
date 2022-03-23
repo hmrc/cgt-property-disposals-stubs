@@ -1185,7 +1185,102 @@ object ReturnAndPaymentProfiles {
     AccountProfile(_.equals("XXCGTP999999999"), List(return1, return2))
   }
 
-  private val profiles: List[AccountProfile] = List(account4, account3, account2, account1)
+  val account5: AccountProfile = {
+    val return1 = {
+      val chargeReference = "XCRG1111111291"
+      ReturnProfile(
+        ReturnSummary(
+          "000000000091",
+          LocalDate.of(2022, 4, 15),
+          LocalDate.of(2022, 4, 10),
+          None,
+          "2022",
+          DesAddressDetails("99 Some Place", Some("Random Lane"), Some("Blackpool"), None, Some("IP12 1AX"), "GB"),
+          BigDecimal("235200"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2022, 3, 24), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("235200"),
+            BigDecimal("0"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("235200"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2022, 3, 24))
+                ),
+                DesFinancialTransactionItem(
+                  BigDecimal("235200"),
+                  Some("TPS RECEIPTS BY DEBIT CARD"),
+                  Some(LocalDate.of(2022, 3, 25)),
+                  Some("Reversal"),
+                  Some(LocalDate.of(2022, 3, 24))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    val return2 = {
+      val chargeReference = "XCRG1111111292"
+      ReturnProfile(
+        ReturnSummary(
+          "000000000092",
+          LocalDate.of(2022, 4, 16),
+          LocalDate.of(2022, 4, 11),
+          None,
+          "2022",
+          DesAddressDetails("98 Another Place", Some("Random Drive"), Some("Blackburn"), None, Some("IP13 1AX"), "GB"),
+          BigDecimal("250000"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2022, 4, 20), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("250000"),
+            BigDecimal("250000"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("250000"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2022, 4, 20))
+                ),
+                DesFinancialTransactionItem(
+                  BigDecimal("250000"),
+                  Some("TPS RECEIPTS BY DEBIT CARD"),
+                  Some(LocalDate.of(2022, 4, 20)),
+                  Some("Reversal"),
+                  Some(LocalDate.of(2022, 4, 20))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    AccountProfile(_.equals("XXCGTP999999998"), List(return1, return2))
+  }
+
+
+  private val profiles: List[AccountProfile] = List(account5, account4, account3, account2, account1)
 
   def getProfile(cgtReference: String): Option[AccountProfile] =
     profiles.find(_.cgtReferencePredicate(cgtReference))
