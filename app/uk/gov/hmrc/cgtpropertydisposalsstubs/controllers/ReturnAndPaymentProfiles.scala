@@ -1191,8 +1191,8 @@ object ReturnAndPaymentProfiles {
       ReturnProfile(
         ReturnSummary(
           "000000000091",
-          LocalDate.of(2022, 4, 1),
-          LocalDate.of(2022, 3, 25),
+          LocalDate.of(2022, 4, 15),
+          LocalDate.of(2022, 4, 10),
           None,
           "2022",
           DesAddressDetails("99 Some Place", Some("Random Lane"), Some("Blackpool"), None, Some("IP12 1AX"), "GB"),
@@ -1236,8 +1236,8 @@ object ReturnAndPaymentProfiles {
       ReturnProfile(
         ReturnSummary(
           "000000000092",
-          LocalDate.of(2022, 4, 20),
-          LocalDate.of(2022, 4, 20),
+          LocalDate.of(2022, 4, 16),
+          LocalDate.of(2022, 4, 11),
           None,
           "2022",
           DesAddressDetails("98 Another Place", Some("Random Drive"), Some("Blackburn"), None, Some("IP13 1AX"), "GB"),
