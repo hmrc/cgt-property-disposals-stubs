@@ -108,8 +108,6 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
           dummyMultipleDisposalsResidentialReturn
         else if (cgtRefInit.endsWith("7") && submissionId.nonEmpty)
           dummyMultipleDisposals2021Return
-        else if (cgtRefInit.endsWith("8") && submissionId.nonEmpty)
-          dummySingleDisposalReturnFor2022SAQuestion
         else if (cgtRefInit.endsWith("9") && submissionId.nonEmpty)
           dummySingleDisposalReturnForSAQuestion
         else dummySingleDisposalReturn
