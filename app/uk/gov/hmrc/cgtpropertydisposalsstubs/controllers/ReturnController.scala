@@ -106,13 +106,11 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
           dummySingleMixedUseDisposalReturn
         else if (cgtRefInit.endsWith("6") && submissionId.nonEmpty)
           dummyMultipleDisposalsResidentialReturn
-        else if (cgtRefInit.endsWith("7") && submissionId.nonEmpty) {
-          println(s"@@@@@@@@@@@@@ cgtRefInit: $cgtRefInit")
+        else if (cgtRefInit.endsWith("7") && submissionId.nonEmpty)
           dummyMultipleDisposals2021Return
-        } else if (cgtRefInit.endsWith("8") && submissionId.nonEmpty) {
-          println(s"@@@@@@@@@@@@@ cgtRefInit: $cgtRefInit")
+        else if (cgtRefInit.endsWith("8") && submissionId.nonEmpty)
           dummySingleDisposalReturnFor2022SAQuestion
-        } else if (cgtRefInit.endsWith("9") && submissionId.nonEmpty)
+        else if (cgtRefInit.endsWith("9") && submissionId.nonEmpty)
           dummySingleDisposalReturnForSAQuestion
         else dummySingleDisposalReturn
       Ok(Json.toJson(desReturn))
