@@ -108,6 +108,8 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
           dummyMultipleDisposalsResidentialReturn
         else if (cgtRefInit.endsWith("7") && submissionId.nonEmpty)
           dummyMultipleDisposals2021Return
+        else if (cgtRefInit.endsWith("8") && submissionId.nonEmpty)
+          dummySingleDisposalReturnFor2022SAQuestion
         else if (cgtRefInit.endsWith("9") && submissionId.nonEmpty)
           dummySingleDisposalReturnForSAQuestion
         else dummySingleDisposalReturn
@@ -122,7 +124,7 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
     ),
     ReturnDetails(
       "individual",
-      LocalDate.of(2022, 3, 20),
+      LocalDate.of(2022, 4, 20),
       true,
       1,
       BigDecimal(11000),
@@ -142,7 +144,7 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
     None,
     List(
       DisposalDetails(
-        LocalDate.of(2022, 3, 15),
+        LocalDate.of(2022, 4, 15),
         DesAddressDetails("You know that place", None, None, None, Some("ZZ0 0ZZ"), "GB"),
         "res",
         "bought",
