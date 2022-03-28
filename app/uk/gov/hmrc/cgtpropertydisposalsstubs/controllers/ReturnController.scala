@@ -106,9 +106,13 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
           dummySingleMixedUseDisposalReturn
         else if (cgtRefInit.endsWith("6") && submissionId.nonEmpty)
           dummyMultipleDisposalsResidentialReturn
-        else if (cgtRefInit.endsWith("7") && submissionId.nonEmpty)
+        else if (cgtRefInit.endsWith("7") && submissionId.nonEmpty) {
+          println(s"@@@@@@@@@@@@@ cgtRefInit: $cgtRefInit")
           dummyMultipleDisposals2021Return
-        else if (cgtRefInit.endsWith("9") && submissionId.nonEmpty)
+        } else if (cgtRefInit.endsWith("8") && submissionId.nonEmpty) {
+          println(s"@@@@@@@@@@@@@ cgtRefInit: $cgtRefInit")
+          dummySingleDisposalReturnFor2022SAQuestion
+        } else if (cgtRefInit.endsWith("9") && submissionId.nonEmpty)
           dummySingleDisposalReturnForSAQuestion
         else dummySingleDisposalReturn
       Ok(Json.toJson(desReturn))
@@ -122,7 +126,7 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
     ),
     ReturnDetails(
       "individual",
-      LocalDate.of(2022, 3, 20),
+      LocalDate.of(2022, 4, 20),
       true,
       1,
       BigDecimal(11000),
@@ -142,7 +146,7 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
     None,
     List(
       DisposalDetails(
-        LocalDate.of(2022, 3, 15),
+        LocalDate.of(2022, 4, 15),
         DesAddressDetails("You know that place", None, None, None, Some("ZZ0 0ZZ"), "GB"),
         "res",
         "bought",
