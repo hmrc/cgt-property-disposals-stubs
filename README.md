@@ -129,6 +129,14 @@ N.B. ` αβγ` must be one of `400`, `403`, `500` or `503`.
 | anything else     | 200 (OK)                                  |
 
 
+## Taxyears data
+
+| CGT Reference    | Subscription Update Response                      |
+| ---------------- |---------------------------------------------------|
+| `XXCGTP19999978` | 2021/22 returns                                   |
+| `XXCGTP999999988`| 2020/21 returns,2021/22 returns,2022/23 returns   |
+| `XXCGTP999999998`| 2022/23 returns                                   |
+| `XXCGTP19999928` | 2020/21 returns                                   |
 
 ### License                                                                                                             
 This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").

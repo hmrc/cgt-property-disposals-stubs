@@ -1185,7 +1185,656 @@ object ReturnAndPaymentProfiles {
     AccountProfile(_.equals("XXCGTP999999999"), List(return1, return2))
   }
 
-  private val profiles: List[AccountProfile] = List(account4, account3, account2, account1)
+  val account5: AccountProfile = {
+    val return1 = {
+      val chargeReference = "XCRG1111111291"
+      ReturnProfile(
+        ReturnSummary(
+          "000000000091",
+          LocalDate.of(2022, 4, 15),
+          LocalDate.of(2022, 4, 10),
+          None,
+          "2022",
+          DesAddressDetails("99 Some Place", Some("Random Lane"), Some("Blackpool"), None, Some("IP12 1AX"), "GB"),
+          BigDecimal("235200"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2022, 3, 24), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("235200"),
+            BigDecimal("0"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("235200"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2022, 3, 24))
+                ),
+                DesFinancialTransactionItem(
+                  BigDecimal("235200"),
+                  Some("TPS RECEIPTS BY DEBIT CARD"),
+                  Some(LocalDate.of(2022, 3, 25)),
+                  Some("Reversal"),
+                  Some(LocalDate.of(2022, 3, 24))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    val return2 = {
+      val chargeReference = "XCRG1111111292"
+      ReturnProfile(
+        ReturnSummary(
+          "000000000092",
+          LocalDate.of(2022, 4, 16),
+          LocalDate.of(2022, 4, 11),
+          None,
+          "2022",
+          DesAddressDetails("98 Another Place", Some("Random Drive"), Some("Blackburn"), None, Some("IP13 1AX"), "GB"),
+          BigDecimal("250000"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2022, 4, 20), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("250000"),
+            BigDecimal("250000"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("250000"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2022, 4, 20))
+                ),
+                DesFinancialTransactionItem(
+                  BigDecimal("250000"),
+                  Some("TPS RECEIPTS BY DEBIT CARD"),
+                  Some(LocalDate.of(2022, 4, 20)),
+                  Some("Reversal"),
+                  Some(LocalDate.of(2022, 4, 20))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    AccountProfile(_.equals("XXCGTP999999998"), List(return1, return2))
+  }
+
+  val account6: AccountProfile = {
+    val return1 = {
+      val chargeReference = "XCRG1111111391"
+      ReturnProfile(
+        ReturnSummary(
+          "000000000091",
+          LocalDate.of(2022, 4, 15),
+          LocalDate.of(2022, 4, 10),
+          None,
+          "2022",
+          DesAddressDetails("99 Some Place", Some("Random Lane"), Some("Blackpool"), None, Some("IP12 1AX"), "GB"),
+          BigDecimal("235200"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2022, 3, 24), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("235200"),
+            BigDecimal("0"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("235200"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2022, 3, 24))
+                ),
+                DesFinancialTransactionItem(
+                  BigDecimal("235200"),
+                  Some("TPS RECEIPTS BY DEBIT CARD"),
+                  Some(LocalDate.of(2022, 3, 25)),
+                  Some("Reversal"),
+                  Some(LocalDate.of(2022, 3, 24))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    val return2 = {
+      val chargeReference = "XCRG1111111492"
+      ReturnProfile(
+        ReturnSummary(
+          "000000000092",
+          LocalDate.of(2020, 4, 16),
+          LocalDate.of(2020, 4, 11),
+          None,
+          "2022",
+          DesAddressDetails("98 Another Place Place", Some("Random Driveway"), Some("Buckingham"), None, Some("IP13 1AX"), "GB"),
+          BigDecimal("250000"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2020, 4, 20), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("250000"),
+            BigDecimal("250000"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("250000"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2020, 4, 20))
+                ),
+                DesFinancialTransactionItem(
+                  BigDecimal("250000"),
+                  Some("TPS RECEIPTS BY DEBIT CARD"),
+                  Some(LocalDate.of(2020, 4, 20)),
+                  Some("Reversal"),
+                  Some(LocalDate.of(2020, 4, 20))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    val return3 = {
+      val chargeReference = "XCRG1111111292"
+      ReturnProfile(
+        ReturnSummary(
+          "000000000093",
+          LocalDate.of(2021, 4, 16),
+          LocalDate.of(2021, 4, 11),
+          None,
+          "2022",
+          DesAddressDetails("98 Another Place", Some("Random Drive"), Some("Blackburn"), None, Some("IP13 1AX"), "GB"),
+          BigDecimal("250000"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 4, 20), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("250000"),
+            BigDecimal("250000"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("250000"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2021, 4, 20))
+                ),
+                DesFinancialTransactionItem(
+                  BigDecimal("250000"),
+                  Some("TPS RECEIPTS BY DEBIT CARD"),
+                  Some(LocalDate.of(2021, 4, 20)),
+                  Some("Reversal"),
+                  Some(LocalDate.of(2021, 4, 20))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    val return4 = {
+      val chargeReference = "XCRG1111111112"
+      ReturnProfile(
+        ReturnSummary(
+          "000000000002",
+          LocalDate.of(2020, 6, 1),
+          LocalDate.of(2020, 5, 25),
+          None,
+          "2020",
+          DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
+          BigDecimal("23520"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2020, 6, 24), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("23520"),
+            BigDecimal("23520"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("23520"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2020, 6, 24))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    val return5 = {
+      val originalChargeReference = "XCRG3333333334"
+      val penaltyChargeReference  = "XCRG4444444445"
+
+      ReturnProfile(
+        ReturnSummary(
+          "000000000004",
+          LocalDate.of(2022, 6, 1),
+          LocalDate.of(2022, 5, 24),
+          None,
+          "2020",
+          DesAddressDetails(
+            "14 Something Something Something",
+            Some("That Other Place"),
+            None,
+            None,
+            Some("ZZ0 0ZZ"),
+            "GB"
+          ),
+          BigDecimal("1680"),
+          Some(
+            List(
+              Charge(
+                "CGT PPD Return UK Resident",
+                LocalDate.of(2022, 10, 5),
+                originalChargeReference
+              ),
+              Charge(
+                "CGT PPD Late Filing Penalty",
+                LocalDate.of(2024, 5, 31),
+                penaltyChargeReference
+              )
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            originalChargeReference,
+            BigDecimal("1000"),
+            BigDecimal("350"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("650"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2022, 10, 5))
+                ),
+                DesFinancialTransactionItem(
+                  BigDecimal("650"),
+                  Some("TPS RECEIPTS BY DEBIT CARD"),
+                  Some(LocalDate.of(2022, 5, 25)),
+                  Some("Outgoing Payment"),
+                  Some(LocalDate.of(2022, 10, 5))
+                )
+              )
+            )
+          ),
+          FinancialTransaction(
+            penaltyChargeReference,
+            BigDecimal("680"),
+            BigDecimal("680"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("680"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2024, 5, 31))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    val return6 = {
+      val chargeReference = "XCRG1212121212"
+      ReturnProfile(
+        ReturnSummary(
+          "000000001212",
+          LocalDate.of(2021, 4, 10),
+          LocalDate.of(2021, 4, 5),
+          None,
+          "2020",
+          DesAddressDetails("Big Ltd", Some("1 Dissimilar Place"), Some("Norfolk"), None, Some("S12 1AX"), "GB"),
+          BigDecimal("55555"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 4, 12), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("55555"),
+            BigDecimal("55555"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("55555"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2021, 4, 12))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    AccountProfile(_.equals("XXCGTP999999988"), List(return1, return2, return3, return4, return5, return6))
+  }
+
+  val account7: AccountProfile = {
+    val return1 = {
+      val chargeReference = "XCRG1111111111"
+      ReturnProfile(
+        ReturnSummary(
+          "000000000001",
+          LocalDate.of(2022, 6, 1),
+          LocalDate.of(2022, 5, 25),
+          None,
+          "2020",
+          DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
+          BigDecimal("23520"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2022, 6, 24), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("23520"),
+            BigDecimal("0"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("23520"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2022, 6, 24))
+                ),
+                DesFinancialTransactionItem(
+                  BigDecimal("23520"),
+                  Some("TPS RECEIPTS BY DEBIT CARD"),
+                  Some(LocalDate.of(2022, 5, 25)),
+                  Some("Reversal"),
+                  Some(LocalDate.of(2022, 6, 24))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    val return2 = {
+      val chargeReference = "XCRG1111111112"
+      ReturnProfile(
+        ReturnSummary(
+          "000000000002",
+          LocalDate.of(2022, 6, 1),
+          LocalDate.of(2022, 5, 25),
+          None,
+          "2020",
+          DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
+          BigDecimal("23555"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2022, 6, 24), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("23555"),
+            BigDecimal("23555"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("23555"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2022, 6, 24))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    AccountProfile(_.equals("XXCGTP19999988"), List(return1, return2))
+  }
+
+  val account8: AccountProfile = {
+    val return1 = {
+      val chargeReference = "XCRG1111111111"
+      ReturnProfile(
+        ReturnSummary(
+          "000000000001",
+          LocalDate.of(2021, 6, 1),
+          LocalDate.of(2021, 5, 25),
+          None,
+          "2020",
+          DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
+          BigDecimal("23520"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 6, 24), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("23520"),
+            BigDecimal("0"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("23520"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2021, 6, 24))
+                ),
+                DesFinancialTransactionItem(
+                  BigDecimal("23520"),
+                  Some("TPS RECEIPTS BY DEBIT CARD"),
+                  Some(LocalDate.of(2021, 5, 25)),
+                  Some("Reversal"),
+                  Some(LocalDate.of(2021, 6, 24))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    val return2 = {
+      val chargeReference = "XCRG1111111112"
+      ReturnProfile(
+        ReturnSummary(
+          "000000000002",
+          LocalDate.of(2021, 6, 1),
+          LocalDate.of(2021, 5, 25),
+          None,
+          "2020",
+          DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
+          BigDecimal("23555"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 6, 24), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("23555"),
+            BigDecimal("23555"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("23555"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2021, 6, 24))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    AccountProfile(_.equals("XXCGTP19999978"), List(return1, return2))
+  }
+
+  val account9: AccountProfile = {
+    val return1 = {
+      val chargeReference = "XCRG1111111111"
+      ReturnProfile(
+        ReturnSummary(
+          "000000000001",
+          LocalDate.of(2020, 6, 1),
+          LocalDate.of(2020, 5, 25),
+          None,
+          "2020",
+          DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
+          BigDecimal("23520"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2020, 6, 24), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("23520"),
+            BigDecimal("0"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("23520"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2020, 6, 24))
+                ),
+                DesFinancialTransactionItem(
+                  BigDecimal("23520"),
+                  Some("TPS RECEIPTS BY DEBIT CARD"),
+                  Some(LocalDate.of(2020, 5, 25)),
+                  Some("Reversal"),
+                  Some(LocalDate.of(2020, 6, 24))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    val return2 = {
+      val chargeReference = "XCRG1111111112"
+      ReturnProfile(
+        ReturnSummary(
+          "000000000002",
+          LocalDate.of(2020, 6, 1),
+          LocalDate.of(2020, 5, 25),
+          None,
+          "2020",
+          DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
+          BigDecimal("23555"),
+          Some(
+            List(
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2020, 6, 24), chargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference,
+            BigDecimal("23555"),
+            BigDecimal("23555"),
+            Some(
+              List(
+                DesFinancialTransactionItem(
+                  BigDecimal("23555"),
+                  None,
+                  None,
+                  None,
+                  Some(LocalDate.of(2020, 6, 24))
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    AccountProfile(_.equals("XXCGTP19999928"), List(return1, return2))
+  }
+
+  private val profiles: List[AccountProfile] = List(account9, account8, account7, account6, account5, account4, account3, account2, account1)
 
   def getProfile(cgtReference: String): Option[AccountProfile] =
     profiles.find(_.cgtReferencePredicate(cgtReference))
