@@ -18,7 +18,6 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalDateTime}
-
 import cats.instances.bigDecimal._
 import cats.syntax.eq._
 import com.eclipsesource.schema.drafts.Version4
@@ -33,11 +32,13 @@ import uk.gov.hmrc.cgtpropertydisposalsstubs.util.GenUtils.sample
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import Version4._
+import uk.gov.hmrc.cgtpropertydisposalsstubs.config.AppConfig
+
 import scala.io.Source
 import scala.util.Try
 
 @Singleton
-class ReturnController @Inject() (cc: ControllerComponents) extends BackendController(cc) with Logging {
+class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig) extends BackendController(cc) with Logging {
 
   lazy val schemaToBeValidated = Json
     .fromJson[SchemaType](
@@ -660,8 +661,20 @@ class ReturnController @Inject() (cc: ControllerComponents) extends BackendContr
     )
   }
 
-  private def dueDate(completionDate: LocalDate): LocalDate =
-    completionDate.plusDays(30)
+  private def dueDate(completionDate: LocalDate): LocalDate = {
+
+    val dueDateChecker = LocalDate.of(
+      appConfig.draftReturnNewDueDateStartYear,
+      appConfig.draftReturnNewDueDateStartMonth,
+      appConfig.draftReturnNewDueDateStartDay-1
+    )
+
+    if(completionDate.isAfter(dueDateChecker)){
+      completionDate.plusDays(60L)
+    } else {
+      completionDate.plusDays(30L)
+    }
+  }
 
   private def randomFormBundleId(): String =
     nRandomDigits(12)
