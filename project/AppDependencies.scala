@@ -3,7 +3,7 @@ import sbt._
 object AppDependencies {
 
   val compile = Seq(
-    "uk.gov.hmrc"       %% "bootstrap-backend-play-28"  % "5.12.0",
+    "uk.gov.hmrc"       %% "bootstrap-backend-play-28"  % "5.25.0",
     "uk.gov.hmrc"       %% "stub-data-generator"        % "0.5.3",
     "com.eclipsesource" %% "play-json-schema-validator" % "0.9.5"
   )
