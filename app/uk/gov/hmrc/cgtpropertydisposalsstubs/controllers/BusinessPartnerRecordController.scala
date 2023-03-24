@@ -162,12 +162,8 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
       )
     else
       doNameMatch(bprRequest.organisation) { requestOrganisation =>
-        println(requestOrganisation)
-        println(bprRequest.organisation)
-
         bpr.organisation.exists { organisationFound =>
           val matches = organisationFound.organisationName === requestOrganisation.organisationName
-          println(matches)
           if (!matches)
             logger.info(
               s"Organisation name in BPR request '${requestOrganisation.organisationName}' " +
