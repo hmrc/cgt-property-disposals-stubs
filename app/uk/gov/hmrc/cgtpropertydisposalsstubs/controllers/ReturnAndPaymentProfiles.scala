@@ -27,19 +27,20 @@ object ReturnAndPaymentProfiles {
 
   final case class AccountProfile(cgtReferencePredicate: String => Boolean, returns: List[ReturnProfile])
 
+  /* Account 1 for CGT refs ending with 1 */
   val account1: AccountProfile = {
     val return1 = {
       val chargeReference = "XCRG1111111111"
       ReturnProfile(
         ReturnSummary(
-          "000000000001",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 25),
-          None,
-          "2020",
-          DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
-          BigDecimal("23520"),
-          Some(
+          submissionId = "000000000001",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 25),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("23520"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2020, 6, 24), chargeReference)
             )
@@ -47,24 +48,24 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("23520"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("23520"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("23520"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 6, 24))
+                  amount = BigDecimal("23520"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 6, 24))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("23520"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2020, 5, 25)),
-                  Some("Reversal"),
-                  Some(LocalDate.of(2020, 6, 24))
+                  amount = BigDecimal("23520"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2020, 5, 25)),
+                  clearingReason = Some("Reversal"),
+                  dueDate = Some(LocalDate.of(2020, 6, 24))
                 )
               )
             )
@@ -77,70 +78,32 @@ object ReturnAndPaymentProfiles {
       val chargeReference = "XCRG1111111112"
       ReturnProfile(
         ReturnSummary(
-          "000000000002",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 25),
-          None,
-          "2020",
-          DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
-          BigDecimal("23555"),
-          Some(
+          submissionId = "000000000002",
+          submissionDate = LocalDate.of(2022, 6, 1),
+          completionDate = LocalDate.of(2022, 5, 25),
+          lastUpdatedDate = None,
+          taxYear = "2022",
+          propertyAddress = DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("23555"),
+          charges = Some(
             List(
-              Charge("CGT PPD Return UK Resident", LocalDate.of(2020, 6, 24), chargeReference)
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2022, 6, 24), chargeReference)
             )
           )
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("23555"),
-            BigDecimal("23555"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("23555"),
+            outstandingAmount = BigDecimal("23555"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("23555"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 6, 24))
-                )
-              )
-            )
-          )
-        )
-      )
-    }
-
-    val return21 = {
-      val chargeReference = "XCRG1212121212"
-      ReturnProfile(
-        ReturnSummary(
-          "000000001212",
-          LocalDate.of(2021, 4, 10),
-          LocalDate.of(2021, 4, 5),
-          None,
-          "2020",
-          DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
-          BigDecimal("55555"),
-          Some(
-            List(
-              Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 4, 12), chargeReference)
-            )
-          )
-        ),
-        List(
-          FinancialTransaction(
-            chargeReference,
-            BigDecimal("55555"),
-            BigDecimal("55555"),
-            Some(
-              List(
-                DesFinancialTransactionItem(
-                  BigDecimal("55555"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2021, 4, 12))
+                  amount = BigDecimal("23555"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2022, 6, 24))
                 )
               )
             )
@@ -155,64 +118,64 @@ object ReturnAndPaymentProfiles {
 
       ReturnProfile(
         ReturnSummary(
-          "000000000003",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 24),
-          None,
-          "2020",
-          DesAddressDetails(
-            "14 Something Something Something",
-            Some("That Other Place"),
-            None,
-            None,
-            Some("ZZ0 0ZZ"),
-            "GB"
+          submissionId = "000000000003",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 24),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails(
+            addressLine1 = "14 Something Something Something",
+            addressLine2 = Some("That Other Place"),
+            addressLine3 = None,
+            addressLine4 = None,
+            postalCode = Some("ZZ0 0ZZ"),
+            countryCode = "GB"
           ),
-          BigDecimal("1680"),
-          Some(
+          totalCGTLiability = BigDecimal("1680"),
+          charges = Some(
             List(
               Charge(
-                "CGT PPD Return UK Resident",
-                LocalDate.of(2020, 10, 5),
-                originalChargeReference
+                chargeDescription = "CGT PPD Return UK Resident",
+                dueDate = LocalDate.of(2020, 10, 5),
+                chargeReference = originalChargeReference
               ),
               Charge(
-                "CGT PPD Late Filing Penalty",
-                LocalDate.of(2022, 1, 31),
-                penaltyChargeReference
+                chargeDescription = "CGT PPD Late Filing Penalty",
+                dueDate = LocalDate.of(2022, 1, 31),
+                chargeReference = penaltyChargeReference
               )
             )
           )
         ),
         List(
           FinancialTransaction(
-            originalChargeReference,
-            BigDecimal("1000"),
-            BigDecimal("1000"),
-            Some(
+            chargeReference = originalChargeReference,
+            originalAmount = BigDecimal("1000"),
+            outstandingAmount = BigDecimal("1000"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("1000"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 10, 5))
+                  amount = BigDecimal("1000"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 10, 5))
                 )
               )
             )
           ),
           FinancialTransaction(
-            penaltyChargeReference,
-            BigDecimal("680"),
-            BigDecimal("680"),
-            Some(
+            chargeReference = penaltyChargeReference,
+            originalAmount = BigDecimal("680"),
+            outstandingAmount = BigDecimal("680"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("680"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2022, 1, 31))
+                  amount = BigDecimal("680"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2022, 1, 31))
                 )
               )
             )
@@ -227,71 +190,71 @@ object ReturnAndPaymentProfiles {
 
       ReturnProfile(
         ReturnSummary(
-          "000000000004",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 24),
-          None,
-          "2020",
-          DesAddressDetails(
-            "14 Something Something Something",
-            Some("That Other Place"),
-            None,
-            None,
-            Some("ZZ0 0ZZ"),
-            "GB"
+          submissionId = "000000000004",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 24),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails(
+            addressLine1 = "14 Something Something Something",
+            addressLine2 = Some("That Other Place"),
+            addressLine3 = None,
+            addressLine4 = None,
+            postalCode = Some("ZZ0 0ZZ"),
+            countryCode = "GB"
           ),
-          BigDecimal("1680"),
-          Some(
+          totalCGTLiability = BigDecimal("1680"),
+          charges = Some(
             List(
               Charge(
-                "CGT PPD Return UK Resident",
-                LocalDate.of(2020, 10, 5),
-                originalChargeReference
+                chargeDescription = "CGT PPD Return UK Resident",
+                dueDate = LocalDate.of(2020, 10, 5),
+                chargeReference = originalChargeReference
               ),
               Charge(
-                "CGT PPD Late Filing Penalty",
-                LocalDate.of(2022, 5, 31),
-                penaltyChargeReference
+                chargeDescription = "CGT PPD Late Filing Penalty",
+                dueDate = LocalDate.of(2022, 5, 31),
+                chargeReference = penaltyChargeReference
               )
             )
           )
         ),
         List(
           FinancialTransaction(
-            originalChargeReference,
-            BigDecimal("1000"),
-            BigDecimal("350"),
-            Some(
+            chargeReference = originalChargeReference,
+            originalAmount = BigDecimal("1000"),
+            outstandingAmount = BigDecimal("350"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("650"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 10, 5))
+                  amount = BigDecimal("650"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 10, 5))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("650"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2020, 5, 25)),
-                  Some("Outgoing Payment"),
-                  Some(LocalDate.of(2020, 10, 5))
+                  amount = BigDecimal("650"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2020, 5, 25)),
+                  clearingReason = Some("Outgoing Payment"),
+                  dueDate = Some(LocalDate.of(2020, 10, 5))
                 )
               )
             )
           ),
           FinancialTransaction(
-            penaltyChargeReference,
-            BigDecimal("680"),
-            BigDecimal("680"),
-            Some(
+            chargeReference = penaltyChargeReference,
+            originalAmount = BigDecimal("680"),
+            outstandingAmount = BigDecimal("680"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("680"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2022, 5, 31))
+                  amount = BigDecimal("680"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2022, 5, 31))
                 )
               )
             )
@@ -306,71 +269,71 @@ object ReturnAndPaymentProfiles {
 
       ReturnProfile(
         ReturnSummary(
-          "000000000005",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 24),
-          None,
-          "2020",
-          DesAddressDetails(
-            "14 Something Something Something",
-            Some("That Other Place"),
-            None,
-            None,
-            Some("ZZ0 0ZZ"),
-            "GB"
+          submissionId = "000000000005",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 24),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails(
+            addressLine1 = "14 Something Something Something",
+            addressLine2 = Some("That Other Place"),
+            addressLine3 = None,
+            addressLine4 = None,
+            postalCode = Some("ZZ0 0ZZ"),
+            countryCode = "GB"
           ),
-          BigDecimal("1680"),
-          Some(
+          totalCGTLiability = BigDecimal("1680"),
+          charges = Some(
             List(
               Charge(
-                "CGT PPD Return UK Resident",
-                LocalDate.of(2020, 10, 5),
-                originalChargeReference
+                chargeDescription = "CGT PPD Return UK Resident",
+                dueDate = LocalDate.of(2020, 10, 5),
+                chargeReference = originalChargeReference
               ),
               Charge(
-                "CGT PPD Late Filing Penalty",
-                LocalDate.of(2022, 1, 31),
-                penaltyChargeReference
+                chargeDescription = "CGT PPD Late Filing Penalty",
+                dueDate = LocalDate.of(2022, 1, 31),
+                chargeReference = penaltyChargeReference
               )
             )
           )
         ),
         List(
           FinancialTransaction(
-            originalChargeReference,
-            BigDecimal("1000"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = originalChargeReference,
+            originalAmount = BigDecimal("1000"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("1000"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 10, 5))
+                  amount = BigDecimal("1000"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 10, 5))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("1000"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2020, 5, 25)),
-                  Some("Some Unknown Clearing Reason"),
-                  Some(LocalDate.of(2020, 10, 5))
+                  amount = BigDecimal("1000"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2020, 5, 25)),
+                  clearingReason = Some("Some Unknown Clearing Reason"),
+                  dueDate = Some(LocalDate.of(2020, 10, 5))
                 )
               )
             )
           ),
           FinancialTransaction(
-            penaltyChargeReference,
-            BigDecimal("680"),
-            BigDecimal("680"),
-            Some(
+            chargeReference = penaltyChargeReference,
+            originalAmount = BigDecimal("680"),
+            outstandingAmount = BigDecimal("680"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("680"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2022, 1, 31))
+                  amount = BigDecimal("680"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2022, 1, 31))
                 )
               )
             )
@@ -385,71 +348,71 @@ object ReturnAndPaymentProfiles {
 
       ReturnProfile(
         ReturnSummary(
-          "000000000006",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 24),
-          None,
-          "2020",
-          DesAddressDetails(
-            "14 Something Something Something",
-            Some("That Other Place"),
-            None,
-            None,
-            Some("ZZ0 0ZZ"),
-            "GB"
+          submissionId = "000000000006",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 24),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails(
+            addressLine1 = "14 Something Something Something",
+            addressLine2 = Some("That Other Place"),
+            addressLine3 = None,
+            addressLine4 = None,
+            postalCode = Some("ZZ0 0ZZ"),
+            countryCode = "GB"
           ),
-          BigDecimal("1680"),
-          Some(
+          totalCGTLiability = BigDecimal("1680"),
+          charges = Some(
             List(
               Charge(
-                "CGT PPD Return UK Resident",
-                LocalDate.of(2020, 10, 5),
-                originalChargeReference
+                chargeDescription = "CGT PPD Return UK Resident",
+                dueDate = LocalDate.of(2020, 10, 5),
+                chargeReference = originalChargeReference
               ),
               Charge(
-                "CGT PPD Late Filing Penalty",
-                LocalDate.of(2022, 1, 31),
-                penaltyChargeReference
+                chargeDescription = "CGT PPD Late Filing Penalty",
+                dueDate = LocalDate.of(2022, 1, 31),
+                chargeReference = penaltyChargeReference
               )
             )
           )
         ),
         List(
           FinancialTransaction(
-            originalChargeReference,
-            BigDecimal("1000"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = originalChargeReference,
+            originalAmount = BigDecimal("1000"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("1000"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 10, 5))
+                  amount = BigDecimal("1000"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 10, 5))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("1000"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2020, 5, 25)),
-                  Some("Mass Write-Off"),
-                  Some(LocalDate.of(2020, 10, 5))
+                  amount = BigDecimal("1000"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2020, 5, 25)),
+                  clearingReason = Some("Mass Write-Off"),
+                  dueDate = Some(LocalDate.of(2020, 10, 5))
                 )
               )
             )
           ),
           FinancialTransaction(
-            penaltyChargeReference,
-            BigDecimal("680"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = penaltyChargeReference,
+            originalAmount = BigDecimal("680"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("680"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2020, 5, 25)),
-                  Some("Automatic Clearing"),
-                  Some(LocalDate.of(2022, 1, 31))
+                  amount = BigDecimal("680"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2020, 5, 25)),
+                  clearingReason = Some("Automatic Clearing"),
+                  dueDate = Some(LocalDate.of(2022, 1, 31))
                 )
               )
             )
@@ -461,21 +424,21 @@ object ReturnAndPaymentProfiles {
     val return7 =
       ReturnProfile(
         ReturnSummary(
-          "000000000007",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 24),
-          None,
-          "2020",
-          DesAddressDetails(
-            "14 Something Something Something",
-            Some("That Other Place"),
-            None,
-            None,
-            Some("ZZ0 0ZZ"),
-            "GB"
+          submissionId = "000000000007",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 24),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails(
+            addressLine1 = "14 Something Something Something",
+            addressLine2 = Some("That Other Place"),
+            addressLine3 = None,
+            addressLine4 = None,
+            postalCode = Some("ZZ0 0ZZ"),
+            countryCode = "GB"
           ),
-          BigDecimal("0"),
-          None
+          totalCGTLiability = BigDecimal("0"),
+          charges = None
         ),
         List.empty
       )
@@ -484,14 +447,14 @@ object ReturnAndPaymentProfiles {
       val chargeReference = "XCRG9999999999"
       ReturnProfile(
         ReturnSummary(
-          "000000000001",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 25),
-          None,
-          "2020",
-          DesAddressDetails("2 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
-          BigDecimal("43520"),
-          Some(
+          submissionId = "000000000011",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 25),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails("2 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("43520"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2020, 6, 24), chargeReference)
             )
@@ -499,24 +462,24 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("43520"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("43520"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("43520"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 6, 24))
+                  amount = BigDecimal("43520"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 6, 24))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("43520"),
-                  Some("Invalid Payment Method"),
-                  Some(LocalDate.of(2020, 5, 25)),
-                  Some("Write-Off"),
-                  Some(LocalDate.of(2020, 6, 24))
+                  amount = BigDecimal("43520"),
+                  paymentMethod = Some("Invalid Payment Method"),
+                  clearingDate = Some(LocalDate.of(2020, 5, 25)),
+                  clearingReason = Some("Write-Off"),
+                  dueDate = Some(LocalDate.of(2020, 6, 24))
                 )
               )
             )
@@ -525,61 +488,62 @@ object ReturnAndPaymentProfiles {
       )
     }
 
-    AccountProfile(_.endsWith("1"), List(return1, return2, return21, return3, return4, return5, return6, return7, return8))
+    AccountProfile(_.endsWith("1"), List(return1, return2, return3, return4, return5, return6, return7, return8))
   }
 
+  /* Account 2 for CGT refs starting with XD */
   val account2: AccountProfile = {
     val chargeReference = "XCRG1111111110"
 
     val return1 =
       ReturnProfile(
         ReturnSummary(
-          "000000000001",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 25),
-          Some(LocalDate.of(2020, 6, 2)),
-          "2020",
-          DesAddressDetails("2 Not sure Where", Some("Don't know what I'm doing"), None, None, Some("ZZ0 0ZZ"), "GB"),
-          BigDecimal("1725"),
-          Some(
+          submissionId = "000000000001",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 25),
+          lastUpdatedDate = Some(LocalDate.of(2020, 6, 2)),
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails("2 Not sure Where", Some("Don't know what I'm doing"), None, None, Some("ZZ0 0ZZ"), "GB"),
+          totalCGTLiability = BigDecimal("1725"),
+          charges = Some(
             List(
               Charge(
-                "CGT PPD Return UK Resident",
-                LocalDate.of(2022, 1, 31),
-                chargeReference
+                chargeDescription = "CGT PPD Return UK Resident",
+                dueDate = LocalDate.of(2022, 1, 31),
+                chargeReference = chargeReference
               )
             )
           )
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal(1000),
-            BigDecimal(1000),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal(1000),
+            outstandingAmount = BigDecimal(1000),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal(1000),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 7, 30))
+                  amount = BigDecimal(1000),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 7, 30))
                 )
               )
             )
           ),
           FinancialTransaction(
-            chargeReference,
-            BigDecimal(725),
-            BigDecimal(725),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal(725),
+            outstandingAmount = BigDecimal(725),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal(725),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2022, 1, 31))
+                  amount = BigDecimal(725),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2022, 1, 31))
                 )
               )
             )
@@ -590,19 +554,20 @@ object ReturnAndPaymentProfiles {
 
   }
 
+  /* Account 3 for CGT ref XDCGTP123456702 */
   val account3: AccountProfile = {
     val return1 = {
       val chargeReference = "XCRG1111111111"
       ReturnProfile(
         ReturnSummary(
-          "000000000001",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 25),
-          None,
-          "2020",
-          DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
-          BigDecimal("23520"),
-          Some(
+          submissionId = "000000000001",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 25),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("23520"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2020, 6, 24), chargeReference)
             )
@@ -610,24 +575,24 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("23520"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("23520"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("23520"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 6, 24))
+                  amount = BigDecimal("23520"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 6, 24))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("23520"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2020, 5, 25)),
-                  Some("Reversal"),
-                  Some(LocalDate.of(2020, 6, 24))
+                  amount = BigDecimal("23520"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2020, 5, 25)),
+                  clearingReason = Some("Reversal"),
+                  dueDate = Some(LocalDate.of(2020, 6, 24))
                 )
               )
             )
@@ -640,14 +605,14 @@ object ReturnAndPaymentProfiles {
       val chargeReference = "XCRG1111111112"
       ReturnProfile(
         ReturnSummary(
-          "000000000002",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 25),
-          None,
-          "2020",
-          DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
-          BigDecimal("23520"),
-          Some(
+          submissionId = "000000000002",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 25),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("23520"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2020, 6, 24), chargeReference)
             )
@@ -655,17 +620,17 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("23520"),
-            BigDecimal("23520"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("23520"),
+            outstandingAmount = BigDecimal("23520"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("23520"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 6, 24))
+                  amount = BigDecimal("23520"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 6, 24))
                 )
               )
             )
@@ -680,12 +645,12 @@ object ReturnAndPaymentProfiles {
 
       ReturnProfile(
         ReturnSummary(
-          "000000000003",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 24),
-          None,
-          "2020",
-          DesAddressDetails(
+          submissionId = "000000000003",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 24),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails(
             "14 Something Something Something",
             Some("That Other Place"),
             None,
@@ -693,51 +658,51 @@ object ReturnAndPaymentProfiles {
             Some("ZZ0 0ZZ"),
             "GB"
           ),
-          BigDecimal("1680"),
-          Some(
+          totalCGTLiability = BigDecimal("1680"),
+          charges = Some(
             List(
               Charge(
-                "CGT PPD Return UK Resident",
-                LocalDate.of(2020, 10, 5),
-                originalChargeReference
+                chargeDescription = "CGT PPD Return UK Resident",
+                dueDate = LocalDate.of(2020, 10, 5),
+                chargeReference = originalChargeReference
               ),
               Charge(
-                "CGT PPD Late Filing Penalty",
-                LocalDate.of(2022, 1, 31),
-                penaltyChargeReference
+                chargeDescription = "CGT PPD Late Filing Penalty",
+                dueDate = LocalDate.of(2022, 1, 31),
+                chargeReference = penaltyChargeReference
               )
             )
           )
         ),
         List(
           FinancialTransaction(
-            originalChargeReference,
-            BigDecimal("1000"),
-            BigDecimal("1000"),
-            Some(
+            chargeReference = originalChargeReference,
+            originalAmount = BigDecimal("1000"),
+            outstandingAmount = BigDecimal("1000"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("1000"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 10, 5))
+                  amount = BigDecimal("1000"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 10, 5))
                 )
               )
             )
           ),
           FinancialTransaction(
-            penaltyChargeReference,
-            BigDecimal("680"),
-            BigDecimal("680"),
-            Some(
+            chargeReference = penaltyChargeReference,
+            originalAmount = BigDecimal("680"),
+            outstandingAmount = BigDecimal("680"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("680"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2022, 1, 31))
+                  amount = BigDecimal("680"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2022, 1, 31))
                 )
               )
             )
@@ -752,12 +717,12 @@ object ReturnAndPaymentProfiles {
 
       ReturnProfile(
         ReturnSummary(
-          "000000000004",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 24),
-          None,
-          "2020",
-          DesAddressDetails(
+          submissionId = "000000000004",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 24),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails(
             "14 Something Something Something",
             Some("That Other Place"),
             None,
@@ -765,58 +730,58 @@ object ReturnAndPaymentProfiles {
             Some("ZZ0 0ZZ"),
             "GB"
           ),
-          BigDecimal("1680"),
-          Some(
+          totalCGTLiability = BigDecimal("1680"),
+          charges = Some(
             List(
               Charge(
-                "CGT PPD Return UK Resident",
-                LocalDate.of(2020, 10, 19),
-                originalChargeReference
+                chargeDescription = "CGT PPD Return UK Resident",
+                dueDate = LocalDate.of(2020, 10, 19),
+                chargeReference = originalChargeReference
               ),
               Charge(
-                "CGT PPD Late Filing Penalty",
-                LocalDate.of(2022, 5, 31),
-                penaltyChargeReference
+                chargeDescription = "CGT PPD Late Filing Penalty",
+                dueDate = LocalDate.of(2022, 5, 31),
+                chargeReference = penaltyChargeReference
               )
             )
           )
         ),
         List(
           FinancialTransaction(
-            originalChargeReference,
-            BigDecimal("1000"),
-            BigDecimal("350"),
-            Some(
+            chargeReference = originalChargeReference,
+            originalAmount = BigDecimal("1000"),
+            outstandingAmount = BigDecimal("350"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("650"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 10, 19))
+                  amount = BigDecimal("650"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 10, 19))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("650"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2020, 5, 25)),
-                  Some("Outgoing Payment"),
-                  Some(LocalDate.of(2020, 10, 19))
+                  amount = BigDecimal("650"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2020, 5, 25)),
+                  clearingReason = Some("Outgoing Payment"),
+                  dueDate = Some(LocalDate.of(2020, 10, 19))
                 )
               )
             )
           ),
           FinancialTransaction(
-            penaltyChargeReference,
-            BigDecimal("680"),
-            BigDecimal("680"),
-            Some(
+            chargeReference = penaltyChargeReference,
+            originalAmount = BigDecimal("680"),
+            outstandingAmount = BigDecimal("680"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("680"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2022, 5, 31))
+                  amount = BigDecimal("680"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2022, 5, 31))
                 )
               )
             )
@@ -831,71 +796,71 @@ object ReturnAndPaymentProfiles {
 
       ReturnProfile(
         ReturnSummary(
-          "000000000005",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 24),
-          None,
-          "2020",
-          DesAddressDetails(
-            "14 Something Something Something",
-            Some("That Other Place"),
-            None,
-            None,
-            Some("ZZ0 0ZZ"),
-            "GB"
+          submissionId = "000000000005",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 24),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails(
+            addressLine1 = "14 Something Something Something",
+            addressLine2 = Some("That Other Place"),
+            addressLine3 = None,
+            addressLine4 = None,
+            postalCode = Some("ZZ0 0ZZ"),
+            countryCode = "GB"
           ),
-          BigDecimal("1680"),
-          Some(
+          totalCGTLiability = BigDecimal("1680"),
+          charges = Some(
             List(
               Charge(
-                "CGT PPD Return UK Resident",
-                LocalDate.of(2020, 10, 5),
-                originalChargeReference
+                chargeDescription = "CGT PPD Return UK Resident",
+                dueDate = LocalDate.of(2020, 10, 5),
+                chargeReference = originalChargeReference
               ),
               Charge(
-                "CGT PPD Late Filing Penalty",
-                LocalDate.of(2022, 1, 31),
-                penaltyChargeReference
+                chargeDescription = "CGT PPD Late Filing Penalty",
+                dueDate = LocalDate.of(2022, 1, 31),
+                chargeReference = penaltyChargeReference
               )
             )
           )
         ),
         List(
           FinancialTransaction(
-            originalChargeReference,
-            BigDecimal("1000"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = originalChargeReference,
+            originalAmount = BigDecimal("1000"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("1000"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 10, 5))
+                  amount = BigDecimal("1000"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 10, 5))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("1000"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2020, 5, 25)),
-                  Some("Some Unknown Clearing Reason"),
-                  Some(LocalDate.of(2020, 10, 5))
+                  amount = BigDecimal("1000"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2020, 5, 25)),
+                  clearingReason = Some("Some Unknown Clearing Reason"),
+                  dueDate = Some(LocalDate.of(2020, 10, 5))
                 )
               )
             )
           ),
           FinancialTransaction(
-            penaltyChargeReference,
-            BigDecimal("680"),
-            BigDecimal("680"),
-            Some(
+            chargeReference = penaltyChargeReference,
+            originalAmount = BigDecimal("680"),
+            outstandingAmount = BigDecimal("680"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("680"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2022, 1, 31))
+                  amount = BigDecimal("680"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2022, 1, 31))
                 )
               )
             )
@@ -910,71 +875,71 @@ object ReturnAndPaymentProfiles {
 
       ReturnProfile(
         ReturnSummary(
-          "000000000006",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 24),
-          None,
-          "2020",
-          DesAddressDetails(
-            "14 Something Something Something",
-            Some("That Other Place"),
-            None,
-            None,
-            Some("ZZ0 0ZZ"),
-            "GB"
+          submissionId = "000000000006",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 24),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails(
+            addressLine1 = "14 Something Something Something",
+            addressLine2 = Some("That Other Place"),
+            addressLine3 = None,
+            addressLine4 = None,
+            postalCode = Some("ZZ0 0ZZ"),
+            countryCode = "GB"
           ),
-          BigDecimal("1680"),
-          Some(
+          totalCGTLiability = BigDecimal("1680"),
+          charges = Some(
             List(
               Charge(
-                "CGT PPD Return UK Resident",
-                LocalDate.of(2020, 10, 5),
-                originalChargeReference
+                chargeDescription = "CGT PPD Return UK Resident",
+                dueDate = LocalDate.of(2020, 10, 5),
+                chargeReference = originalChargeReference
               ),
               Charge(
-                "CGT PPD Late Filing Penalty",
-                LocalDate.of(2022, 1, 31),
-                penaltyChargeReference
+                chargeDescription = "CGT PPD Late Filing Penalty",
+                dueDate = LocalDate.of(2022, 1, 31),
+                chargeReference = penaltyChargeReference
               )
             )
           )
         ),
         List(
           FinancialTransaction(
-            originalChargeReference,
-            BigDecimal("1000"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = originalChargeReference,
+            originalAmount = BigDecimal("1000"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("1000"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 10, 5))
+                  amount = BigDecimal("1000"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 10, 5))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("1000"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2020, 5, 25)),
-                  Some("Mass Write-Off"),
-                  Some(LocalDate.of(2020, 10, 5))
+                  amount = BigDecimal("1000"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2020, 5, 25)),
+                  clearingReason = Some("Mass Write-Off"),
+                  dueDate = Some(LocalDate.of(2020, 10, 5))
                 )
               )
             )
           ),
           FinancialTransaction(
-            penaltyChargeReference,
-            BigDecimal("680"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = penaltyChargeReference,
+            originalAmount = BigDecimal("680"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("680"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2020, 5, 25)),
-                  Some("Automatic Clearing"),
-                  Some(LocalDate.of(2022, 1, 31))
+                  amount = BigDecimal("680"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2020, 5, 25)),
+                  clearingReason = Some("Automatic Clearing"),
+                  dueDate = Some(LocalDate.of(2022, 1, 31))
                 )
               )
             )
@@ -986,21 +951,21 @@ object ReturnAndPaymentProfiles {
     val return7 =
       ReturnProfile(
         ReturnSummary(
-          "000000000007",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 24),
-          None,
-          "2020",
-          DesAddressDetails(
-            "14 Something Something Something",
-            Some("That Other Place"),
-            None,
-            None,
-            Some("ZZ0 0ZZ"),
-            "GB"
+          submissionId = "000000000007",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 24),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails(
+            addressLine1 = "14 Something Something Something",
+            addressLine2 = Some("That Other Place"),
+            addressLine3 = None,
+            addressLine4 = None,
+            postalCode = Some("ZZ0 0ZZ"),
+            countryCode = "GB"
           ),
-          BigDecimal("0"),
-          None
+          totalCGTLiability = BigDecimal("0"),
+          charges = None
         ),
         List.empty
       )
@@ -1009,14 +974,14 @@ object ReturnAndPaymentProfiles {
       val chargeReference = "XCRG9999999991"
       ReturnProfile(
         ReturnSummary(
-          "000000000011",
-          LocalDate.of(2021, 6, 1),
-          LocalDate.of(2021, 5, 25),
-          None,
-          "2021",
-          DesAddressDetails("2 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
-          BigDecimal("43520"),
-          Some(
+          submissionId = "000000000011",
+          submissionDate = LocalDate.of(2021, 6, 1),
+          completionDate = LocalDate.of(2021, 5, 25),
+          lastUpdatedDate = None,
+          taxYear = "2021",
+          propertyAddress = DesAddressDetails("2 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("43520"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 6, 24), chargeReference)
             )
@@ -1024,24 +989,24 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("43520"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("43520"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("43520"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2021, 6, 24))
+                  amount = BigDecimal("43520"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2021, 6, 24))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("43520"),
-                  Some("Invalid Payment Method"),
-                  Some(LocalDate.of(2021, 5, 25)),
-                  Some("Write-Off"),
-                  Some(LocalDate.of(2021, 6, 24))
+                  amount = BigDecimal("43520"),
+                  paymentMethod = Some("Invalid Payment Method"),
+                  clearingDate = Some(LocalDate.of(2021, 5, 25)),
+                  clearingReason = Some("Write-Off"),
+                  dueDate = Some(LocalDate.of(2021, 6, 24))
                 )
               )
             )
@@ -1054,14 +1019,14 @@ object ReturnAndPaymentProfiles {
       val chargeReference = "XCRG9999999992"
       ReturnProfile(
         ReturnSummary(
-          "000000000012",
-          LocalDate.of(2021, 7, 1),
-          LocalDate.of(2021, 6, 25),
-          None,
-          "2021",
-          DesAddressDetails("2 Similar Place Second", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
-          BigDecimal("47520"),
-          Some(
+          submissionId = "000000000012",
+          submissionDate = LocalDate.of(2021, 7, 1),
+          completionDate = LocalDate.of(2021, 6, 25),
+          lastUpdatedDate = None,
+          taxYear = "2021",
+          propertyAddress = DesAddressDetails("2 Similar Place Second", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("47520"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 7, 24), chargeReference)
             )
@@ -1069,17 +1034,17 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("47520"),
-            BigDecimal("47520"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("47520"),
+            outstandingAmount = BigDecimal("47520"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("47520"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2021, 7, 24))
+                  amount = BigDecimal("47520"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2021, 7, 24))
                 )
               )
             )
@@ -1091,19 +1056,20 @@ object ReturnAndPaymentProfiles {
     AccountProfile(_.equals("XDCGTP123456702"), List(return1, return2, return3, return4, return5, return6, return7, return8, return9))
   }
 
+  /* Account 4 for CGT Ref XXCGTP999999999 */
   val account4: AccountProfile = {
     val return1 = {
       val chargeReference = "XCRG1111111191"
       ReturnProfile(
         ReturnSummary(
-          "000000000091",
-          LocalDate.of(2021, 4, 1),
-          LocalDate.of(2021, 3, 25),
-          None,
-          "2021",
-          DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
-          BigDecimal("235200"),
-          Some(
+          submissionId = "000000000091",
+          submissionDate = LocalDate.of(2021, 4, 1),
+          completionDate = LocalDate.of(2021, 3, 25),
+          lastUpdatedDate = None,
+          taxYear = "2021",
+          propertyAddress = DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("235200"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 3, 24), chargeReference)
             )
@@ -1111,24 +1077,24 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("235200"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("235200"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("235200"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2021, 3, 24))
+                  amount = BigDecimal("235200"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2021, 3, 24))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("235200"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2021, 3, 25)),
-                  Some("Reversal"),
-                  Some(LocalDate.of(2021, 3, 24))
+                  amount = BigDecimal("235200"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2021, 3, 25)),
+                  clearingReason = Some("Reversal"),
+                  dueDate = Some(LocalDate.of(2021, 3, 24))
                 )
               )
             )
@@ -1141,14 +1107,14 @@ object ReturnAndPaymentProfiles {
       val chargeReference = "XCRG1111111192"
       ReturnProfile(
         ReturnSummary(
-          "000000000092",
-          LocalDate.of(2021, 4, 20),
-          LocalDate.of(2021, 4, 20),
-          None,
-          "2021",
-          DesAddressDetails("11 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP13 1AX"), "GB"),
-          BigDecimal("250000"),
-          Some(
+          submissionId = "000000000092",
+          submissionDate = LocalDate.of(2021, 4, 20),
+          completionDate = LocalDate.of(2021, 4, 20),
+          lastUpdatedDate = None,
+          taxYear = "2021",
+          propertyAddress = DesAddressDetails("11 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP13 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("250000"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 4, 20), chargeReference)
             )
@@ -1156,24 +1122,24 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("250000"),
-            BigDecimal("250000"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("250000"),
+            outstandingAmount = BigDecimal("250000"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("250000"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2021, 4, 20))
+                  amount = BigDecimal("250000"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2021, 4, 20))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("250000"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2021, 4, 20)),
-                  Some("Reversal"),
-                  Some(LocalDate.of(2021, 4, 20))
+                  amount = BigDecimal("250000"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2021, 4, 20)),
+                  clearingReason = Some("Reversal"),
+                  dueDate = Some(LocalDate.of(2021, 4, 20))
                 )
               )
             )
@@ -1185,44 +1151,45 @@ object ReturnAndPaymentProfiles {
     AccountProfile(_.equals("XXCGTP999999999"), List(return1, return2))
   }
 
+  /* Account 5 for CGT Ref XXCGTP999999998 */
   val account5: AccountProfile = {
     val return1 = {
       val chargeReference = "XCRG1111111291"
       ReturnProfile(
         ReturnSummary(
-          "000000000091",
-          LocalDate.of(2022, 4, 15),
-          LocalDate.of(2022, 4, 10),
-          None,
-          "2022",
-          DesAddressDetails("99 Some Place", Some("Random Lane"), Some("Blackpool"), None, Some("IP12 1AX"), "GB"),
-          BigDecimal("235200"),
-          Some(
+          submissionId = "000000000091",
+          submissionDate = LocalDate.of(2023, 4, 9),
+          completionDate = LocalDate.of(2023, 4, 8),
+          lastUpdatedDate = None,
+          taxYear = "2023",
+          propertyAddress = DesAddressDetails("99 Some Place", Some("Random Lane"), Some("Blackpool"), None, Some("IP12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("235200"),
+          charges = Some(
             List(
-              Charge("CGT PPD Return UK Resident", LocalDate.of(2022, 3, 24), chargeReference)
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2023, 3, 24), chargeReference)
             )
           )
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("235200"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("235200"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("235200"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2022, 3, 24))
+                  amount = BigDecimal("235200"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2023, 3, 24))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("235200"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2022, 3, 25)),
-                  Some("Reversal"),
-                  Some(LocalDate.of(2022, 3, 24))
+                  amount = BigDecimal("235200"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2023, 3, 25)),
+                  clearingReason = Some("Reversal"),
+                  dueDate = Some(LocalDate.of(2023, 3, 24))
                 )
               )
             )
@@ -1235,39 +1202,39 @@ object ReturnAndPaymentProfiles {
       val chargeReference = "XCRG1111111292"
       ReturnProfile(
         ReturnSummary(
-          "000000000092",
-          LocalDate.of(2022, 4, 16),
-          LocalDate.of(2022, 4, 11),
-          None,
-          "2022",
-          DesAddressDetails("98 Another Place", Some("Random Drive"), Some("Blackburn"), None, Some("IP13 1AX"), "GB"),
-          BigDecimal("250000"),
-          Some(
+          submissionId = "000000000092",
+          submissionDate = LocalDate.of(2023, 4, 7),
+          completionDate = LocalDate.of(2023, 4, 6),
+          lastUpdatedDate = None,
+          taxYear = "2023",
+          propertyAddress = DesAddressDetails("98 Another Place", Some("Random Drive"), Some("Blackburn"), None, Some("IP13 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("250000"),
+          charges = Some(
             List(
-              Charge("CGT PPD Return UK Resident", LocalDate.of(2022, 4, 20), chargeReference)
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2023, 4, 10), chargeReference)
             )
           )
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("250000"),
-            BigDecimal("250000"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("250000"),
+            outstandingAmount = BigDecimal("250000"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("250000"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2022, 4, 20))
+                  amount = BigDecimal("250000"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2023, 4, 10))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("250000"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2022, 4, 20)),
-                  Some("Reversal"),
-                  Some(LocalDate.of(2022, 4, 20))
+                  amount = BigDecimal("250000"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2023, 4, 10)),
+                  clearingReason = Some("Reversal"),
+                  dueDate = Some(LocalDate.of(2023, 4, 10))
                 )
               )
             )
@@ -1279,19 +1246,20 @@ object ReturnAndPaymentProfiles {
     AccountProfile(_.equals("XXCGTP999999998"), List(return1, return2))
   }
 
+  /* Account 6 for CGT Ref XXCGTP999999988 */
   val account6: AccountProfile = {
     val return1 = {
       val chargeReference = "XCRG1111111391"
       ReturnProfile(
         ReturnSummary(
-          "000000000091",
-          LocalDate.of(2022, 4, 15),
-          LocalDate.of(2022, 4, 10),
-          None,
-          "2022",
-          DesAddressDetails("99 Some Place", Some("Random Lane"), Some("Blackpool"), None, Some("IP12 1AX"), "GB"),
-          BigDecimal("235200"),
-          Some(
+          submissionId = "000000000091",
+          submissionDate = LocalDate.of(2022, 4, 15),
+          completionDate = LocalDate.of(2022, 4, 10),
+          lastUpdatedDate = None,
+          taxYear = "2022",
+          propertyAddress = DesAddressDetails("99 Some Place", Some("Random Lane"), Some("Blackpool"), None, Some("IP12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("235200"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2022, 3, 24), chargeReference)
             )
@@ -1299,24 +1267,24 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("235200"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("235200"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("235200"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2022, 3, 24))
+                  amount = BigDecimal("235200"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2022, 3, 24))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("235200"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2022, 3, 25)),
-                  Some("Reversal"),
-                  Some(LocalDate.of(2022, 3, 24))
+                  amount = BigDecimal("235200"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2022, 3, 25)),
+                  clearingReason = Some("Reversal"),
+                  dueDate = Some(LocalDate.of(2022, 3, 24))
                 )
               )
             )
@@ -1329,14 +1297,14 @@ object ReturnAndPaymentProfiles {
       val chargeReference = "XCRG1111111492"
       ReturnProfile(
         ReturnSummary(
-          "000000000092",
-          LocalDate.of(2020, 4, 16),
-          LocalDate.of(2020, 4, 11),
-          None,
-          "2022",
-          DesAddressDetails("98 Another Place Place", Some("Random Driveway"), Some("Buckingham"), None, Some("IP13 1AX"), "GB"),
-          BigDecimal("250000"),
-          Some(
+          submissionId = "000000000092",
+          submissionDate = LocalDate.of(2020, 4, 16),
+          completionDate = LocalDate.of(2020, 4, 11),
+          lastUpdatedDate = None,
+          taxYear = "2022",
+          propertyAddress = DesAddressDetails("98 Another Place Place", Some("Random Driveway"), Some("Buckingham"), None, Some("IP13 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("250000"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2020, 4, 20), chargeReference)
             )
@@ -1344,24 +1312,24 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("250000"),
-            BigDecimal("250000"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("250000"),
+            outstandingAmount = BigDecimal("250000"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("250000"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 4, 20))
+                  amount = BigDecimal("250000"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 4, 20))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("250000"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2020, 4, 20)),
-                  Some("Reversal"),
-                  Some(LocalDate.of(2020, 4, 20))
+                  amount = BigDecimal("250000"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2020, 4, 20)),
+                  clearingReason = Some("Reversal"),
+                  dueDate = Some(LocalDate.of(2020, 4, 20))
                 )
               )
             )
@@ -1374,14 +1342,14 @@ object ReturnAndPaymentProfiles {
       val chargeReference = "XCRG1111111292"
       ReturnProfile(
         ReturnSummary(
-          "000000000093",
-          LocalDate.of(2021, 4, 16),
-          LocalDate.of(2021, 4, 11),
-          None,
-          "2022",
-          DesAddressDetails("98 Another Place", Some("Random Drive"), Some("Blackburn"), None, Some("IP13 1AX"), "GB"),
-          BigDecimal("250000"),
-          Some(
+          submissionId = "000000000093",
+          submissionDate = LocalDate.of(2021, 4, 16),
+          completionDate = LocalDate.of(2021, 4, 11),
+          lastUpdatedDate = None,
+          taxYear = "2022",
+          propertyAddress = DesAddressDetails("98 Another Place", Some("Random Drive"), Some("Blackburn"), None, Some("IP13 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("250000"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 4, 20), chargeReference)
             )
@@ -1389,24 +1357,24 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("250000"),
-            BigDecimal("250000"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("250000"),
+            outstandingAmount = BigDecimal("250000"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("250000"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2021, 4, 20))
+                  amount = BigDecimal("250000"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2021, 4, 20))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("250000"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2021, 4, 20)),
-                  Some("Reversal"),
-                  Some(LocalDate.of(2021, 4, 20))
+                  amount = BigDecimal("250000"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2021, 4, 20)),
+                  clearingReason = Some("Reversal"),
+                  dueDate = Some(LocalDate.of(2021, 4, 20))
                 )
               )
             )
@@ -1419,14 +1387,14 @@ object ReturnAndPaymentProfiles {
       val chargeReference = "XCRG1111111112"
       ReturnProfile(
         ReturnSummary(
-          "000000000002",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 25),
-          None,
-          "2020",
-          DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
-          BigDecimal("23520"),
-          Some(
+          submissionId = "000000000002",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 25),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("23520"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2020, 6, 24), chargeReference)
             )
@@ -1434,17 +1402,17 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("23520"),
-            BigDecimal("23520"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("23520"),
+            outstandingAmount = BigDecimal("23520"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("23520"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 6, 24))
+                  amount = BigDecimal("23520"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 6, 24))
                 )
               )
             )
@@ -1459,12 +1427,12 @@ object ReturnAndPaymentProfiles {
 
       ReturnProfile(
         ReturnSummary(
-          "000000000004",
-          LocalDate.of(2022, 6, 1),
-          LocalDate.of(2022, 5, 24),
-          None,
-          "2020",
-          DesAddressDetails(
+          submissionId = "000000000004",
+          submissionDate = LocalDate.of(2022, 6, 1),
+          completionDate = LocalDate.of(2022, 5, 24),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails(
             "14 Something Something Something",
             Some("That Other Place"),
             None,
@@ -1472,58 +1440,58 @@ object ReturnAndPaymentProfiles {
             Some("ZZ0 0ZZ"),
             "GB"
           ),
-          BigDecimal("1680"),
-          Some(
+          totalCGTLiability = BigDecimal("1680"),
+          charges = Some(
             List(
               Charge(
-                "CGT PPD Return UK Resident",
-                LocalDate.of(2022, 10, 5),
-                originalChargeReference
+                chargeDescription = "CGT PPD Return UK Resident",
+                dueDate = LocalDate.of(2022, 10, 5),
+                chargeReference = originalChargeReference
               ),
               Charge(
-                "CGT PPD Late Filing Penalty",
-                LocalDate.of(2024, 5, 31),
-                penaltyChargeReference
+                chargeDescription = "CGT PPD Late Filing Penalty",
+                dueDate = LocalDate.of(2024, 5, 31),
+                chargeReference = penaltyChargeReference
               )
             )
           )
         ),
         List(
           FinancialTransaction(
-            originalChargeReference,
-            BigDecimal("1000"),
-            BigDecimal("350"),
-            Some(
+            chargeReference = originalChargeReference,
+            originalAmount = BigDecimal("1000"),
+            outstandingAmount = BigDecimal("350"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("650"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2022, 10, 5))
+                  amount = BigDecimal("650"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2022, 10, 5))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("650"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2022, 5, 25)),
-                  Some("Outgoing Payment"),
-                  Some(LocalDate.of(2022, 10, 5))
+                  amount = BigDecimal("650"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2022, 5, 25)),
+                  clearingReason = Some("Outgoing Payment"),
+                  dueDate = Some(LocalDate.of(2022, 10, 5))
                 )
               )
             )
           ),
           FinancialTransaction(
-            penaltyChargeReference,
-            BigDecimal("680"),
-            BigDecimal("680"),
-            Some(
+            chargeReference = penaltyChargeReference,
+            originalAmount = BigDecimal("680"),
+            outstandingAmount = BigDecimal("680"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("680"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2024, 5, 31))
+                  amount = BigDecimal("680"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2024, 5, 31))
                 )
               )
             )
@@ -1536,14 +1504,14 @@ object ReturnAndPaymentProfiles {
       val chargeReference = "XCRG1212121212"
       ReturnProfile(
         ReturnSummary(
-          "000000001212",
-          LocalDate.of(2021, 4, 10),
-          LocalDate.of(2021, 4, 5),
-          None,
-          "2020",
-          DesAddressDetails("Big Ltd", Some("1 Dissimilar Place"), Some("Norfolk"), None, Some("S12 1AX"), "GB"),
-          BigDecimal("55555"),
-          Some(
+          submissionId = "000000001212",
+          submissionDate = LocalDate.of(2021, 4, 10),
+          completionDate = LocalDate.of(2021, 4, 5),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails("Big Ltd", Some("1 Dissimilar Place"), Some("Norfolk"), None, Some("S12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("55555"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 4, 12), chargeReference)
             )
@@ -1551,17 +1519,17 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("55555"),
-            BigDecimal("55555"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("55555"),
+            outstandingAmount = BigDecimal("55555"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("55555"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2021, 4, 12))
+                  amount = BigDecimal("55555"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2021, 4, 12))
                 )
               )
             )
@@ -1573,44 +1541,45 @@ object ReturnAndPaymentProfiles {
     AccountProfile(_.equals("XXCGTP999999988"), List(return1, return2, return3, return4, return5, return6))
   }
 
+  /* Account 7 for CGT ref XXCGTP19999988 */
   val account7: AccountProfile = {
     val return1 = {
       val chargeReference = "XCRG1111111111"
       ReturnProfile(
         ReturnSummary(
-          "000000000001",
-          LocalDate.of(2022, 6, 1),
-          LocalDate.of(2022, 5, 25),
-          None,
-          "2020",
-          DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
-          BigDecimal("23520"),
-          Some(
+          submissionId = "000000000001",
+          submissionDate = LocalDate.of(2023, 4, 8),
+          completionDate = LocalDate.of(2023, 4, 7),
+          lastUpdatedDate = None,
+          taxYear = "2022",
+          propertyAddress = DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("23520"),
+          charges = Some(
             List(
-              Charge("CGT PPD Return UK Resident", LocalDate.of(2022, 6, 24), chargeReference)
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2023, 4, 8), chargeReference)
             )
           )
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("23520"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("23520"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("23520"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2022, 6, 24))
+                  amount = BigDecimal("23520"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2023, 4, 8))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("23520"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2022, 5, 25)),
-                  Some("Reversal"),
-                  Some(LocalDate.of(2022, 6, 24))
+                  amount = BigDecimal("23520"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2023, 4, 8)),
+                  clearingReason = Some("Reversal"),
+                  dueDate = Some(LocalDate.of(2023, 4, 8))
                 )
               )
             )
@@ -1623,32 +1592,32 @@ object ReturnAndPaymentProfiles {
       val chargeReference = "XCRG1111111112"
       ReturnProfile(
         ReturnSummary(
-          "000000000002",
-          LocalDate.of(2022, 6, 1),
-          LocalDate.of(2022, 5, 25),
-          None,
-          "2020",
-          DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
-          BigDecimal("23555"),
-          Some(
+          submissionId = "000000000002",
+          submissionDate = LocalDate.of(2023, 4, 8),
+          completionDate = LocalDate.of(2023, 4, 7),
+          lastUpdatedDate = None,
+          taxYear = "2022",
+          propertyAddress = DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("23555"),
+          charges = Some(
             List(
-              Charge("CGT PPD Return UK Resident", LocalDate.of(2022, 6, 24), chargeReference)
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2023, 4, 11), chargeReference)
             )
           )
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("23555"),
-            BigDecimal("23555"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("23555"),
+            outstandingAmount = BigDecimal("23555"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("23555"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2022, 6, 24))
+                  amount = BigDecimal("23555"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2023, 4, 11))
                 )
               )
             )
@@ -1660,19 +1629,20 @@ object ReturnAndPaymentProfiles {
     AccountProfile(_.equals("XXCGTP19999988"), List(return1, return2))
   }
 
+  /* Account 8 for CGT Ref XXCGTP19999978 */
   val account8: AccountProfile = {
     val return1 = {
       val chargeReference = "XCRG1111111111"
       ReturnProfile(
         ReturnSummary(
-          "000000000001",
-          LocalDate.of(2021, 6, 1),
-          LocalDate.of(2021, 5, 25),
-          None,
-          "2020",
-          DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
-          BigDecimal("23520"),
-          Some(
+          submissionId = "000000000001",
+          submissionDate = LocalDate.of(2021, 6, 1),
+          completionDate = LocalDate.of(2021, 5, 25),
+          lastUpdatedDate = None,
+          taxYear = "2021",
+          propertyAddress = DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("23520"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 6, 24), chargeReference)
             )
@@ -1680,24 +1650,24 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("23520"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("23520"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("23520"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2021, 6, 24))
+                  amount = BigDecimal("23520"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2021, 6, 24))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("23520"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2021, 5, 25)),
-                  Some("Reversal"),
-                  Some(LocalDate.of(2021, 6, 24))
+                  amount = BigDecimal("23520"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2021, 5, 25)),
+                  clearingReason = Some("Reversal"),
+                  dueDate = Some(LocalDate.of(2021, 6, 24))
                 )
               )
             )
@@ -1710,14 +1680,14 @@ object ReturnAndPaymentProfiles {
       val chargeReference = "XCRG1111111112"
       ReturnProfile(
         ReturnSummary(
-          "000000000002",
-          LocalDate.of(2021, 6, 1),
-          LocalDate.of(2021, 5, 25),
-          None,
-          "2020",
-          DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
-          BigDecimal("23555"),
-          Some(
+          submissionId = "000000000002",
+          submissionDate = LocalDate.of(2021, 6, 1),
+          completionDate = LocalDate.of(2021, 5, 25),
+          lastUpdatedDate = None,
+          taxYear = "2021",
+          propertyAddress = DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("23555"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 6, 24), chargeReference)
             )
@@ -1725,17 +1695,17 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("23555"),
-            BigDecimal("23555"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("23555"),
+            outstandingAmount = BigDecimal("23555"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("23555"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2021, 6, 24))
+                  amount = BigDecimal("23555"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2021, 6, 24))
                 )
               )
             )
@@ -1747,19 +1717,20 @@ object ReturnAndPaymentProfiles {
     AccountProfile(_.equals("XXCGTP19999978"), List(return1, return2))
   }
 
+  /* Account 9 for CGT ref XXCGTP19999928 - no account in ATs uses this ref */
   val account9: AccountProfile = {
     val return1 = {
       val chargeReference = "XCRG1111111111"
       ReturnProfile(
         ReturnSummary(
-          "000000000001",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 25),
-          None,
-          "2020",
-          DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
-          BigDecimal("23520"),
-          Some(
+          submissionId = "000000000001",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 25),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("23520"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2020, 6, 24), chargeReference)
             )
@@ -1767,24 +1738,24 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("23520"),
-            BigDecimal("0"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("23520"),
+            outstandingAmount = BigDecimal("0"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("23520"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 6, 24))
+                  amount = BigDecimal("23520"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 6, 24))
                 ),
                 DesFinancialTransactionItem(
-                  BigDecimal("23520"),
-                  Some("TPS RECEIPTS BY DEBIT CARD"),
-                  Some(LocalDate.of(2020, 5, 25)),
-                  Some("Reversal"),
-                  Some(LocalDate.of(2020, 6, 24))
+                  amount = BigDecimal("23520"),
+                  paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
+                  clearingDate = Some(LocalDate.of(2020, 5, 25)),
+                  clearingReason = Some("Reversal"),
+                  dueDate = Some(LocalDate.of(2020, 6, 24))
                 )
               )
             )
@@ -1797,14 +1768,14 @@ object ReturnAndPaymentProfiles {
       val chargeReference = "XCRG1111111112"
       ReturnProfile(
         ReturnSummary(
-          "000000000002",
-          LocalDate.of(2020, 6, 1),
-          LocalDate.of(2020, 5, 25),
-          None,
-          "2020",
-          DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
-          BigDecimal("23555"),
-          Some(
+          submissionId = "000000000002",
+          submissionDate = LocalDate.of(2020, 6, 1),
+          completionDate = LocalDate.of(2020, 5, 25),
+          lastUpdatedDate = None,
+          taxYear = "2020",
+          propertyAddress = DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
+          totalCGTLiability = BigDecimal("23555"),
+          charges = Some(
             List(
               Charge("CGT PPD Return UK Resident", LocalDate.of(2020, 6, 24), chargeReference)
             )
@@ -1812,17 +1783,17 @@ object ReturnAndPaymentProfiles {
         ),
         List(
           FinancialTransaction(
-            chargeReference,
-            BigDecimal("23555"),
-            BigDecimal("23555"),
-            Some(
+            chargeReference = chargeReference,
+            originalAmount = BigDecimal("23555"),
+            outstandingAmount = BigDecimal("23555"),
+            items = Some(
               List(
                 DesFinancialTransactionItem(
-                  BigDecimal("23555"),
-                  None,
-                  None,
-                  None,
-                  Some(LocalDate.of(2020, 6, 24))
+                  amount = BigDecimal("23555"),
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(LocalDate.of(2020, 6, 24))
                 )
               )
             )
