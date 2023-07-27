@@ -22,7 +22,7 @@ lazy val microservice = Project(appName, file("."))
     ),
     Test / scalacOptions --= Seq("-Ywarn-value-discard")
   )
-  .settings(scalaVersion := "2.12.12")
+  .settings(scalaVersion := "2.13.11")
   .settings(publishingSettings: _*)
   .settings(Compile / resourceDirectory := baseDirectory.value / "/conf")
   .configs(IntegrationTest)
