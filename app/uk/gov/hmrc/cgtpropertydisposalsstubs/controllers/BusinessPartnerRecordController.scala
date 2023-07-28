@@ -203,7 +203,7 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
       val email = {
         val local =
           if (isAnIndividual) s"${forename.toLowerCase}.${surname.toLowerCase}"
-          else organisationName.replaceAllLiterally(" ", ".").toLowerCase
+          else organisationName.replace(" ", ".").toLowerCase
         s"$local@email.com"
       }
       val organisation = if (isAnIndividual) None else Some(DesOrganisation(organisationName))

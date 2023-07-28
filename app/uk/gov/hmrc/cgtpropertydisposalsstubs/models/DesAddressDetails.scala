@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 final case class DesAddressDetails(
   addressLine1: String,
@@ -28,5 +28,5 @@ final case class DesAddressDetails(
 )
 
 object DesAddressDetails {
-  implicit val format = Json.format[DesAddressDetails]
+  implicit val format: OFormat[DesAddressDetails] = Json.format[DesAddressDetails]
 }
