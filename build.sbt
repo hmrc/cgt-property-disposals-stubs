@@ -1,5 +1,4 @@
 import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "cgt-property-disposals-stubs"
 
@@ -25,7 +24,6 @@ lazy val microservice = Project(appName, file("."))
     Test / scalacOptions -= "-Ywarn-value-discard",
   )
   .settings(scalaVersion := "2.13.11")
-  .settings(publishingSettings: _*)
   .settings(Compile / resourceDirectory := baseDirectory.value / "/conf")
   .configs(IntegrationTest)
   .settings(integrationTestSettings(): _*)
