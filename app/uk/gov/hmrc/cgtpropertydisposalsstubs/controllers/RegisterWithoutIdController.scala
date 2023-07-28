@@ -47,7 +47,7 @@ class RegisterWithoutIdController @Inject() (
     )
     .get
 
-  def registerWithoutId(): Action[AnyContent] = Action { implicit request =>
+  def registerWithoutId: Action[AnyContent] = Action { implicit request =>
     request.body.asJson.fold[Result] {
       logger.warn("Could not find JSON in request body for register without id request")
       BadRequest
