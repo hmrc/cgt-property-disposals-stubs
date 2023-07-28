@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.SubscriptionUpdateRequest.SubscriptionUpdateDetails
 
 case class SubscriptionUpdateRequest(
@@ -35,7 +35,7 @@ object SubscriptionUpdateRequest {
   )
 
   object SubscriptionUpdateAddressDetails {
-    implicit val format = Json.format[SubscriptionUpdateAddressDetails]
+    implicit val format: OFormat[SubscriptionUpdateAddressDetails] = Json.format[SubscriptionUpdateAddressDetails]
   }
 
   final case class SubscriptionUpdateDetails(
@@ -45,9 +45,9 @@ object SubscriptionUpdateRequest {
   )
 
   object SubscriptionUpdateDetails {
-    implicit val format = Json.format[SubscriptionUpdateDetails]
+    implicit val format: OFormat[SubscriptionUpdateDetails] = Json.format[SubscriptionUpdateDetails]
   }
 
-  implicit val format = Json.format[SubscriptionUpdateRequest]
+  implicit val format: OFormat[SubscriptionUpdateRequest] = Json.format[SubscriptionUpdateRequest]
 
 }

@@ -47,7 +47,7 @@ class AddressLookupController @Inject() (cc: ControllerComponents) extends Backe
 
         formattedPostcode match {
           case statusRegex(statusCodeString) =>
-            val statusCode = statusCodeString.replaceAllLiterally(" ", "").toInt
+            val statusCode = statusCodeString.replace(" ", "").toInt
             logger.info("Returning with status")
             Status(statusCode)
 
@@ -74,7 +74,7 @@ class AddressLookupController @Inject() (cc: ControllerComponents) extends Backe
     def validatedFromBoolean[A](a: A)(predicate: A => Boolean, ifInvalid: => String): ValidationResult[A] =
       if (predicate(a)) Valid(a) else Invalid(NonEmptyList.one(ifInvalid))
 
-    val cleanedPostcode = postcode.replaceAllLiterally(" ", "")
+    val cleanedPostcode = postcode.replace(" ", "")
     val lengthCheck: ValidationResult[String] =
       validatedFromBoolean(cleanedPostcode)(_.length > 3, "postcode should have more than three characters in it")
     val lowerCaseLetterCheck: ValidationResult[String] =

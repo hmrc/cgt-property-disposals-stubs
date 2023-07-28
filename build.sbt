@@ -16,11 +16,13 @@ lazy val microservice = Project(appName, file("."))
   )
   .settings(routesImport := Seq.empty)
   .settings(TwirlKeys.templateImports := Seq.empty)
-  .settings(scalacOptions ++= Seq(
+  .settings(
+    scalacOptions ++= Seq(
       "-Yrangepos",
       "-language:postfixOps"
     ),
-    Test / scalacOptions --= Seq("-Ywarn-value-discard")
+    scalacOptions -= "-Xlint:nullary-override",
+    Test / scalacOptions -= "-Ywarn-value-discard",
   )
   .settings(scalaVersion := "2.13.11")
   .settings(publishingSettings: _*)

@@ -196,7 +196,7 @@ object SubscriptionController {
   )
 
   object SubscriptionDetails {
-    implicit val dd = Json.format[SubscriptionDetails]
+    implicit val dd: OFormat[SubscriptionDetails] = Json.format[SubscriptionDetails]
   }
 
   object DesSubscriptionDisplayDetails {
