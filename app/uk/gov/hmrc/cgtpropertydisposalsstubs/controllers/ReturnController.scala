@@ -68,9 +68,6 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
           BadRequest
         },
         { case (taxDue, completionDate, _) =>
-          //go right up to confirm and submit then duplicate tabs and go through the process on both
-          //with my solution we should get directed to the home page
-          Thread.sleep(15000L)
           Ok(
             Json.toJson(prepareDesSubmitReturnResponse(cgtReferenceNumber, taxDue, completionDate))
           )
