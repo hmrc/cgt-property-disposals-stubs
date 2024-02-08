@@ -1636,15 +1636,15 @@ object ReturnAndPaymentProfiles {
       ReturnProfile(
         ReturnSummary(
           submissionId = "000000000001",
-          submissionDate = LocalDate.of(2021, 6, 1),
-          completionDate = LocalDate.of(2021, 5, 25),
+          submissionDate = LocalDate.of(2022, 6, 1),
+          completionDate = LocalDate.of(2022, 5, 25),
           lastUpdatedDate = None,
-          taxYear = "2021",
+          taxYear = "2022",
           propertyAddress = DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
           totalCGTLiability = BigDecimal("23520"),
           charges = Some(
             List(
-              Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 6, 24), chargeReference)
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2022, 6, 24), chargeReference)
             )
           )
         ),
@@ -1660,14 +1660,14 @@ object ReturnAndPaymentProfiles {
                   paymentMethod = None,
                   clearingDate = None,
                   clearingReason = None,
-                  dueDate = Some(LocalDate.of(2021, 6, 24))
+                  dueDate = Some(LocalDate.of(2022, 6, 24))
                 ),
                 DesFinancialTransactionItem(
                   amount = BigDecimal("23520"),
                   paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
-                  clearingDate = Some(LocalDate.of(2021, 5, 25)),
+                  clearingDate = Some(LocalDate.of(2022, 5, 25)),
                   clearingReason = Some("Reversal"),
-                  dueDate = Some(LocalDate.of(2021, 6, 24))
+                  dueDate = Some(LocalDate.of(2022, 6, 24))
                 )
               )
             )
@@ -1681,15 +1681,15 @@ object ReturnAndPaymentProfiles {
       ReturnProfile(
         ReturnSummary(
           submissionId = "000000000002",
-          submissionDate = LocalDate.of(2021, 6, 1),
-          completionDate = LocalDate.of(2021, 5, 25),
+          submissionDate = LocalDate.of(2022, 6, 1),
+          completionDate = LocalDate.of(2022, 5, 25),
           lastUpdatedDate = None,
           taxYear = "2021",
           propertyAddress = DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
           totalCGTLiability = BigDecimal("23555"),
           charges = Some(
             List(
-              Charge("CGT PPD Return UK Resident", LocalDate.of(2021, 6, 24), chargeReference)
+              Charge("CGT PPD Return UK Resident", LocalDate.of(2022, 6, 24), chargeReference)
             )
           )
         ),
@@ -1705,7 +1705,7 @@ object ReturnAndPaymentProfiles {
                   paymentMethod = None,
                   clearingDate = None,
                   clearingReason = None,
-                  dueDate = Some(LocalDate.of(2021, 6, 24))
+                  dueDate = Some(LocalDate.of(2022, 6, 24))
                 )
               )
             )
