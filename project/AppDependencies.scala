@@ -8,7 +8,7 @@ object AppDependencies {
   )
 
   val test = Seq(
-    "uk.gov.hmrc"            %% "tax-year"               % "3.3.0",
+    "uk.gov.hmrc"            %% "tax-year"               % "4.0.0",
     "uk.gov.hmrc"            %% "stub-data-generator"    % "1.1.0",
     "com.vladsch.flexmark"    % "flexmark-all"           % "0.36.8"         % "test, it",
     "org.scalatestplus.play" %% "scalatestplus-play"     % "5.1.0"          % Test,
