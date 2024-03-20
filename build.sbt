@@ -2,9 +2,6 @@ import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
 
 val appName = "cgt-property-disposals-stubs"
 
-addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
-addCommandAlias("check", "all scalafmtSbtCheck scalafmtCheck test:scalafmtCheck")
-
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin)
@@ -13,6 +10,7 @@ lazy val microservice = Project(appName, file("."))
     addCompilerPlugin(scalafixSemanticdb),
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test
   )
+  .settings(CodeCoverageSettings.settings: _*)
   .settings(routesImport := Seq.empty)
   .settings(TwirlKeys.templateImports := Seq.empty)
   .settings(
@@ -28,5 +26,9 @@ lazy val microservice = Project(appName, file("."))
   .configs(IntegrationTest)
   .settings(integrationTestSettings(): _*)
   .settings(resolvers += Resolver.jcenterRepo)
-  .settings(resolvers ++= Seq(("emueller-bintray" at "http://dl.bintray.com/emueller/maven").withAllowInsecureProtocol(true)))
   .settings(PlayKeys.playDefaultPort := 7022)
+
+ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
+
+addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
+addCommandAlias("check", "all scalafmtSbtCheck scalafmtCheck test:scalafmtCheck")
