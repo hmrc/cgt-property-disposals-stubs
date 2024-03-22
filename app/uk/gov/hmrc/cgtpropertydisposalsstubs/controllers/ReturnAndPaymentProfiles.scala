@@ -1594,16 +1594,16 @@ object ReturnAndPaymentProfiles {
       ReturnProfile(
         ReturnSummary(
           submissionId = "000000000001",
-          submissionDate = LocalDate.of(currentTaxYear, 4, 8),
-          completionDate = LocalDate.of(currentTaxYear, 4, 7),
+          submissionDate = LocalDate.of(currentTaxYear + 1, 4, 8),
+          completionDate = LocalDate.of(currentTaxYear + 1, 4, 7),
           lastUpdatedDate = None,
-          taxYear = "currentTaxYear - 1",
+          taxYear = "future tax year",
           propertyAddress =
             DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
           totalCGTLiability = BigDecimal("23520"),
           charges = Some(
             List(
-              Charge("CGT PPD Return UK Resident", LocalDate.of(currentTaxYear, 4, 8), chargeReference)
+              Charge("CGT PPD Return UK Resident", LocalDate.of(currentTaxYear + 1, 4, 8), chargeReference)
             )
           )
         ),
@@ -1619,14 +1619,14 @@ object ReturnAndPaymentProfiles {
                   paymentMethod = None,
                   clearingDate = None,
                   clearingReason = None,
-                  dueDate = Some(LocalDate.of(currentTaxYear, 4, 8))
+                  dueDate = Some(LocalDate.of(currentTaxYear + 1, 4, 8))
                 ),
                 DesFinancialTransactionItem(
                   amount = BigDecimal("23520"),
                   paymentMethod = Some("TPS RECEIPTS BY DEBIT CARD"),
-                  clearingDate = Some(LocalDate.of(currentTaxYear, 4, 8)),
+                  clearingDate = Some(LocalDate.of(currentTaxYear + 1, 4, 8)),
                   clearingReason = Some("Reversal"),
-                  dueDate = Some(LocalDate.of(currentTaxYear, 4, 8))
+                  dueDate = Some(LocalDate.of(currentTaxYear + 1, 4, 8))
                 )
               )
             )
