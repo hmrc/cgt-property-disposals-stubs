@@ -1,7 +1,7 @@
 import sbt.*
 
 object AppDependencies {
-  val bootStrapVersion = "7.20.0"
+  val bootStrapVersion = "8.4.0"
   val compile = Seq(
     "uk.gov.hmrc"       %% "bootstrap-backend-play-28"  % bootStrapVersion,
     "com.eclipsesource" %% "play-json-schema-validator" % "0.9.5"
