@@ -23,8 +23,6 @@ lazy val microservice = Project(appName, file("."))
   )
   .settings(scalaVersion := "2.13.12")
   .settings(Compile / resourceDirectory := baseDirectory.value / "/conf")
-  .configs(IntegrationTest)
-  .settings(integrationTestSettings(): _*)
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(PlayKeys.playDefaultPort := 7022)
 
