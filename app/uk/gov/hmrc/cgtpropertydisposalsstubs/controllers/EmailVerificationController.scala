@@ -18,9 +18,9 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import java.time.Instant
 
-import akka.actor.{Actor, ActorSystem, Cancellable, Props}
-import akka.pattern.ask
-import akka.util.Timeout
+import org.apache.pekko.actor.{Actor, ActorSystem, Cancellable, Props}
+import org.apache.pekko.pattern.ask
+import org.apache.pekko.util.Timeout
 import com.google.inject.Inject
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}

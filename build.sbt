@@ -21,10 +21,8 @@ lazy val microservice = Project(appName, file("."))
     scalacOptions -= "-Xlint:nullary-override",
     Test / scalacOptions -= "-Ywarn-value-discard",
   )
-  .settings(scalaVersion := "2.13.11")
+  .settings(scalaVersion := "2.13.12")
   .settings(Compile / resourceDirectory := baseDirectory.value / "/conf")
-  .configs(IntegrationTest)
-  .settings(integrationTestSettings(): _*)
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(PlayKeys.playDefaultPort := 7022)
 

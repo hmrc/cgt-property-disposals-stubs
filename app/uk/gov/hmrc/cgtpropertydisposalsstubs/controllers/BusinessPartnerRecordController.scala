@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
-import akka.stream.Materializer
 import cats.instances.string._
 import cats.syntax.eq._
 import com.eclipsesource.schema.drafts.Version4
@@ -37,6 +36,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext}
 import scala.io.Source
 import scala.util.Random
+import org.apache.pekko.stream.Materializer
 
 class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(implicit
   mat: Materializer,
