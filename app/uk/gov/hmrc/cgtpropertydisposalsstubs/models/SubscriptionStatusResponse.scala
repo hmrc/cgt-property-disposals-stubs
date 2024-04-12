@@ -21,7 +21,7 @@ import uk.gov.hmrc.cgtpropertydisposalsstubs.models.SubscriptionStatusResponse.S
 
 final case class SubscriptionStatusResponse(
   subscriptionStatus: SubscriptionStatus,
-  idType: Option[String]  = None,
+  idType: Option[String] = None,
   idValue: Option[String] = None
 )
 

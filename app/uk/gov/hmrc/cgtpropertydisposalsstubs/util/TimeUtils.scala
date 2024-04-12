@@ -38,12 +38,11 @@ object TimeUtils {
         throw new RuntimeException(s"Could not parse toDate ('$toDate')")
 
       case (Some(from), Some(to)) =>
-
-        val daysDuration =  ChronoUnit.DAYS.between(from, to)
-        if( daysDuration <= 366)
+        val daysDuration = ChronoUnit.DAYS.between(from, to)
+        if (daysDuration <= 366)
           (from, to)
         else
-        throw new RuntimeException("Financial data api date range over one year")
+          throw new RuntimeException("Financial data api date range over one year")
 
     }
   }

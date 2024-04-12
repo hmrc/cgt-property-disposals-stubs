@@ -30,40 +30,42 @@ class AddressLookupController @Inject() (cc: ControllerComponents) extends Backe
 
   val statusRegex = """E(\d\d \d)RR""".r
 
-  def lookupAddresses(postcode: String): Action[AnyContent] = Action { implicit request =>
-    val userAgent = request.headers.get("User-Agent").getOrElse("-")
-    logger.info(s"Request for address lookup made for postcode $postcode with user agent $userAgent")
+  def lookupAddresses(postcode: String): Action[AnyContent] =
+    Action { implicit request =>
+      val userAgent = request.headers.get("User-Agent").getOrElse("-")
+      logger.info(s"Request for address lookup made for postcode $postcode with user agent $userAgent")
 
-    validatePostcode(postcode).fold(
-      { errors =>
-        logger.warn(s"Returning bad request: ${errors.toList.mkString("; ")}")
-        BadRequest
-      }, { p =>
-        // put a space before the last three characters
-        val formattedPostcode = {
-          val (firstPart, secondPart) = p.splitAt(p.length - 3)
-          s"$firstPart $secondPart"
+      validatePostcode(postcode).fold(
+        { errors =>
+          logger.warn(s"Returning bad request: ${errors.toList.mkString("; ")}")
+          BadRequest
+        },
+        { p =>
+          // put a space before the last three characters
+          val formattedPostcode = {
+            val (firstPart, secondPart) = p.splitAt(p.length - 3)
+            s"$firstPart $secondPart"
+          }
+
+          formattedPostcode match {
+            case statusRegex(statusCodeString) =>
+              val statusCode = statusCodeString.replace(" ", "").toInt
+              logger.info("Returning with status")
+              Status(statusCode)
+
+            case _ =>
+              // if all the digits are zero in the postcode, return an empty array
+              val response =
+                if (p.filter(_.isDigit).exists(_ != '0'))
+                  JsArray(randomAddresses(formattedPostcode).map(a => JsObject(Map("address" -> Json.toJson(a)))))
+                else
+                  JsArray()
+
+              Ok(response)
+          }
         }
-
-        formattedPostcode match {
-          case statusRegex(statusCodeString) =>
-            val statusCode = statusCodeString.replace(" ", "").toInt
-            logger.info("Returning with status")
-            Status(statusCode)
-
-          case _ =>
-            // if all the digits are zero in the postcode, return an empty array
-            val response = if (p.filter(_.isDigit).exists(_ != '0')) {
-              JsArray(randomAddresses(formattedPostcode).map(a => JsObject(Map("address" -> Json.toJson(a)))))
-            } else {
-              JsArray()
-            }
-
-            Ok(response)
-        }
-      }
-    )
-  }
+      )
+    }
 
   def randomAddresses(postcode: String): List[Address] =
     (1 to 10)

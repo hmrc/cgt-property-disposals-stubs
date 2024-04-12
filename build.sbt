@@ -6,7 +6,8 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     majorVersion := 0,
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
-    scalacOptions ++= Seq("-Wconf:src=routes/.*:s")
+    scalacOptions ++= Seq("-Wconf:src=routes/.*:s"),
+    scalafmtOnCompile := true
   )
   .settings(CodeCoverageSettings.settings *)
   .settings(scalaVersion := "2.13.12")

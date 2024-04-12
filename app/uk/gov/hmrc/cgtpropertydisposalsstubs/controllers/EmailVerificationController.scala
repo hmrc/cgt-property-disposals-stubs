@@ -48,43 +48,45 @@ class EmailVerificationController @Inject() (
 
   implicit def toFuture[A](a: A): Future[A] = Future.successful(a)
 
-  def verifyEmail(): Action[AnyContent] = Action.async { implicit request =>
-    request.body.asJson.fold[Future[Result]] {
-      logger.warn("No JSON found in body")
-      BadRequest
-    } { json =>
-      json
-        .validate[EmailVerificationRequest]
-        .fold(
-          { errors =>
-            logger.warn(s"Could not read body of email verification request: $errors")
-            BadRequest
-          }, { request =>
-            (verificationManager ? VerificationManager
-              .EmailVerificationRequested(request)).mapTo[EmailVerificationRequestedAck].map { _ =>
-              request.email match {
-                case statusRegex(status) =>
-                  logger.info(s"Returning status $status to email verification request: $request")
-                  Status(status.toInt)
+  def verifyEmail(): Action[AnyContent] =
+    Action.async { implicit request =>
+      request.body.asJson.fold[Future[Result]] {
+        logger.warn("No JSON found in body")
+        BadRequest
+      } { json =>
+        json
+          .validate[EmailVerificationRequest]
+          .fold(
+            { errors =>
+              logger.warn(s"Could not read body of email verification request: $errors")
+              BadRequest
+            },
+            request =>
+              (verificationManager ? VerificationManager
+                .EmailVerificationRequested(request)).mapTo[EmailVerificationRequestedAck].map { _ =>
+                request.email match {
+                  case statusRegex(status) =>
+                    logger.info(s"Returning status $status to email verification request: $request")
+                    Status(status.toInt)
 
-                case _ =>
-                  logger.info(s"Returning status 201 to email verification request: $request")
-                  Created
+                  case _ =>
+                    logger.info(s"Returning status 201 to email verification request: $request")
+                    Created
+                }
               }
-            }
-          }
-        )
+          )
 
-    }
-  }
-
-  def getEmailVerificationRequest(email: String) = Action.async { _ =>
-    (verificationManager ? VerificationManager.GetEmailVerificationRequest(email))
-      .mapTo[GetEmailVerificationRequestResponse]
-      .map { response =>
-        Ok(Json.toJson(response.request))
       }
-  }
+    }
+
+  def getEmailVerificationRequest(email: String) =
+    Action.async { _ =>
+      (verificationManager ? VerificationManager.GetEmailVerificationRequest(email))
+        .mapTo[GetEmailVerificationRequestResponse]
+        .map { response =>
+          Ok(Json.toJson(response.request))
+        }
+    }
 
 }
 

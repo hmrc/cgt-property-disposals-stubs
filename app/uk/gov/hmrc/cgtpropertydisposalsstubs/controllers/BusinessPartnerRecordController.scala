@@ -49,7 +49,7 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
 
   implicit val ninoToLong: ToLong[NINO]   = ninoEnumNoSpaces.imap(NINO(_))(_.value)
   implicit val sautrToLong: ToLong[SAUTR] = pattern"9999999999".imap(SAUTR(_))(_.value)
-  implicit val trnToLong: ToLong[TRN]     = new ToLong[TRN] {
+  implicit val trnToLong: ToLong[TRN] = new ToLong[TRN] {
     override def asLong(i: TRN): Long = i.value.filter(_.isDigit).toLong
   }
 
@@ -77,7 +77,7 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
         case ("individual", "utr")   => handleRequest(request, Left(Right(SAUTR(idValue))), true)
         case ("organisation", "utr") => handleRequest(request, Left(Right(SAUTR(idValue))), false)
         case ("organisation", "trn") => handleRequest(request, Left(Left(TRN(idValue))), false)
-        case _                       =>
+        case _ =>
           logger.warn(
             s"Received request for BPR for unsupported combination of entity type $entityType and " +
               s"id type '$idType' with value '$idValue'"

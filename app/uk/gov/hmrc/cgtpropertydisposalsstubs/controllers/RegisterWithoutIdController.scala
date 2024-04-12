@@ -47,31 +47,32 @@ class RegisterWithoutIdController @Inject() (
     )
     .get
 
-  def registerWithoutId: Action[AnyContent] = Action { implicit request =>
-    request.body.asJson.fold[Result] {
-      logger.warn("Could not find JSON in request body for register without id request")
-      BadRequest
-    } { json =>
-      SchemaValidator(Some(Version4)).validate(schemaToBeValidated, json)
+  def registerWithoutId: Action[AnyContent] =
+    Action { implicit request =>
+      request.body.asJson.fold[Result] {
+        logger.warn("Could not find JSON in request body for register without id request")
+        BadRequest
+      } { json =>
+        SchemaValidator(Some(Version4)).validate(schemaToBeValidated, json)
 
-      json.validate[RegistrationRequest] match {
-        case JsSuccess(registrationRequest, _) =>
-          logger.info(s"Received register without id request with body $registrationRequest")
-          registrationRequest.address.addressLine1 match {
-            case registrationStatusRegex(status) => Status(status.toInt)
-            case subscriptionStatusRegex(status) =>
-              Ok(Json.toJson(Response(SubscriptionProfiles.sapNumberForSubscriptionStatus(status.toInt))))
-            case _ => Ok(Json.toJson(Response(randomSapNumber())))
-          }
+        json.validate[RegistrationRequest] match {
+          case JsSuccess(registrationRequest, _) =>
+            logger.info(s"Received register without id request with body $registrationRequest")
+            registrationRequest.address.addressLine1 match {
+              case registrationStatusRegex(status) => Status(status.toInt)
+              case subscriptionStatusRegex(status) =>
+                Ok(Json.toJson(Response(SubscriptionProfiles.sapNumberForSubscriptionStatus(status.toInt))))
+              case _ => Ok(Json.toJson(Response(randomSapNumber())))
+            }
 
-        case JsError(errors) =>
-          logger.warn(s"Could not validate or parse JSON in request: $errors")
-          BadRequest
+          case JsError(errors) =>
+            logger.warn(s"Could not validate or parse JSON in request: $errors")
+            BadRequest
+        }
+
       }
 
     }
-
-  }
 
   private def randomSapNumber(): SapNumber =
     Gen
