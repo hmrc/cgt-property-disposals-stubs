@@ -1334,7 +1334,7 @@ object ReturnAndPaymentProfiles {
           submissionDate = LocalDate.of(currentTaxYearMinus3, 4, 16),
           completionDate = LocalDate.of(currentTaxYearMinus3, 4, 11),
           lastUpdatedDate = None,
-          taxYear = "currentTaxYear - 1",
+          taxYear = "currentTaxYear - 3",
           propertyAddress = DesAddressDetails(
             "98 Another Place Place",
             Some("Random Driveway"),
@@ -1386,7 +1386,7 @@ object ReturnAndPaymentProfiles {
           submissionDate = LocalDate.of(currentTaxYearMinus2, 4, 16),
           completionDate = LocalDate.of(currentTaxYearMinus2, 4, 11),
           lastUpdatedDate = None,
-          taxYear = "currentTaxYear - 1",
+          taxYear = "currentTaxYear - 2",
           propertyAddress = DesAddressDetails(
             "98 Another Place",
             Some("Random Drive"),
@@ -1479,7 +1479,7 @@ object ReturnAndPaymentProfiles {
           submissionDate = LocalDate.of(currentTaxYearMinus1, 6, 1),
           completionDate = LocalDate.of(currentTaxYearMinus1, 5, 24),
           lastUpdatedDate = None,
-          taxYear = "currentTaxYear - 3",
+          taxYear = "currentTaxYear - 1",
           propertyAddress = DesAddressDetails(
             "14 Something Something Something",
             Some("That Other Place"),
@@ -1556,7 +1556,7 @@ object ReturnAndPaymentProfiles {
           submissionDate = LocalDate.of(currentTaxYearMinus2, 4, 10),
           completionDate = LocalDate.of(currentTaxYearMinus2, 4, 5),
           lastUpdatedDate = None,
-          taxYear = "currentTaxYear - 3",
+          taxYear = "currentTaxYear - 2",
           propertyAddress =
             DesAddressDetails("Big Ltd", Some("1 Dissimilar Place"), Some("Norfolk"), None, Some("S12 1AX"), "GB"),
           totalCGTLiability = BigDecimal("55555"),
@@ -1600,7 +1600,7 @@ object ReturnAndPaymentProfiles {
           submissionDate = LocalDate.of(currentTaxYear, 4, 8),
           completionDate = LocalDate.of(currentTaxYear, 4, 7),
           lastUpdatedDate = None,
-          taxYear = "currentTaxYear - 1",
+          taxYear = "currentTaxYear",
           propertyAddress =
             DesAddressDetails("1 Similar Place", Some("Random Avenue"), Some("Ipswich"), None, Some("IP12 1AX"), "GB"),
           totalCGTLiability = BigDecimal("23520"),
@@ -1646,7 +1646,7 @@ object ReturnAndPaymentProfiles {
           submissionDate = LocalDate.of(currentTaxYear, 4, 8),
           completionDate = LocalDate.of(currentTaxYear, 4, 7),
           lastUpdatedDate = None,
-          taxYear = "currentTaxYear - 1",
+          taxYear = "currentTaxYear",
           propertyAddress =
             DesAddressDetails("Acme Ltd", Some("1 Similar Place"), Some("Southampton"), None, Some("S12 1AX"), "GB"),
           totalCGTLiability = BigDecimal("23555"),
