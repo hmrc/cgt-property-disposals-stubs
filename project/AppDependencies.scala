@@ -2,12 +2,13 @@ import sbt.*
 
 object AppDependencies {
   val bootStrapVersion = "8.4.0"
-  val compile = Seq(
+
+  val compile: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"       %% "bootstrap-backend-play-30"  % bootStrapVersion,
     "com.eclipsesource" %% "play-json-schema-validator" % "0.9.5"
   )
 
-  val test = Seq(
+  val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"            %% "tax-year"               % "4.0.0",
     "uk.gov.hmrc"            %% "stub-data-generator"    % "1.1.0",
     "com.vladsch.flexmark"    % "flexmark-all"           % "0.36.8"         % "test",
@@ -16,5 +17,4 @@ object AppDependencies {
     "org.pegdown"             % "pegdown"                % "1.6.0"          % "test",
     "uk.gov.hmrc"            %% "bootstrap-test-play-30" % bootStrapVersion % Test
   )
-
 }
