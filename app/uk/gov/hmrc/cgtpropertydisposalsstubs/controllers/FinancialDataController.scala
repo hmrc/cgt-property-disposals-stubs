@@ -32,24 +32,32 @@ class FinancialDataController @Inject() (cc: ControllerComponents) extends Backe
     regimeType: String,
     dateFrom: String,
     dateTo: String
-  ): Action[AnyContent] = Action { _ =>
-    logger.info(s"""
+  ): Action[AnyContent] =
+    Action { _ =>
+      logger.info(s"""
         Get financial data called with parameters: idType = $idType, idNumber = $idNumber,
         regimeType = $regimeType, dateFrom = $dateFrom, dateTo = $dateTo
       """)
 
-    val dates = TimeUtils.withFromAndToDate(dateFrom, dateTo)
+      val dates = TimeUtils.withFromAndToDate(dateFrom, dateTo)
 
-    Ok(
-      Json.toJson(
-        FinancialDataResponse(
-          ReturnAndPaymentProfiles
-            .getProfile(idNumber)
-            .map(_.returns.filter(p => !p.returnSummary.submissionDate.isBefore(dates._1) && !p.returnSummary.submissionDate.isAfter(dates._2)).flatMap(_.financialData))
-            .getOrElse(List.empty)
+      Ok(
+        Json.toJson(
+          FinancialDataResponse(
+            ReturnAndPaymentProfiles
+              .getProfile(idNumber)
+              .map(
+                _.returns
+                  .filter(p =>
+                    !p.returnSummary.submissionDate.isBefore(dates._1) && !p.returnSummary.submissionDate
+                      .isAfter(dates._2)
+                  )
+                  .flatMap(_.financialData)
+              )
+              .getOrElse(List.empty)
+          )
         )
       )
-    )
-  }
+    }
 
 }

@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.models
 
-import java.time.{LocalDate, LocalDateTime}
-
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesListReturnsResponse.ReturnSummary
+
+import java.time.{LocalDate, LocalDateTime}
 
 final case class DesListReturnsResponse(
   processingDate: LocalDateTime,

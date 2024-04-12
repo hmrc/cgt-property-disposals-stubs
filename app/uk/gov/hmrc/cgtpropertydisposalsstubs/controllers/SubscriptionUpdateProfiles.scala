@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
-import cats.syntax.eq._
 import cats.instances.string._
+import cats.syntax.eq._
 import play.api.mvc.Result
 import play.api.mvc.Results._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.SubscriptionController.SubscriptionUpdateResponse

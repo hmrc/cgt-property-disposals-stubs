@@ -1,5 +1,3 @@
-import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
-
 val appName = "cgt-property-disposals-stubs"
 
 lazy val microservice = Project(appName, file("."))
@@ -7,26 +5,10 @@ lazy val microservice = Project(appName, file("."))
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(
     majorVersion := 0,
-    addCompilerPlugin(scalafixSemanticdb),
-    libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test
+    libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
+    scalacOptions ++= Seq("-Wconf:src=routes/.*:s"),
+    scalafmtOnCompile := true
   )
-  .settings(CodeCoverageSettings.settings: _*)
-  .settings(routesImport := Seq.empty)
-  .settings(TwirlKeys.templateImports := Seq.empty)
-  .settings(
-    scalacOptions ++= Seq(
-      "-Yrangepos",
-      "-language:postfixOps"
-    ),
-    scalacOptions -= "-Xlint:nullary-override",
-    Test / scalacOptions -= "-Ywarn-value-discard",
-  )
+  .settings(CodeCoverageSettings.settings *)
   .settings(scalaVersion := "2.13.12")
-  .settings(Compile / resourceDirectory := baseDirectory.value / "/conf")
-  .settings(resolvers += Resolver.jcenterRepo)
   .settings(PlayKeys.playDefaultPort := 7022)
-
-ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
-
-addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
-addCommandAlias("check", "all scalafmtSbtCheck scalafmtCheck test:scalafmtCheck")

@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
-import java.time.LocalDateTime
 import cats.data.EitherT
 import cats.instances.option._
 import com.eclipsesource.schema.drafts.Version4
+import com.eclipsesource.schema.drafts.Version4._
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.google.inject.{Inject, Singleton}
 import org.scalacheck.Gen
@@ -31,14 +31,12 @@ import uk.gov.hmrc.cgtpropertydisposalsstubs.models._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.smartstub._
-import Version4._
+
+import java.time.LocalDateTime
 import scala.io.Source
 
 @Singleton
-class SubscriptionController @Inject() (cc: ControllerComponents)
-  extends BackendController(cc)
-  with Logging {
-
+class SubscriptionController @Inject() (cc: ControllerComponents) extends BackendController(cc) with Logging {
 
   val amendSubscriptionSchemaToBeValidated = Json
     .fromJson[SchemaType](
@@ -64,99 +62,103 @@ class SubscriptionController @Inject() (cc: ControllerComponents)
     )
     .get
 
-  def getSubscriptionStatus(sapNumber: String): Action[AnyContent] = Action { _ =>
-    SubscriptionProfiles
-      .getProfile(SapNumber(sapNumber))
-      .flatMap(_.subscriptionStatusResponse)
-      .getOrElse(Right(SubscriptionStatusResponse(SubscriptionStatus.NotSubscribed)))
-      .map(status => Ok(Json.toJson(status)))
-      .merge
-  }
+  def getSubscriptionStatus(sapNumber: String): Action[AnyContent] =
+    Action { _ =>
+      SubscriptionProfiles
+        .getProfile(SapNumber(sapNumber))
+        .flatMap(_.subscriptionStatusResponse)
+        .getOrElse(Right(SubscriptionStatusResponse(SubscriptionStatus.NotSubscribed)))
+        .map(status => Ok(Json.toJson(status)))
+        .merge
+    }
 
-  def getSubscriptionDetails(id: String): Action[AnyContent] = Action { _ =>
-    SubscriptionDisplayProfiles
-      .getDisplayDetails(id)
-      .map(_.subscriptionDisplayResponse.map(displayDetails => Ok(Json.toJson(displayDetails))).merge)
-      .getOrElse {
-        Ok(
-          Json.toJson(
-            SubscriptionDisplayProfiles.individualSubscriptionDisplayDetails(registeredWithId = true)
+  def getSubscriptionDetails(id: String): Action[AnyContent] =
+    Action { _ =>
+      SubscriptionDisplayProfiles
+        .getDisplayDetails(id)
+        .map(_.subscriptionDisplayResponse.map(displayDetails => Ok(Json.toJson(displayDetails))).merge)
+        .getOrElse {
+          Ok(
+            Json.toJson(
+              SubscriptionDisplayProfiles.individualSubscriptionDisplayDetails(registeredWithId = true)
+            )
           )
-        )
-      }
-  }
+        }
+    }
 
-  def updateSubscriptionDetails(id: String): Action[AnyContent] = Action { implicit request =>
+  def updateSubscriptionDetails(id: String): Action[AnyContent] =
+    Action { implicit request =>
+      request.body.asJson.fold[Result] {
+        logger.warn("Could not find JSON in body for subscribe update request")
+        BadRequest
+      } { json =>
+        SchemaValidator(Some(Version4)).validate(amendSubscriptionSchemaToBeValidated, json)
 
-    request.body.asJson.fold[Result] {
-      logger.warn("Could not find JSON in body for subscribe update request")
-      BadRequest
-    } { json =>
-      SchemaValidator(Some(Version4)).validate(amendSubscriptionSchemaToBeValidated, json)
-
-      json
-        .validate[SubscriptionUpdateRequest]
-        .fold[Result](
-          { e =>
-            logger.warn(s"Could not validate subscription update body: $e")
-            BadRequest
-          }, { subscriptionUpdateRequest =>
-            val result: Result =
-              EitherT(
-                SubscriptionUpdateProfiles
-                  .updateSubscriptionDetails(id)
-                  .map(_.subscriptionUpdateResponse)
-              ).map(subscriptionResponse => Ok(Json.toJson(subscriptionResponse)))
-                .merge
-                .getOrElse(
-                  Ok(
-                    Json.toJson(
-                      SubscriptionUpdateResponse(
-                        "CGT",
-                        LocalDateTime.now().toString,
-                        "0134567910",
-                        id,
-                        subscriptionUpdateRequest.subscriptionDetails.addressDetails.countryCode,
-                        subscriptionUpdateRequest.subscriptionDetails.addressDetails.postalCode
+        json
+          .validate[SubscriptionUpdateRequest]
+          .fold[Result](
+            { e =>
+              logger.warn(s"Could not validate subscription update body: $e")
+              BadRequest
+            },
+            { subscriptionUpdateRequest =>
+              val result: Result =
+                EitherT(
+                  SubscriptionUpdateProfiles
+                    .updateSubscriptionDetails(id)
+                    .map(_.subscriptionUpdateResponse)
+                ).map(subscriptionResponse => Ok(Json.toJson(subscriptionResponse)))
+                  .merge
+                  .getOrElse(
+                    Ok(
+                      Json.toJson(
+                        SubscriptionUpdateResponse(
+                          "CGT",
+                          LocalDateTime.now().toString,
+                          "0134567910",
+                          id,
+                          subscriptionUpdateRequest.subscriptionDetails.addressDetails.countryCode,
+                          subscriptionUpdateRequest.subscriptionDetails.addressDetails.postalCode
+                        )
                       )
                     )
                   )
-                )
 
-            logger.info(s"Returning result $result to subscribe request ${json.toString()}")
-            result
-          }
-        )
+              logger.info(s"Returning result $result to subscribe request ${json.toString()}")
+              result
+            }
+          )
+      }
     }
-  }
 
-  def subscribe(): Action[AnyContent] = Action { implicit request =>
+  def subscribe(): Action[AnyContent] =
+    Action { implicit request =>
+      request.body.asJson.fold[Result] {
+        logger.warn("Could not find JSON in body for subscribe request")
+        BadRequest
+      } { json =>
+        SchemaValidator(Some(Version4)).validate(createSubscriptionSchemaToBeValidated, json)
 
-    request.body.asJson.fold[Result] {
-      logger.warn("Could not find JSON in body for subscribe request")
-      BadRequest
-    } { json =>
-      SchemaValidator(Some(Version4)).validate(createSubscriptionSchemaToBeValidated, json)
+        (json \ "identity" \ "idValue")
+          .validate[SapNumber]
+          .fold[Result](
+            { e =>
+              logger.warn(s"Could not validate or find sap number in json for subscribe request: $e")
+              BadRequest
+            },
+            { sapNumber =>
+              val result =
+                EitherT(SubscriptionProfiles.getProfile(sapNumber).flatMap(_.subscriptionResponse))
+                  .map(subscriptionResponse => Ok(Json.toJson(subscriptionResponse)))
+                  .merge
+                  .getOrElse(Ok(Json.toJson(SubscriptionResponse(randomCgtReferenceId()))))
 
-      (json \ "identity" \ "idValue")
-        .validate[SapNumber]
-        .fold[Result](
-          { e =>
-            logger.warn(s"Could not validate or find sap number in json for subscribe request: $e")
-            BadRequest
-          }, { sapNumber =>
-            val result =
-              EitherT(SubscriptionProfiles.getProfile(sapNumber).flatMap(_.subscriptionResponse))
-                .map(subscriptionResponse => Ok(Json.toJson(subscriptionResponse)))
-                .merge
-                .getOrElse(Ok(Json.toJson(SubscriptionResponse(randomCgtReferenceId()))))
-
-            logger.info(s"Returning result $result to subscribe request ${json.toString()}")
-            result
-          }
-        )
+              logger.info(s"Returning result $result to subscribe request ${json.toString()}")
+              result
+            }
+          )
+      }
     }
-  }
 
   val cgtReferenceIdGen = for {
     letter <- Gen.alphaUpperChar

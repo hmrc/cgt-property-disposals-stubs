@@ -16,12 +16,10 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
-import java.time.Instant
-
+import com.google.inject.Inject
 import org.apache.pekko.actor.{Actor, ActorSystem, Cancellable, Props}
 import org.apache.pekko.pattern.ask
 import org.apache.pekko.util.Timeout
-import com.google.inject.Inject
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.EmailVerificationController.VerificationManager.{EmailVerificationRequestedAck, GetEmailVerificationRequestResponse}
@@ -29,6 +27,7 @@ import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.EmailVerificationContro
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
+import java.time.Instant
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.matching.Regex
@@ -48,43 +47,45 @@ class EmailVerificationController @Inject() (
 
   implicit def toFuture[A](a: A): Future[A] = Future.successful(a)
 
-  def verifyEmail(): Action[AnyContent] = Action.async { implicit request =>
-    request.body.asJson.fold[Future[Result]] {
-      logger.warn("No JSON found in body")
-      BadRequest
-    } { json =>
-      json
-        .validate[EmailVerificationRequest]
-        .fold(
-          { errors =>
-            logger.warn(s"Could not read body of email verification request: $errors")
-            BadRequest
-          }, { request =>
-            (verificationManager ? VerificationManager
-              .EmailVerificationRequested(request)).mapTo[EmailVerificationRequestedAck].map { _ =>
-              request.email match {
-                case statusRegex(status) =>
-                  logger.info(s"Returning status $status to email verification request: $request")
-                  Status(status.toInt)
+  def verifyEmail(): Action[AnyContent] =
+    Action.async { implicit request =>
+      request.body.asJson.fold[Future[Result]] {
+        logger.warn("No JSON found in body")
+        BadRequest
+      } { json =>
+        json
+          .validate[EmailVerificationRequest]
+          .fold(
+            { errors =>
+              logger.warn(s"Could not read body of email verification request: $errors")
+              BadRequest
+            },
+            request =>
+              (verificationManager ? VerificationManager
+                .EmailVerificationRequested(request)).mapTo[EmailVerificationRequestedAck].map { _ =>
+                request.email match {
+                  case statusRegex(status) =>
+                    logger.info(s"Returning status $status to email verification request: $request")
+                    Status(status.toInt)
 
-                case _ =>
-                  logger.info(s"Returning status 201 to email verification request: $request")
-                  Created
+                  case _ =>
+                    logger.info(s"Returning status 201 to email verification request: $request")
+                    Created
+                }
               }
-            }
-          }
-        )
+          )
 
-    }
-  }
-
-  def getEmailVerificationRequest(email: String) = Action.async { _ =>
-    (verificationManager ? VerificationManager.GetEmailVerificationRequest(email))
-      .mapTo[GetEmailVerificationRequestResponse]
-      .map { response =>
-        Ok(Json.toJson(response.request))
       }
-  }
+    }
+
+  def getEmailVerificationRequest(email: String) =
+    Action.async { _ =>
+      (verificationManager ? VerificationManager.GetEmailVerificationRequest(email))
+        .mapTo[GetEmailVerificationRequestResponse]
+        .map { response =>
+          Ok(Json.toJson(response.request))
+        }
+    }
 
 }
 

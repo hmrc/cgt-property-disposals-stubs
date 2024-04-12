@@ -19,24 +19,25 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 import cats.instances.string._
 import cats.syntax.eq._
 import com.eclipsesource.schema.drafts.Version4
+import com.eclipsesource.schema.drafts.Version4._
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.google.inject.Inject
+import org.apache.pekko.stream.Materializer
 import org.scalacheck.Gen
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord.{DesIndividual, DesOrganisation}
-import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{DesAddressDetails, NINO, SAUTR, SapNumber, TRN}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesErrorResponse.desErrorResponseJson
+import uk.gov.hmrc.cgtpropertydisposalsstubs.models._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.smartstub.Enumerable.instances.ninoEnumNoSpaces
 import uk.gov.hmrc.smartstub._
-import Version4._
+
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext}
 import scala.io.Source
 import scala.util.Random
-import org.apache.pekko.stream.Materializer
 
 class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(implicit
   mat: Materializer,
@@ -49,7 +50,7 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
 
   implicit val ninoToLong: ToLong[NINO]   = ninoEnumNoSpaces.imap(NINO(_))(_.value)
   implicit val sautrToLong: ToLong[SAUTR] = pattern"9999999999".imap(SAUTR(_))(_.value)
-  implicit val trnToLong: ToLong[TRN]     = new ToLong[TRN] {
+  implicit val trnToLong: ToLong[TRN] = new ToLong[TRN] {
     override def asLong(i: TRN): Long = i.value.filter(_.isDigit).toLong
   }
 
@@ -77,7 +78,7 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
         case ("individual", "utr")   => handleRequest(request, Left(Right(SAUTR(idValue))), true)
         case ("organisation", "utr") => handleRequest(request, Left(Right(SAUTR(idValue))), false)
         case ("organisation", "trn") => handleRequest(request, Left(Left(TRN(idValue))), false)
-        case _                       =>
+        case _ =>
           logger.warn(
             s"Received request for BPR for unsupported combination of entity type $entityType and " +
               s"id type '$idType' with value '$idValue'"

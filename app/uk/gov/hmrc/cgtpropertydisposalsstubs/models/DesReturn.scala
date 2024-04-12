@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.models
 
-import java.time.LocalDate
-
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesReturn._
+
+import java.time.LocalDate
 
 case class DesReturn(
   returnType: DesReturnType,

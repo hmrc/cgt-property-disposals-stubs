@@ -16,29 +16,31 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
-import java.time.format.DateTimeFormatter
-import java.time.{LocalDate, LocalDateTime}
 import cats.instances.bigDecimal._
 import cats.syntax.eq._
 import com.eclipsesource.schema.drafts.Version4
+import com.eclipsesource.schema.drafts.Version4._
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.google.inject.{Inject, Singleton}
 import org.scalacheck.Gen
 import play.api.libs.json.{JsResult, JsValue, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
+import uk.gov.hmrc.cgtpropertydisposalsstubs.config.AppConfig
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesReturn._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.GenUtils.sample
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import Version4._
-import uk.gov.hmrc.cgtpropertydisposalsstubs.config.AppConfig
 
+import java.time.format.DateTimeFormatter
+import java.time.{LocalDate, LocalDateTime}
 import scala.io.Source
 import scala.util.Try
 
 @Singleton
-class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig) extends BackendController(cc) with Logging {
+class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig)
+    extends BackendController(cc)
+    with Logging {
 
   lazy val schemaToBeValidated = Json
     .fromJson[SchemaType](
@@ -67,28 +69,34 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
           logger.warn(s"Could not validate or parse request body: $e")
           BadRequest
         },
-        { case (taxDue, completionDate, _) =>
-          Ok(
-            Json.toJson(prepareDesSubmitReturnResponse(cgtReferenceNumber, taxDue, completionDate))
-          )
+        {
+          case (taxDue, completionDate, _) =>
+            Ok(
+              Json.toJson(prepareDesSubmitReturnResponse(cgtReferenceNumber, taxDue, completionDate))
+            )
         }
       )
     }
 
   def listReturns(cgtReference: String, fromDate: String, toDate: String): Action[AnyContent] =
     Action { _ =>
-      withFromAndToDate(fromDate, toDate) { case (from, to) =>
-        Ok(
-          Json.toJson(
-            DesListReturnsResponse(
-              LocalDateTime.now(),
-              ReturnAndPaymentProfiles
-                .getProfile(cgtReference)
-                .map(_.returns.map(_.returnSummary).filter(p => !p.submissionDate.isBefore(from) && !p.submissionDate.isAfter(to)))
-                .getOrElse(List.empty)
+      withFromAndToDate(fromDate, toDate) {
+        case (from, to) =>
+          Ok(
+            Json.toJson(
+              DesListReturnsResponse(
+                LocalDateTime.now(),
+                ReturnAndPaymentProfiles
+                  .getProfile(cgtReference)
+                  .map(
+                    _.returns
+                      .map(_.returnSummary)
+                      .filter(p => !p.submissionDate.isBefore(from) && !p.submissionDate.isAfter(to))
+                  )
+                  .getOrElse(List.empty)
+              )
             )
           )
-        )
       }
     }
 
@@ -627,7 +635,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     completionDate: LocalDate
   ): DesReturnResponse = {
     val ppdReturnResponseDetails =
-      if (cgtReferenceNumber.startsWith("XD")) {
+      if (cgtReferenceNumber.startsWith("XD"))
         // return with delta charge
         PPDReturnResponseDetails(
           None,
@@ -637,7 +645,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
           Some("000000000001"),
           Some(cgtReferenceNumber)
         )
-      } else if (taxDue =!= BigDecimal(0))
+      else if (taxDue =!= BigDecimal(0))
         PPDReturnResponseDetails(
           None,
           Some(randomChargeReference()),
@@ -666,14 +674,13 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     val dueDateChecker = LocalDate.of(
       appConfig.draftReturnNewDueDateStartYear,
       appConfig.draftReturnNewDueDateStartMonth,
-      appConfig.draftReturnNewDueDateStartDay-1
+      appConfig.draftReturnNewDueDateStartDay - 1
     )
 
-    if(completionDate.isAfter(dueDateChecker)){
+    if (completionDate.isAfter(dueDateChecker))
       completionDate.plusDays(60L)
-    } else {
+    else
       completionDate.plusDays(30L)
-    }
   }
 
   private def randomFormBundleId(): String =

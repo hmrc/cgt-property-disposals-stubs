@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.models
 
-import java.time.{LocalDate, LocalDateTime}
-
 import play.api.libs.json.{Format, Json}
+
+import java.time.{LocalDate, LocalDateTime}
 
 final case class PPDReturnResponseDetails(
   chargeType: Option[String],
