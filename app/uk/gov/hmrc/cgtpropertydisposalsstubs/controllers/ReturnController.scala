@@ -16,24 +16,24 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
-import java.time.format.DateTimeFormatter
-import java.time.{LocalDate, LocalDateTime}
 import cats.instances.bigDecimal._
 import cats.syntax.eq._
 import com.eclipsesource.schema.drafts.Version4
+import com.eclipsesource.schema.drafts.Version4._
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.google.inject.{Inject, Singleton}
 import org.scalacheck.Gen
 import play.api.libs.json.{JsResult, JsValue, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
+import uk.gov.hmrc.cgtpropertydisposalsstubs.config.AppConfig
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesReturn._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.GenUtils.sample
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import Version4._
-import uk.gov.hmrc.cgtpropertydisposalsstubs.config.AppConfig
 
+import java.time.format.DateTimeFormatter
+import java.time.{LocalDate, LocalDateTime}
 import scala.io.Source
 import scala.util.Try
 

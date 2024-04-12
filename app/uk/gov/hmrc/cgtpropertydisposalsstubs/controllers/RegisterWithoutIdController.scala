@@ -17,6 +17,7 @@
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import com.eclipsesource.schema.drafts.Version4
+import com.eclipsesource.schema.drafts.Version4._
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.google.inject.Inject
 import org.scalacheck.Gen
@@ -26,7 +27,7 @@ import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.RegisterWithoutIdContro
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.SapNumber
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import Version4._
+
 import scala.io.Source
 import scala.util.matching.Regex
 

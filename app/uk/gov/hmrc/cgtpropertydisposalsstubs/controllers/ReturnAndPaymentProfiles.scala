@@ -16,10 +16,11 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
-import java.time.LocalDate
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesListReturnsResponse.{Charge, ReturnSummary}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{DesAddressDetails, DesFinancialTransactionItem, FinancialTransaction}
 import uk.gov.hmrc.time.TaxYear
+
+import java.time.LocalDate
 
 object ReturnAndPaymentProfiles {
   final case class ReturnProfile(returnSummary: ReturnSummary, financialData: List[FinancialTransaction])

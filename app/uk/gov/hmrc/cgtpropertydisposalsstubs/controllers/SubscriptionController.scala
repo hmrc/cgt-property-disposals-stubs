@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
-import java.time.LocalDateTime
 import cats.data.EitherT
 import cats.instances.option._
 import com.eclipsesource.schema.drafts.Version4
+import com.eclipsesource.schema.drafts.Version4._
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.google.inject.{Inject, Singleton}
 import org.scalacheck.Gen
@@ -31,7 +31,8 @@ import uk.gov.hmrc.cgtpropertydisposalsstubs.models._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.smartstub._
-import Version4._
+
+import java.time.LocalDateTime
 import scala.io.Source
 
 @Singleton

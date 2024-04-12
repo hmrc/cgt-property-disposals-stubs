@@ -19,24 +19,25 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 import cats.instances.string._
 import cats.syntax.eq._
 import com.eclipsesource.schema.drafts.Version4
+import com.eclipsesource.schema.drafts.Version4._
 import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.google.inject.Inject
+import org.apache.pekko.stream.Materializer
 import org.scalacheck.Gen
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord.{DesIndividual, DesOrganisation}
-import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{DesAddressDetails, NINO, SAUTR, SapNumber, TRN}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesErrorResponse.desErrorResponseJson
+import uk.gov.hmrc.cgtpropertydisposalsstubs.models._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.smartstub.Enumerable.instances.ninoEnumNoSpaces
 import uk.gov.hmrc.smartstub._
-import Version4._
+
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext}
 import scala.io.Source
 import scala.util.Random
-import org.apache.pekko.stream.Materializer
 
 class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(implicit
   mat: Materializer,

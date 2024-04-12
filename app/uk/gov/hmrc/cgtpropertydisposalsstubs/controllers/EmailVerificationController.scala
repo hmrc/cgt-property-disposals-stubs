@@ -16,12 +16,10 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
-import java.time.Instant
-
+import com.google.inject.Inject
 import org.apache.pekko.actor.{Actor, ActorSystem, Cancellable, Props}
 import org.apache.pekko.pattern.ask
 import org.apache.pekko.util.Timeout
-import com.google.inject.Inject
 import play.api.libs.json.{Format, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.EmailVerificationController.VerificationManager.{EmailVerificationRequestedAck, GetEmailVerificationRequestResponse}
@@ -29,6 +27,7 @@ import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.EmailVerificationContro
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
+import java.time.Instant
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.matching.Regex
