@@ -31,6 +31,7 @@ import uk.gov.hmrc.cgtpropertydisposalsstubs.models._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.GenUtils.sample
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+import uk.gov.hmrc.time.TaxYear
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalDateTime}
@@ -41,8 +42,7 @@ import scala.util.Try
 class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig)
     extends BackendController(cc)
     with Logging {
-
-  lazy val schemaToBeValidated = Json
+  private lazy val schemaToBeValidated = Json
     .fromJson[SchemaType](
       Json.parse(
         Source
@@ -106,26 +106,31 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
 
       val desReturn =
         if (cgtRefInit.endsWith("2") && submissionId.nonEmpty)
-          dummyMultipleDisposalsReturn
+          dummyMultipleDisposalsReturnCurrentTaxYearMinus3
         else if (cgtRefInit.endsWith("3") && submissionId.nonEmpty)
-          dummySingleIndirectDisposalReturn
+          dummySingleIndirectDisposalReturnCurrentTaxYearMinus3
         else if (cgtRefInit.endsWith("4") && submissionId.nonEmpty)
-          dummyMultipleIndirectDisposalsReturn
+          dummyMultipleIndirectDisposalsReturnCurrentTaxYearMinus3
         else if (cgtRefInit.endsWith("5") && submissionId.nonEmpty)
-          dummySingleMixedUseDisposalReturn
+          dummySingleMixedUseDisposalReturnCurrentTaxYearMinus3
         else if (cgtRefInit.endsWith("6") && submissionId.nonEmpty)
-          dummyMultipleDisposalsResidentialReturn
+          dummyMultipleDisposalsResidentialReturnCurrentTaxYearMinus3
         else if (cgtRefInit.endsWith("7") && submissionId.nonEmpty)
-          dummyMultipleDisposals2021Return
+          dummyMultipleDisposalsReturnCurrentTaxYearMinus2
         else if (cgtRefInit.endsWith("8") && submissionId.nonEmpty)
-          dummySingleDisposalReturnFor2023SAQuestion
+          dummySingleDisposalReturnForSAQuestionCurrentTaxYear
         else if (cgtRefInit.endsWith("9") && submissionId.nonEmpty)
-          dummySingleDisposalReturnForSAQuestion
-        else dummySingleDisposalReturn
+          dummySingleDisposalReturnForSAQuestionCurrentTaxYearMinus2
+        else dummySingleDisposalReturnCurrentTaxYearMinus3
       Ok(Json.toJson(desReturn))
     }
 
-  val dummySingleDisposalReturnFor2023SAQuestion = DesReturn(
+  private final val currentTaxYear = TaxYear.current.startYear
+
+  private val currentTaxYearMinus3 = currentTaxYear - 3
+  private val currentTaxYearMinus2 = currentTaxYear - 2
+
+  private val dummySingleDisposalReturnForSAQuestionCurrentTaxYear = DesReturn(
     DesReturnType(
       "self digital",
       "New",
@@ -133,7 +138,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     ),
     ReturnDetails(
       customerType = "individual",
-      completionDate = LocalDate.of(2023, 4, 7),
+      completionDate = LocalDate.of(currentTaxYear, 4, 7),
       isUKResident = true,
       numberDisposals = 1,
       totalTaxableGain = BigDecimal(11000),
@@ -153,7 +158,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     None,
     List(
       DisposalDetails(
-        disposalDate = LocalDate.of(2023, 4, 6),
+        disposalDate = LocalDate.of(currentTaxYear, 4, 6),
         addressDetails = DesAddressDetails("You know that place", None, None, None, Some("ZZ0 0ZZ"), "GB"),
         assetType = "res",
         acquisitionType = "bought",
@@ -187,7 +192,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     )
   )
 
-  val dummySingleDisposalReturnForSAQuestion = DesReturn(
+  private val dummySingleDisposalReturnForSAQuestionCurrentTaxYearMinus2 = DesReturn(
     DesReturnType(
       "self digital",
       "New",
@@ -195,7 +200,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     ),
     ReturnDetails(
       customerType = "individual",
-      completionDate = LocalDate.of(2021, 3, 20),
+      completionDate = LocalDate.of(currentTaxYearMinus2, 3, 20),
       isUKResident = true,
       numberDisposals = 1,
       totalTaxableGain = BigDecimal(11000),
@@ -215,7 +220,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     None,
     List(
       DisposalDetails(
-        disposalDate = LocalDate.of(2021, 3, 15),
+        disposalDate = LocalDate.of(currentTaxYearMinus2, 3, 15),
         addressDetails = DesAddressDetails("You know that place", None, None, None, Some("ZZ0 0ZZ"), "GB"),
         assetType = "res",
         acquisitionType = "bought",
@@ -249,7 +254,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     )
   )
 
-  val dummySingleDisposalReturn = DesReturn(
+  private val dummySingleDisposalReturnCurrentTaxYearMinus3 = DesReturn(
     DesReturnType(
       "self digital",
       "New",
@@ -257,7 +262,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     ),
     ReturnDetails(
       customerType = "individual",
-      completionDate = LocalDate.of(2020, 4, 20),
+      completionDate = LocalDate.of(currentTaxYearMinus3, 4, 20),
       isUKResident = true,
       numberDisposals = 1,
       totalTaxableGain = BigDecimal(100),
@@ -277,7 +282,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     None,
     List(
       DisposalDetails(
-        disposalDate = LocalDate.of(2020, 4, 15),
+        disposalDate = LocalDate.of(currentTaxYearMinus3, 4, 15),
         addressDetails = DesAddressDetails("You know that place", None, None, None, Some("ZZ0 0ZZ"), "GB"),
         assetType = "res",
         acquisitionType = "bought",
@@ -311,7 +316,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     )
   )
 
-  val dummyMultipleDisposalsReturn = DesReturn(
+  private val dummyMultipleDisposalsReturnCurrentTaxYearMinus3 = DesReturn(
     DesReturnType(
       "self digital",
       "New",
@@ -319,7 +324,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     ),
     ReturnDetails(
       customerType = "individual",
-      completionDate = LocalDate.of(2020, 4, 22),
+      completionDate = LocalDate.of(currentTaxYearMinus3, 4, 22),
       isUKResident = false,
       numberDisposals = 68,
       totalTaxableGain = BigDecimal(100),
@@ -339,7 +344,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     None,
     List(
       DisposalDetails(
-        disposalDate = LocalDate.of(2020, 4, 10),
+        disposalDate = LocalDate.of(currentTaxYearMinus3, 4, 10),
         addressDetails = DesAddressDetails("You know that place", None, None, None, Some("ZZ0 0ZZ"), "GB"),
         assetType = "res nonres shares mix",
         acquisitionType = "not captured for multiple disposals",
@@ -364,7 +369,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     None
   )
 
-  val dummyMultipleDisposalsResidentialReturn = DesReturn(
+  private val dummyMultipleDisposalsResidentialReturnCurrentTaxYearMinus3 = DesReturn(
     DesReturnType(
       "self digital",
       "New",
@@ -372,7 +377,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     ),
     ReturnDetails(
       customerType = "individual",
-      completionDate = LocalDate.of(2020, 4, 22),
+      completionDate = LocalDate.of(currentTaxYearMinus3, 4, 22),
       isUKResident = true,
       numberDisposals = 68,
       totalTaxableGain = BigDecimal(100),
@@ -392,7 +397,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     None,
     List(
       DisposalDetails(
-        disposalDate = LocalDate.of(2020, 4, 10),
+        disposalDate = LocalDate.of(currentTaxYearMinus3, 4, 10),
         addressDetails = DesAddressDetails("You know that place", None, None, None, Some("ZZ0 0ZZ"), "GB"),
         assetType = "res",
         acquisitionType = "not captured for multiple disposals",
@@ -417,7 +422,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     None
   )
 
-  val dummyMultipleDisposals2021Return = DesReturn(
+  private val dummyMultipleDisposalsReturnCurrentTaxYearMinus2 = DesReturn(
     DesReturnType(
       "self digital",
       "New",
@@ -425,7 +430,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     ),
     ReturnDetails(
       customerType = "individual",
-      completionDate = LocalDate.of(2021, 4, 12),
+      completionDate = LocalDate.of(currentTaxYearMinus2, 4, 12),
       isUKResident = true,
       numberDisposals = 68,
       totalTaxableGain = BigDecimal(100),
@@ -445,7 +450,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     None,
     List(
       DisposalDetails(
-        disposalDate = LocalDate.of(2021, 4, 10),
+        disposalDate = LocalDate.of(currentTaxYearMinus2, 4, 10),
         addressDetails = DesAddressDetails("You know that place", None, None, None, Some("YY1 1YY"), "GB"),
         assetType = "res",
         acquisitionType = "not captured for multiple disposals",
@@ -470,7 +475,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     None
   )
 
-  val dummySingleIndirectDisposalReturn = DesReturn(
+  private val dummySingleIndirectDisposalReturnCurrentTaxYearMinus3 = DesReturn(
     DesReturnType(
       "self digital",
       "New",
@@ -478,7 +483,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     ),
     ReturnDetails(
       customerType = "individual",
-      completionDate = LocalDate.of(2020, 4, 15),
+      completionDate = LocalDate.of(currentTaxYearMinus3, 4, 15),
       isUKResident = false,
       numberDisposals = 1,
       totalTaxableGain = BigDecimal(100),
@@ -498,7 +503,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     None,
     List(
       DisposalDetails(
-        disposalDate = LocalDate.of(2020, 4, 15),
+        disposalDate = LocalDate.of(currentTaxYearMinus3, 4, 15),
         addressDetails = DesAddressDetails("Company X", None, None, None, Some("ZZ0 0ZZ"), "IT"),
         assetType = "shares",
         acquisitionType = "bought",
@@ -523,7 +528,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     None
   )
 
-  val dummyMultipleIndirectDisposalsReturn = DesReturn(
+  private val dummyMultipleIndirectDisposalsReturnCurrentTaxYearMinus3 = DesReturn(
     DesReturnType(
       "self digital",
       "New",
@@ -531,7 +536,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     ),
     ReturnDetails(
       customerType = "individual",
-      completionDate = LocalDate.of(2020, 4, 22),
+      completionDate = LocalDate.of(currentTaxYearMinus3, 4, 22),
       isUKResident = false,
       numberDisposals = 68,
       totalTaxableGain = BigDecimal(100),
@@ -551,7 +556,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     None,
     List(
       DisposalDetails(
-        disposalDate = LocalDate.of(2020, 4, 22),
+        disposalDate = LocalDate.of(currentTaxYearMinus3, 4, 22),
         addressDetails = DesAddressDetails("Some Multiple Company", None, None, None, Some("ZZ0 0ZZ"), "GB"),
         assetType = "shares",
         acquisitionType = "not captured for multiple disposals",
@@ -576,7 +581,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     None
   )
 
-  val dummySingleMixedUseDisposalReturn = DesReturn(
+  private val dummySingleMixedUseDisposalReturnCurrentTaxYearMinus3 = DesReturn(
     DesReturnType(
       "self digital",
       "New",
@@ -584,7 +589,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     ),
     ReturnDetails(
       customerType = "individual",
-      completionDate = LocalDate.of(2020, 4, 22),
+      completionDate = LocalDate.of(currentTaxYearMinus3, 4, 22),
       isUKResident = false,
       numberDisposals = 68,
       totalTaxableGain = BigDecimal(100),
@@ -604,7 +609,7 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
     None,
     List(
       DisposalDetails(
-        LocalDate.of(2020, 4, 10),
+        LocalDate.of(currentTaxYearMinus3, 4, 10),
         DesAddressDetails("You know that place", None, None, None, Some("ZZ0 0ZZ"), "GB"),
         "mix",
         "not captured for single mixed use disposals",
@@ -670,7 +675,6 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
   }
 
   private def dueDate(completionDate: LocalDate): LocalDate = {
-
     val dueDateChecker = LocalDate.of(
       appConfig.draftReturnNewDueDateStartYear,
       appConfig.draftReturnNewDueDateStartMonth,
@@ -713,5 +717,4 @@ class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig
         f(from, to)
     }
   }
-
 }

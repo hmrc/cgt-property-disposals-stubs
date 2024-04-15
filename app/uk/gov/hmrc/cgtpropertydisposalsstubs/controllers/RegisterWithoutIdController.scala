@@ -54,8 +54,6 @@ class RegisterWithoutIdController @Inject() (
         logger.warn("Could not find JSON in request body for register without id request")
         BadRequest
       } { json =>
-        SchemaValidator(Some(Version4)).validate(schemaToBeValidated, json)
-
         json.validate[RegistrationRequest] match {
           case JsSuccess(registrationRequest, _) =>
             logger.info(s"Received register without id request with body $registrationRequest")
