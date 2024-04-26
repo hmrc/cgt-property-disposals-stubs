@@ -21,11 +21,10 @@ import org.scalacheck.Gen
 import play.api.libs.json._
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.RegisterWithoutIdController.{RegistrationRequest, Response}
-import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{RegisterWithoutIdDetails, SapNumber}
+import uk.gov.hmrc.cgtpropertydisposalsstubs.models.SapNumber
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
-import scala.io.Source
 import scala.util.matching.Regex
 
 class RegisterWithoutIdController @Inject() (

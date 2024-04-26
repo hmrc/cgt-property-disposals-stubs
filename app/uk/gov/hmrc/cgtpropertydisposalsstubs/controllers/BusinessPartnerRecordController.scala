@@ -33,7 +33,6 @@ import uk.gov.hmrc.smartstub._
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext}
-import scala.io.Source
 import scala.util.Random
 
 class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(implicit
