@@ -19,7 +19,6 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 import cats.data.EitherT
 import cats.instances.option._
 import com.google.inject.{Inject, Singleton}
-import org.apache.pekko.util.Helpers.Requiring
 import org.scalacheck.Gen
 import play.api.libs.json.{Json, OFormat, Writes}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
@@ -31,7 +30,6 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.smartstub._
 
 import java.time.LocalDateTime
-import scala.io.Source
 
 @Singleton
 class SubscriptionController @Inject() (cc: ControllerComponents) extends BackendController(cc) with Logging {
