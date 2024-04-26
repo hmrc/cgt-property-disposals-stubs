@@ -18,9 +18,6 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import cats.instances.string._
 import cats.syntax.eq._
-import com.eclipsesource.schema.drafts.Version4
-import com.eclipsesource.schema.drafts.Version4._
-import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.google.inject.Inject
 import org.apache.pekko.stream.Materializer
 import org.scalacheck.Gen
@@ -59,18 +56,6 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
       override def asLong(i: Either[A, B]): Long = i.fold(a.asLong, b.asLong)
     }
 
-  lazy val schemaToBeValidated = Json
-    .fromJson[SchemaType](
-      Json.parse(
-        Source
-          .fromInputStream(
-            this.getClass.getResourceAsStream("/resources/register-with-id-des-schema-2.json")
-          )
-          .mkString
-      )
-    )
-    .get
-
   def getBusinessPartnerRecord(entityType: String, idType: String, idValue: String): Action[AnyContent] =
     Action { implicit request =>
       (entityType, idType) match {
@@ -102,8 +87,6 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
       logger.warn("Could not find JSON in request body for BPR request")
       BadRequest
     } { json =>
-      SchemaValidator(Some(Version4)).validate(schemaToBeValidated, json)
-
       json
         .validate[BprRequest]
         .fold(

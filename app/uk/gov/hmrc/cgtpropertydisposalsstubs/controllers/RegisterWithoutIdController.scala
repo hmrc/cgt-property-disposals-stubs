@@ -16,15 +16,12 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
-import com.eclipsesource.schema.drafts.Version4
-import com.eclipsesource.schema.drafts.Version4._
-import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.google.inject.Inject
 import org.scalacheck.Gen
 import play.api.libs.json._
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.RegisterWithoutIdController.{RegistrationRequest, Response}
-import uk.gov.hmrc.cgtpropertydisposalsstubs.models.SapNumber
+import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{RegisterWithoutIdDetails, SapNumber}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
@@ -35,18 +32,6 @@ class RegisterWithoutIdController @Inject() (
   cc: ControllerComponents
 ) extends BackendController(cc)
     with Logging {
-
-  lazy val schemaToBeValidated = Json
-    .fromJson[SchemaType](
-      Json.parse(
-        Source
-          .fromInputStream(
-            this.getClass.getResourceAsStream("/resources/register-without-id-des-schema-4.json")
-          )
-          .mkString
-      )
-    )
-    .get
 
   def registerWithoutId: Action[AnyContent] =
     Action { implicit request =>

@@ -5,7 +5,6 @@ object AppDependencies {
 
   val compile: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"       %% "bootstrap-backend-play-30"  % bootStrapVersion,
-    "com.eclipsesource" %% "play-json-schema-validator" % "0.9.5",
     "uk.gov.hmrc"       %% "stub-data-generator"        % "1.1.0",
     "uk.gov.hmrc"       %% "tax-year"                   % "4.0.0"
   )
