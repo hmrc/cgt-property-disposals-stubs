@@ -18,10 +18,8 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import cats.data.EitherT
 import cats.instances.option._
-import com.eclipsesource.schema.drafts.Version4
-import com.eclipsesource.schema.drafts.Version4._
-import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.google.inject.{Inject, Singleton}
+import org.apache.pekko.util.Helpers.Requiring
 import org.scalacheck.Gen
 import play.api.libs.json.{Json, OFormat, Writes}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
@@ -37,30 +35,6 @@ import scala.io.Source
 
 @Singleton
 class SubscriptionController @Inject() (cc: ControllerComponents) extends BackendController(cc) with Logging {
-
-  val amendSubscriptionSchemaToBeValidated = Json
-    .fromJson[SchemaType](
-      Json.parse(
-        Source
-          .fromInputStream(
-            this.getClass.getResourceAsStream("/resources/amend-subscription-des-schema-v-1-0-0.json")
-          )
-          .mkString
-      )
-    )
-    .get
-
-  val createSubscriptionSchemaToBeValidated = Json
-    .fromJson[SchemaType](
-      Json.parse(
-        Source
-          .fromInputStream(
-            this.getClass.getResourceAsStream("/resources/create-subscription-des-schema-v-1-1-0.json")
-          )
-          .mkString
-      )
-    )
-    .get
 
   def getSubscriptionStatus(sapNumber: String): Action[AnyContent] =
     Action { _ =>
@@ -92,8 +66,6 @@ class SubscriptionController @Inject() (cc: ControllerComponents) extends Backen
         logger.warn("Could not find JSON in body for subscribe update request")
         BadRequest
       } { json =>
-        SchemaValidator(Some(Version4)).validate(amendSubscriptionSchemaToBeValidated, json)
-
         json
           .validate[SubscriptionUpdateRequest]
           .fold[Result](
@@ -137,8 +109,6 @@ class SubscriptionController @Inject() (cc: ControllerComponents) extends Backen
         logger.warn("Could not find JSON in body for subscribe request")
         BadRequest
       } { json =>
-        SchemaValidator(Some(Version4)).validate(createSubscriptionSchemaToBeValidated, json)
-
         (json \ "identity" \ "idValue")
           .validate[SapNumber]
           .fold[Result](
