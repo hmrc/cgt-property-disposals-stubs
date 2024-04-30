@@ -18,12 +18,11 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import cats.instances.bigDecimal._
 import cats.syntax.eq._
-import com.eclipsesource.schema.drafts.Version4
-import com.eclipsesource.schema.drafts.Version4._
-import com.eclipsesource.schema.{SchemaType, SchemaValidator}
 import com.google.inject.{Inject, Singleton}
 import org.scalacheck.Gen
-import play.api.libs.json.{JsResult, JsValue, Json}
+import play.api.libs.json.Format.GenericFormat
+import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.config.AppConfig
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesReturn._
@@ -35,47 +34,28 @@ import uk.gov.hmrc.time.TaxYear
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalDateTime}
-import scala.io.Source
+import scala.concurrent.Future
 import scala.util.Try
 
 @Singleton
 class ReturnController @Inject() (cc: ControllerComponents, appConfig: AppConfig)
     extends BackendController(cc)
     with Logging {
-  private lazy val schemaToBeValidated = Json
-    .fromJson[SchemaType](
-      Json.parse(
-        Source
-          .fromInputStream(
-            this.getClass.getResourceAsStream("/resources/submit-return-des-schema-v-1-0-0.json")
-          )
-          .mkString
-      )
-    )
-    .get
-
   def submitReturn(cgtReferenceNumber: String): Action[JsValue] =
-    Action(parse.json) { request =>
-      val validator = SchemaValidator(Some(Version4))
-
-      val submittedReturn: JsResult[(BigDecimal, LocalDate, JsValue)] = for {
-        a <- (request.body \ "ppdReturnDetails" \ "returnDetails" \ "totalLiability").validate[BigDecimal]
-        d <- (request.body \ "ppdReturnDetails" \ "returnDetails" \ "completionDate").validate[LocalDate]
-        e <- validator.validate(schemaToBeValidated, request.body)
-      } yield (a, d, e)
-
-      submittedReturn.fold(
-        { e =>
-          logger.warn(s"Could not validate or parse request body: $e")
-          BadRequest
-        },
-        {
-          case (taxDue, completionDate, _) =>
-            Ok(
-              Json.toJson(prepareDesSubmitReturnResponse(cgtReferenceNumber, taxDue, completionDate))
+    Action.async(parse.json) { implicit request =>
+      withJsonBody[DesSubmitReturnRequest] { submitReturnRequest =>
+        Future.successful(
+          Ok(
+            Json.toJson(
+              prepareDesSubmitReturnResponse(
+                cgtReferenceNumber,
+                submitReturnRequest.ppdReturnDetails.returnDetails.totalLiability,
+                submitReturnRequest.ppdReturnDetails.returnDetails.completionDate
+              )
             )
-        }
-      )
+          )
+        )
+      }
     }
 
   def listReturns(cgtReference: String, fromDate: String, toDate: String): Action[AnyContent] =
