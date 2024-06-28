@@ -128,17 +128,15 @@ class SubscriptionController @Inject() (cc: ControllerComponents) extends Backen
       }
     }
 
-  val cgtReferenceIdGen = for {
+  private val cgtReferenceIdGen: Gen[String] = for {
     letter <- Gen.alphaUpperChar
     digits <- Gen.listOfN(9, Gen.numChar)
   } yield s"X${letter}CGTP${digits.mkString("")}"
 
   // sap numbers should be a series of digits so toLong should be ok
-  implicit val sapNumberToLong: ToLong[SapNumber] = new ToLong[SapNumber] {
-    override def asLong(i: SapNumber): Long = i.value.toLong
-  }
+  implicit val sapNumberToLong: ToLong[SapNumber] = (i: SapNumber) => i.value.toLong
 
-  def randomCgtReferenceId(): String =
+  private def randomCgtReferenceId(): String =
     cgtReferenceIdGen.sample.get
 
 }

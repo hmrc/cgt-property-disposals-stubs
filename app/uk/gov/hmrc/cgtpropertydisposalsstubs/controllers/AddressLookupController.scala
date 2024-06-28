@@ -26,9 +26,11 @@ import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.AddressLookupController
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
+import scala.util.matching.Regex
+
 class AddressLookupController @Inject() (cc: ControllerComponents) extends BackendController(cc) with Logging {
 
-  val statusRegex = """E(\d\d \d)RR""".r
+  val statusRegex: Regex = """E(\d\d \d)RR""".r
 
   def lookupAddresses(postcode: String): Action[AnyContent] =
     Action { implicit request =>
@@ -67,12 +69,12 @@ class AddressLookupController @Inject() (cc: ControllerComponents) extends Backe
       )
     }
 
-  def randomAddresses(postcode: String): List[Address] =
+  private def randomAddresses(postcode: String): List[Address] =
     (1 to 10)
       .map(i => Address(List(s"$i the Street"), "Townsville", Some("Countyshire"), postcode, Country("GB")))
       .toList
 
-  def validatePostcode(postcode: String): ValidatedNel[String, String] = {
+  private def validatePostcode(postcode: String): ValidatedNel[String, String] = {
     def validatedFromBoolean[A](a: A)(predicate: A => Boolean, ifInvalid: => String): ValidationResult[A] =
       if (predicate(a)) Valid(a) else Invalid(NonEmptyList.one(ifInvalid))
 
@@ -89,7 +91,7 @@ class AddressLookupController @Inject() (cc: ControllerComponents) extends Backe
 
 object AddressLookupController {
 
-  type ValidationResult[A] = ValidatedNel[String, A]
+  private type ValidationResult[A] = ValidatedNel[String, A]
 
   final case class Country(code: String)
 
