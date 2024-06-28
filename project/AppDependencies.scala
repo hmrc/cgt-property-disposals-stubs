@@ -10,6 +10,7 @@ object AppDependencies {
   )
 
   val test: Seq[ModuleID] = Seq(
+    "uk.gov.hmrc" %% "stub-data-generator"    % "1.1.0"          % Test,
     "uk.gov.hmrc" %% "bootstrap-test-play-30" % bootStrapVersion % Test
   )
 }
