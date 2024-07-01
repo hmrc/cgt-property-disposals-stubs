@@ -46,22 +46,18 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
 
   implicit val ninoToLong: ToLong[NINO]   = ninoEnumNoSpaces.imap(NINO(_))(_.value)
   implicit val sautrToLong: ToLong[SAUTR] = pattern"9999999999".imap(SAUTR(_))(_.value)
-  implicit val trnToLong: ToLong[TRN] = new ToLong[TRN] {
-    override def asLong(i: TRN): Long = i.value.filter(_.isDigit).toLong
-  }
+  implicit val trnToLong: ToLong[TRN]     = (i: TRN) => i.value.filter(_.isDigit).toLong
 
   implicit def eitherToLong[A, B](implicit a: ToLong[A], b: ToLong[B]): ToLong[Either[A, B]] =
-    new ToLong[Either[A, B]] {
-      override def asLong(i: Either[A, B]): Long = i.fold(a.asLong, b.asLong)
-    }
+    (i: Either[A, B]) => i.fold(a.asLong, b.asLong)
 
   def getBusinessPartnerRecord(entityType: String, idType: String, idValue: String): Action[AnyContent] =
     Action { implicit request =>
       (entityType, idType) match {
-        case ("individual", "nino")  => handleRequest(request, Right(NINO(idValue)), true)
-        case ("individual", "utr")   => handleRequest(request, Left(Right(SAUTR(idValue))), true)
-        case ("organisation", "utr") => handleRequest(request, Left(Right(SAUTR(idValue))), false)
-        case ("organisation", "trn") => handleRequest(request, Left(Left(TRN(idValue))), false)
+        case ("individual", "nino")  => handleRequest(request, Right(NINO(idValue)), isAnIndividual = true)
+        case ("individual", "utr")   => handleRequest(request, Left(Right(SAUTR(idValue))), isAnIndividual = true)
+        case ("organisation", "utr") => handleRequest(request, Left(Right(SAUTR(idValue))), isAnIndividual = false)
+        case ("organisation", "trn") => handleRequest(request, Left(Left(TRN(idValue))), isAnIndividual = false)
         case _ =>
           logger.warn(
             s"Received request for BPR for unsupported combination of entity type $entityType and " +
@@ -117,7 +113,7 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
     }
   }
 
-  def doNameMatch(bprRequest: BprRequest, isAnIndividual: Boolean, bpr: DesBusinessPartnerRecord): Result = {
+  private def doNameMatch(bprRequest: BprRequest, isAnIndividual: Boolean, bpr: DesBusinessPartnerRecord): Result = {
     def doNameMatch[A](requestField: Option[A])(nameMatches: A => Boolean): Result =
       requestField.fold(
         BadRequest(desErrorResponseJson("BAD_REQUEST", "requiresNameMatch was true but could not find name"))
@@ -157,7 +153,7 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
       }
   }
 
-  def bprGen(isAnIndividual: Boolean, id: Either[Either[TRN, SAUTR], NINO]): Gen[DesBusinessPartnerRecord] = {
+  private def bprGen(isAnIndividual: Boolean, id: Either[Either[TRN, SAUTR], NINO]): Gen[DesBusinessPartnerRecord] = {
     val addressGen: Gen[DesAddressDetails] = for {
       addressLines <- Gen.ukAddress
       postcode     <- Gen.postcode

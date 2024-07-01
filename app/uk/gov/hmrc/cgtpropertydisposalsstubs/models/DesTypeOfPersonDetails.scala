@@ -27,9 +27,9 @@ object DesTypeOfPersonDetails {
 
   final case class DesTrustee(organisationName: String, typeOfPerson: String) extends DesTypeOfPersonDetails
 
-  val individualFormat: OFormat[DesIndividual] = Json.format[DesIndividual]
+  private val individualFormat: OFormat[DesIndividual] = Json.format[DesIndividual]
 
-  val trusteeFormat: OFormat[DesTrustee] = Json.format[DesTrustee]
+  private val trusteeFormat: OFormat[DesTrustee] = Json.format[DesTrustee]
 
   implicit val format: OFormat[DesTypeOfPersonDetails] =
     OFormat(
