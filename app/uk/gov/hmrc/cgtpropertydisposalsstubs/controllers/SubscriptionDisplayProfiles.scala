@@ -30,7 +30,7 @@ case class SubscriptionDisplay(
 
 object SubscriptionDisplayProfiles {
 
-  def individualSubscriptionDisplayDetails(registeredWithId: Boolean) =
+  def individualSubscriptionDisplayDetails(registeredWithId: Boolean): DesSubscriptionDisplayDetails =
     DesSubscriptionDisplayDetails(
       regime = "CGT",
       subscriptionDetails = SubscriptionDetails(
@@ -58,7 +58,7 @@ object SubscriptionDisplayProfiles {
       )
     )
 
-  def trusteeSubscriptionDisplayDetails(registeredWithId: Boolean) =
+  private def trusteeSubscriptionDisplayDetails(registeredWithId: Boolean): DesSubscriptionDisplayDetails =
     DesSubscriptionDisplayDetails(
       regime = "CGT",
       subscriptionDetails = SubscriptionDetails(

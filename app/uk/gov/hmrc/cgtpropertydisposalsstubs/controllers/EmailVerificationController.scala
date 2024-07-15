@@ -17,7 +17,7 @@
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import com.google.inject.Inject
-import org.apache.pekko.actor.{Actor, ActorSystem, Cancellable, Props}
+import org.apache.pekko.actor.{Actor, ActorRef, ActorSystem, Cancellable, Props}
 import org.apache.pekko.pattern.ask
 import org.apache.pekko.util.Timeout
 import play.api.libs.json.{Format, Json}
@@ -30,6 +30,7 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import java.time.Instant
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
+import scala.language.implicitConversions
 import scala.util.matching.Regex
 
 class EmailVerificationController @Inject() (
@@ -41,7 +42,7 @@ class EmailVerificationController @Inject() (
 
   val statusRegex: Regex = "status(\\d{3})@email\\.com".r
 
-  val verificationManager = system.actorOf(VerificationManager.props())
+  private val verificationManager: ActorRef = system.actorOf(VerificationManager.props())
 
   implicit val askTimeout: Timeout = Timeout(5.seconds)
 
@@ -78,7 +79,7 @@ class EmailVerificationController @Inject() (
       }
     }
 
-  def getEmailVerificationRequest(email: String) =
+  def getEmailVerificationRequest(email: String): Action[AnyContent] =
     Action.async { _ =>
       (verificationManager ? VerificationManager.GetEmailVerificationRequest(email))
         .mapTo[GetEmailVerificationRequestResponse]
@@ -119,15 +120,15 @@ object EmailVerificationController {
       cleanJob = None
     }
 
-    val (cleanFrequency, ttlMillis) = 5.minutes -> 30.minutes.toMillis
+    private val (cleanFrequency, ttlMillis) = 5.minutes -> 30.minutes.toMillis
 
-    var cleanJob: Option[Cancellable] = None
+    private var cleanJob: Option[Cancellable] = None
 
     def now(): Long = Instant.now().toEpochMilli
 
     def receive: Receive = active(Map.empty)
 
-    def active(requests: Map[String, EmailVerificationRequestWithTimestamp]): Receive = {
+    private def active(requests: Map[String, EmailVerificationRequestWithTimestamp]): Receive = {
 
       case EmailVerificationRequested(r) =>
         context become active(requests.updated(r.email, EmailVerificationRequestWithTimestamp(r, now())))
