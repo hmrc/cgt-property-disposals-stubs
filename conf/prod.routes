@@ -19,5 +19,9 @@ GET         /enterprise/financial-data/:idType/:idNumber/:regimeType           u
 POST        /email-verification/verification-requests                          uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.EmailVerificationController.verifyEmail()
 GET         /email-verification/verification-request                           uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.EmailVerificationController.getEmailVerificationRequest(email: String)
 
+
 ## Adddress Lookup
 GET         /v2/uk/addresses                                                   uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.AddressLookupController.lookupAddresses(postcode:String)
+
+## GForms
+POST        /gform/dms/submit-with-attachments                                 uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.GFormController.submitToDmsWithAttachments()
