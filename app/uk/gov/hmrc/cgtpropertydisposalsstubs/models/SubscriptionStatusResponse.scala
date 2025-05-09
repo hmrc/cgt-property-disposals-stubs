@@ -26,74 +26,70 @@ final case class SubscriptionStatusResponse(
 )
 
 object SubscriptionStatusResponse {
-
   sealed trait SubscriptionStatus extends Product with Serializable {
     val value: String
   }
 
   object SubscriptionStatus {
-
-    final case object NotSubscribed extends SubscriptionStatus {
+    case object NotSubscribed extends SubscriptionStatus {
       val value: String = "NO_FORM_BUNDLE_FOUND"
     }
 
-    final case object Subscribed extends SubscriptionStatus {
+    case object Subscribed extends SubscriptionStatus {
       val value: String = "SUCCESSFUL"
     }
 
-    final case object RegistrationFormReceived extends SubscriptionStatus {
+    case object RegistrationFormReceived extends SubscriptionStatus {
       val value: String = "REG_FORM_RECEIVED"
     }
 
-    final case object SentToDs extends SubscriptionStatus {
+    case object SentToDs extends SubscriptionStatus {
       val value: String = "SENT_TO_DS"
     }
 
-    final case object DsOutcomeInProgress extends SubscriptionStatus {
+    case object DsOutcomeInProgress extends SubscriptionStatus {
       val value: String = "DS_OUTCOME_IN_PROGRESS"
     }
 
-    final case object Rejected extends SubscriptionStatus {
+    case object Rejected extends SubscriptionStatus {
       val value: String = "REJECTED"
     }
 
-    final case object InProcessing extends SubscriptionStatus {
+    case object InProcessing extends SubscriptionStatus {
       val value: String = "IN_PROCESSING"
     }
 
-    final case object CreateFailed extends SubscriptionStatus {
+    case object CreateFailed extends SubscriptionStatus {
       val value: String = "CREATE_FAILED"
     }
 
-    final case object Withdrawal extends SubscriptionStatus {
+    case object Withdrawal extends SubscriptionStatus {
       val value: String = "WITHDRAWAL"
     }
 
-    final case object SentToRcm extends SubscriptionStatus {
+    case object SentToRcm extends SubscriptionStatus {
       val value: String = "SENT_TO_RCM"
     }
 
-    final case object ApprovedWithConditions extends SubscriptionStatus {
+    case object ApprovedWithConditions extends SubscriptionStatus {
       val value: String = "APPROVED_WITH_CONDITIONS"
     }
 
-    final case object Revoked extends SubscriptionStatus {
+    case object Revoked extends SubscriptionStatus {
       val value: String = "REVOKED"
     }
 
-    final case object Deregistered extends SubscriptionStatus {
+    case object Deregistered extends SubscriptionStatus {
       val value: String = "DE-REGISTERED"
     }
 
-    final case object ContractObjectInactive extends SubscriptionStatus {
+    case object ContractObjectInactive extends SubscriptionStatus {
       val value: String = "CONTRACT_OBJECT_INACTIVE"
     }
 
     implicit val writes: Writes[SubscriptionStatus] =
       Writes(status => JsString(status.value))
-
   }
 
   implicit val writes: Writes[SubscriptionStatusResponse] = Json.writes[SubscriptionStatusResponse]
-
 }
