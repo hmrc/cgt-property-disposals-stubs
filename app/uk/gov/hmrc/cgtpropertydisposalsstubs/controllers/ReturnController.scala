@@ -20,6 +20,7 @@ import cats.instances.bigDecimal._
 import cats.syntax.eq._
 import com.google.inject.{Inject, Singleton}
 import org.scalacheck.Gen
+import play.api.Logging
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import play.api.libs.json.{JsValue, Json}
@@ -28,7 +29,6 @@ import uk.gov.hmrc.cgtpropertydisposalsstubs.config.AppConfig
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesReturn._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.util.GenUtils.sample
-import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.time.TaxYear
 

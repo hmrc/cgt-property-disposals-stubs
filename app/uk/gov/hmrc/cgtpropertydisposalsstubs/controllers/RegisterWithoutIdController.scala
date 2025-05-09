@@ -18,11 +18,11 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import com.google.inject.Inject
 import org.scalacheck.Gen
+import play.api.Logging
 import play.api.libs.json._
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.RegisterWithoutIdController.{RegistrationRequest, Response}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.SapNumber
-import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import scala.util.matching.Regex
@@ -31,7 +31,6 @@ class RegisterWithoutIdController @Inject() (
   cc: ControllerComponents
 ) extends BackendController(cc)
     with Logging {
-
   def registerWithoutId: Action[AnyContent] =
     Action { implicit request =>
       request.body.asJson.fold[Result] {

@@ -20,16 +20,15 @@ import cats.data.Validated._
 import cats.data.{NonEmptyList, ValidatedNel}
 import cats.syntax.apply._
 import com.google.inject.Inject
+import play.api.Logging
 import play.api.libs.json.{JsArray, JsObject, Json, Writes}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.AddressLookupController._
-import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import scala.util.matching.Regex
 
 class AddressLookupController @Inject() (cc: ControllerComponents) extends BackendController(cc) with Logging {
-
   val statusRegex: Regex = """E(\d\d \d)RR""".r
 
   def lookupAddresses(postcode: String): Action[AnyContent] =
