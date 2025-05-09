@@ -46,10 +46,10 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
 
   implicit val ninoToLong: ToLong[NINO]   = ninoEnumNoSpaces.imap(NINO(_))(_.value)
   implicit val sautrToLong: ToLong[SAUTR] = pattern"9999999999".imap(SAUTR(_))(_.value)
-  implicit val trnToLong: ToLong[TRN]     = ((i: TRN)) => i.value.filter(_.isDigit).toLong
+  implicit val trnToLong: ToLong[TRN]     = (i: TRN) => i.value.filter(_.isDigit).toLong
 
   implicit def eitherToLong[A, B](implicit a: ToLong[A], b: ToLong[B]): ToLong[Either[A, B]] =
-    ((i: Either[A, B])) => i.fold(a.asLong, b.asLong)
+    (i: Either[A, B]) => i.fold(a.asLong, b.asLong)
 
   def getBusinessPartnerRecord(entityType: String, idType: String, idValue: String): Action[AnyContent] =
     Action { implicit request =>
