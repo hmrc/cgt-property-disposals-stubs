@@ -22,11 +22,11 @@ import com.google.inject.Inject
 import org.apache.pekko.stream.Materializer
 import org.scalacheck.Gen
 import play.api.Logging
-import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord.{DesIndividual, DesOrganisation}
 import play.api.libs.json.*
 import play.api.mvc.*
+import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesBusinessPartnerRecord.DesContactDetails
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesErrorResponse.desErrorResponseJson
-import uk.gov.hmrc.cgtpropertydisposalsstubs.models._
+import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{BprRequest, DesAddressDetails, DesBusinessPartnerRecord, DesIndividual, DesOrganisation, NINO, SAUTR, SapNumber, TRN}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.smartstub.*
 import uk.gov.hmrc.smartstub.Enumerable.instances.ninoEnumNoSpaces
@@ -40,10 +40,6 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
   ec: ExecutionContext
 ) extends BackendController(cc)
     with Logging {
-
-  import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController._
-  import DesBusinessPartnerRecord._
-
   implicit val ninoToLong: ToLong[NINO]   = ninoEnumNoSpaces.imap(NINO(_))(_.value)
   implicit val sautrToLong: ToLong[SAUTR] = pattern"9999999999".imap(SAUTR(_))(_.value)
   implicit val trnToLong: ToLong[TRN]     = (i: TRN) => i.value.filter(_.isDigit).toLong
@@ -194,47 +190,4 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
       DesBusinessPartnerRecord(address, DesContactDetails(Some(email)), SapNumber(sapNumber), organisation, individual)
     }
   }
-
-}
-
-object BusinessPartnerRecordController {
-
-  final case class BprRequest(
-    regime: String,
-    requiresNameMatch: Boolean,
-    isAnAgent: Boolean,
-    individual: Option[DesIndividual],
-    organisation: Option[DesOrganisation]
-  )
-
-  import DesBusinessPartnerRecord._
-
-  final case class DesBusinessPartnerRecord(
-    address: DesAddressDetails,
-    contactDetails: DesContactDetails,
-    sapNumber: SapNumber,
-    organisation: Option[DesOrganisation],
-    individual: Option[DesIndividual]
-  )
-
-  object DesBusinessPartnerRecord {
-
-    final case class DesOrganisation(
-      organisationName: String
-    )
-
-    final case class DesIndividual(
-      firstName: String,
-      lastName: String
-    )
-
-    final case class DesContactDetails(emailAddress: Option[String])
-
-    implicit val organisationWrites: Format[DesOrganisation]     = Json.format[DesOrganisation]
-    implicit val individualWrites: Format[DesIndividual]         = Json.format[DesIndividual]
-    implicit val contactDetailsWrites: Writes[DesContactDetails] = Json.writes[DesContactDetails]
-    implicit val bprWrites: Writes[DesBusinessPartnerRecord]     = Json.writes[DesBusinessPartnerRecord]
-    implicit val bprRequestReads: Reads[BprRequest]              = Json.reads[BprRequest]
-  }
-
 }
