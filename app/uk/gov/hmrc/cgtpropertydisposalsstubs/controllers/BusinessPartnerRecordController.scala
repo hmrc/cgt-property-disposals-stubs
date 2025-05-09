@@ -16,22 +16,22 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
-import cats.instances.string._
-import cats.syntax.eq._
+import cats.instances.string.*
+import cats.syntax.eq.*
 import com.google.inject.Inject
 import org.apache.pekko.stream.Materializer
 import org.scalacheck.Gen
 import play.api.Logging
-import play.api.libs.json._
-import play.api.mvc._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord.{DesIndividual, DesOrganisation}
+import play.api.libs.json.*
+import play.api.mvc.*
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesErrorResponse.desErrorResponseJson
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models._
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+import uk.gov.hmrc.smartstub.*
 import uk.gov.hmrc.smartstub.Enumerable.instances.ninoEnumNoSpaces
-import uk.gov.hmrc.smartstub._
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.concurrent.{Await, ExecutionContext}
 import scala.util.Random
 
@@ -93,9 +93,13 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
             val result: Result =
               SubscriptionProfiles
                 .getProfile(id)
-                .map(_.bprResponse.map { bpr =>
-                  getResult(bpr, bprRequest)
-                }.merge)
+                .map(
+                  _.bprResponse
+                    .map { bpr =>
+                      getResult(bpr, bprRequest)
+                    }
+                    .merge
+                )
                 .getOrElse {
                   val bpr = bprGen(isAnIndividual, id).seeded(id).get
                   getResult(bpr, bprRequest)

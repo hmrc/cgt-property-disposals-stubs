@@ -25,10 +25,11 @@ import play.api.libs.json.{Format, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.EmailVerificationController.VerificationManager.{EmailVerificationRequestedAck, GetEmailVerificationRequestResponse}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.EmailVerificationController.{EmailVerificationRequest, VerificationManager}
+import uk.gov.hmrc.cgtpropertydisposalsstubs.models.*
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import java.time.Instant
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 import scala.util.matching.Regex

@@ -19,7 +19,7 @@ package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 import com.google.inject.Inject
 import org.scalacheck.Gen
 import play.api.Logging
-import play.api.libs.json._
+import play.api.libs.json.*
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.RegisterWithoutIdController.{RegistrationRequest, Response}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.SapNumber

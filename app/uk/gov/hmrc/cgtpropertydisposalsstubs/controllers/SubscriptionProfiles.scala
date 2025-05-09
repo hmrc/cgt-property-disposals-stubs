@@ -16,12 +16,12 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
-import cats.instances.either._
-import cats.syntax.either._
+import cats.instances.either.*
+import cats.syntax.either.*
 import play.api.mvc.Result
-import play.api.mvc.Results._
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord.{DesContactDetails, DesIndividual, DesOrganisation}
+import play.api.mvc.Results.*
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.SubscriptionController.SubscriptionResponse
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesErrorResponse.desErrorResponseJson
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.SubscriptionStatusResponse.SubscriptionStatus
