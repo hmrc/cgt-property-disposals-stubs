@@ -134,7 +134,7 @@ class SubscriptionController @Inject() (cc: ControllerComponents) extends Backen
   } yield s"X${letter}CGTP${digits.mkString("")}"
 
   // sap numbers should be a series of digits so toLong should be ok
-  implicit val sapNumberToLong: ToLong[SapNumber] = (i: SapNumber) => i.value.toLong
+  implicit val sapNumberToLong: ToLong[SapNumber] = ((i: SapNumber)) => i.value.toLong
 
   private def randomCgtReferenceId(): String =
     cgtReferenceIdGen.sample.get
