@@ -20,15 +20,16 @@ import com.google.inject.Inject
 import org.apache.pekko.actor.{Actor, ActorRef, ActorSystem, Cancellable, Props}
 import org.apache.pekko.pattern.ask
 import org.apache.pekko.util.Timeout
-import play.api.libs.json.{Format, Json}
+import play.api.Logging
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
-import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.EmailVerificationController.VerificationManager.{EmailVerificationRequestedAck, GetEmailVerificationRequestResponse}
-import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.EmailVerificationController.{EmailVerificationRequest, VerificationManager}
-import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
+import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.EmailVerificationController.VerificationManager
+import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.EmailVerificationController.VerificationManager.CleanData
+import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{EmailVerificationRequest, EmailVerificationRequestWithTimestamp, EmailVerificationRequested, EmailVerificationRequestedAck, GetEmailVerificationRequest, GetEmailVerificationRequestResponse}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import java.time.Instant
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.implicitConversions
 import scala.util.matching.Regex
@@ -39,7 +40,6 @@ class EmailVerificationController @Inject() (
 )(implicit ec: ExecutionContext)
     extends BackendController(cc)
     with Logging {
-
   val statusRegex: Regex = "status(\\d{3})@email\\.com".r
 
   private val verificationManager: ActorRef = system.actorOf(VerificationManager.props())
@@ -62,51 +62,37 @@ class EmailVerificationController @Inject() (
               BadRequest
             },
             request =>
-              (verificationManager ? VerificationManager
-                .EmailVerificationRequested(request)).mapTo[EmailVerificationRequestedAck].map { _ =>
-                request.email match {
-                  case statusRegex(status) =>
-                    logger.info(s"Returning status $status to email verification request: $request")
-                    Status(status.toInt)
+              (verificationManager ? EmailVerificationRequested(request)).mapTo[EmailVerificationRequestedAck].map {
+                _ =>
+                  request.email match {
+                    case statusRegex(status) =>
+                      logger.info(s"Returning status $status to email verification request: $request")
+                      Status(status.toInt)
 
-                  case _ =>
-                    logger.info(s"Returning status 201 to email verification request: $request")
-                    Created
-                }
+                    case _ =>
+                      logger.info(s"Returning status 201 to email verification request: $request")
+                      Created
+                  }
               }
           )
-
       }
     }
 
   def getEmailVerificationRequest(email: String): Action[AnyContent] =
     Action.async { _ =>
-      (verificationManager ? VerificationManager.GetEmailVerificationRequest(email))
+      (verificationManager ? GetEmailVerificationRequest(email))
         .mapTo[GetEmailVerificationRequestResponse]
         .map { response =>
           Ok(Json.toJson(response.request))
         }
     }
-
 }
 
 object EmailVerificationController {
-
-  final case class EmailVerificationRequest(
-    email: String,
-    templateId: String,
-    linkExpiryDuration: String,
-    continueUrl: String,
-    templateParameters: Map[String, String]
-  )
-
-  implicit val format: Format[EmailVerificationRequest] = Json.format[EmailVerificationRequest]
-
   // Actor which stores verification requests so that the verification requests details can be
   // retrieved back. Verification request are only stored for a finite amount of time and are
   // cleared out periodically
   class VerificationManager extends Actor {
-    import VerificationManager._
     import context.dispatcher
 
     override def preStart(): Unit = {
@@ -129,7 +115,6 @@ object EmailVerificationController {
     def receive: Receive = active(Map.empty)
 
     private def active(requests: Map[String, EmailVerificationRequestWithTimestamp]): Receive = {
-
       case EmailVerificationRequested(r) =>
         context become active(requests.updated(r.email, EmailVerificationRequestWithTimestamp(r, now())))
         sender() ! EmailVerificationRequestedAck()
@@ -139,26 +124,12 @@ object EmailVerificationController {
 
       case CleanData =>
         context become active(requests.filter(_._2.timestamp > (now() - ttlMillis)))
-
     }
-
   }
 
   object VerificationManager {
-
     def props(): Props = Props(new VerificationManager)
-
-    case class EmailVerificationRequested(request: EmailVerificationRequest)
-
-    case class EmailVerificationRequestedAck()
-
-    case class GetEmailVerificationRequest(email: String)
-
-    case class GetEmailVerificationRequestResponse(request: Option[EmailVerificationRequest])
-
-    case class EmailVerificationRequestWithTimestamp(request: EmailVerificationRequest, timestamp: Long)
 
     private case object CleanData
   }
-
 }

@@ -16,22 +16,22 @@
 
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
-import cats.instances.string._
-import cats.syntax.eq._
+import cats.instances.string.*
+import cats.syntax.eq.*
 import com.google.inject.Inject
 import org.apache.pekko.stream.Materializer
 import org.scalacheck.Gen
-import play.api.libs.json._
-import play.api.mvc._
-import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController.DesBusinessPartnerRecord.{DesIndividual, DesOrganisation}
+import play.api.Logging
+import play.api.libs.json.*
+import play.api.mvc.*
+import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesBusinessPartnerRecord.DesContactDetails
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.DesErrorResponse.desErrorResponseJson
-import uk.gov.hmrc.cgtpropertydisposalsstubs.models._
-import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
+import uk.gov.hmrc.cgtpropertydisposalsstubs.models.{BprRequest, DesAddressDetails, DesBusinessPartnerRecord, DesIndividual, DesOrganisation, NINO, SAUTR, SapNumber, TRN}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+import uk.gov.hmrc.smartstub.*
 import uk.gov.hmrc.smartstub.Enumerable.instances.ninoEnumNoSpaces
-import uk.gov.hmrc.smartstub._
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.concurrent.{Await, ExecutionContext}
 import scala.util.Random
 
@@ -40,10 +40,6 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
   ec: ExecutionContext
 ) extends BackendController(cc)
     with Logging {
-
-  import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.BusinessPartnerRecordController._
-  import DesBusinessPartnerRecord._
-
   implicit val ninoToLong: ToLong[NINO]   = ninoEnumNoSpaces.imap(NINO(_))(_.value)
   implicit val sautrToLong: ToLong[SAUTR] = pattern"9999999999".imap(SAUTR(_))(_.value)
   implicit val trnToLong: ToLong[TRN]     = (i: TRN) => i.value.filter(_.isDigit).toLong
@@ -93,9 +89,13 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
             val result: Result =
               SubscriptionProfiles
                 .getProfile(id)
-                .map(_.bprResponse.map { bpr =>
-                  getResult(bpr, bprRequest)
-                }.merge)
+                .map(
+                  _.bprResponse
+                    .map { bpr =>
+                      getResult(bpr, bprRequest)
+                    }
+                    .merge
+                )
                 .getOrElse {
                   val bpr = bprGen(isAnIndividual, id).seeded(id).get
                   getResult(bpr, bprRequest)
@@ -190,47 +190,4 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
       DesBusinessPartnerRecord(address, DesContactDetails(Some(email)), SapNumber(sapNumber), organisation, individual)
     }
   }
-
-}
-
-object BusinessPartnerRecordController {
-
-  final case class BprRequest(
-    regime: String,
-    requiresNameMatch: Boolean,
-    isAnAgent: Boolean,
-    individual: Option[DesIndividual],
-    organisation: Option[DesOrganisation]
-  )
-
-  import DesBusinessPartnerRecord._
-
-  final case class DesBusinessPartnerRecord(
-    address: DesAddressDetails,
-    contactDetails: DesContactDetails,
-    sapNumber: SapNumber,
-    organisation: Option[DesOrganisation],
-    individual: Option[DesIndividual]
-  )
-
-  object DesBusinessPartnerRecord {
-
-    final case class DesOrganisation(
-      organisationName: String
-    )
-
-    final case class DesIndividual(
-      firstName: String,
-      lastName: String
-    )
-
-    final case class DesContactDetails(emailAddress: Option[String])
-
-    implicit val organisationWrites: Format[DesOrganisation]     = Json.format[DesOrganisation]
-    implicit val individualWrites: Format[DesIndividual]         = Json.format[DesIndividual]
-    implicit val contactDetailsWrites: Writes[DesContactDetails] = Json.writes[DesContactDetails]
-    implicit val bprWrites: Writes[DesBusinessPartnerRecord]     = Json.writes[DesBusinessPartnerRecord]
-    implicit val bprRequestReads: Reads[BprRequest]              = Json.reads[BprRequest]
-  }
-
 }

@@ -17,15 +17,15 @@
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import com.google.inject.{Inject, Singleton}
+import play.api.Logging
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.FinancialDataResponse
-import uk.gov.hmrc.cgtpropertydisposalsstubs.util.{Logging, TimeUtils}
+import uk.gov.hmrc.cgtpropertydisposalsstubs.util.TimeUtils
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 @Singleton
 class FinancialDataController @Inject() (cc: ControllerComponents) extends BackendController(cc) with Logging {
-
   def getFinancialData(
     idType: String,
     idNumber: String,

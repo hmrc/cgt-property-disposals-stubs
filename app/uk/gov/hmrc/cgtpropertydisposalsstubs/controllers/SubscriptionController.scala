@@ -17,23 +17,22 @@
 package uk.gov.hmrc.cgtpropertydisposalsstubs.controllers
 
 import cats.data.EitherT
-import cats.instances.option._
+import cats.instances.option.*
 import com.google.inject.{Inject, Singleton}
 import org.scalacheck.Gen
+import play.api.Logging
 import play.api.libs.json.{Json, OFormat, Writes}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Result}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.controllers.SubscriptionController.{SubscriptionResponse, SubscriptionUpdateResponse}
 import uk.gov.hmrc.cgtpropertydisposalsstubs.models.SubscriptionStatusResponse.SubscriptionStatus
-import uk.gov.hmrc.cgtpropertydisposalsstubs.models._
-import uk.gov.hmrc.cgtpropertydisposalsstubs.util.Logging
+import uk.gov.hmrc.cgtpropertydisposalsstubs.models.*
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import uk.gov.hmrc.smartstub._
+import uk.gov.hmrc.smartstub.*
 
 import java.time.LocalDateTime
 
 @Singleton
 class SubscriptionController @Inject() (cc: ControllerComponents) extends BackendController(cc) with Logging {
-
   def getSubscriptionStatus(sapNumber: String): Action[AnyContent] =
     Action { _ =>
       SubscriptionProfiles
