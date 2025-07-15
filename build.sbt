@@ -7,8 +7,9 @@ lazy val microservice = Project(appName, file("."))
     majorVersion := 0,
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     scalacOptions ++= Seq("-Wconf:src=routes/.*:s"),
+    scalacOptions := scalacOptions.value.distinct,
     scalafmtOnCompile := true
   )
   .settings(CodeCoverageSettings.settings *)
-  .settings(scalaVersion := "3.3.5")
+  .settings(scalaVersion := "3.7.1")
   .settings(PlayKeys.playDefaultPort := 7022)
