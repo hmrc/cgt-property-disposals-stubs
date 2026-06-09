@@ -31,6 +31,7 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.smartstub.*
 import uk.gov.hmrc.smartstub.Enumerable.instances.ninoEnumNoSpaces
 
+import java.text.Normalizer
 import scala.concurrent.duration.*
 import scala.concurrent.{Await, ExecutionContext}
 import scala.util.Random
@@ -181,8 +182,10 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
     } yield {
       val email = {
         val local =
-          if (isAnIndividual) s"${forename.toLowerCase}.${surname.toLowerCase}"
-          else organisationName.replace(" ", ".").toLowerCase
+          removeAccented(
+            if (isAnIndividual) s"${forename.replace(" ", ".").toLowerCase}.${surname.replace(" ", ".").toLowerCase}"
+            else organisationName.replace(" ", ".").toLowerCase
+          )
         s"$local@email.com"
       }
       val organisation = if (isAnIndividual) None else Some(DesOrganisation(organisationName))
@@ -190,4 +193,6 @@ class BusinessPartnerRecordController @Inject() (cc: ControllerComponents)(impli
       DesBusinessPartnerRecord(address, DesContactDetails(Some(email)), SapNumber(sapNumber), organisation, individual)
     }
   }
+  private def removeAccented(localString: String): String =
+    Normalizer.normalize(localString, Normalizer.Form.NFD).replaceAll("\\p{M}", "")
 }
