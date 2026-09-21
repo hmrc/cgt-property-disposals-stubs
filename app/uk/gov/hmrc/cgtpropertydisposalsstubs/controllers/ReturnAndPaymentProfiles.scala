@@ -1861,8 +1861,92 @@ object ReturnAndPaymentProfiles {
     AccountProfile(_.equals("XXCGTP19999928"), List(return1, return2))
   }
 
+  /* Account 10 for CGT ref XPCGTP123456790 - penalty and service charge types */
+  private val account10: AccountProfile = {
+    val serviceChargeTypes = List(
+      "Interest on late tax payment"      -> "CGT PPD Interest",
+      "Late filing penalty"               -> "CGT PPD Late Filing Penalty",
+      "Six month late filing penalty"     -> "CGT PPD 6 Mth LFP",
+      "Twelve month late filing penalty"  -> "CGT PPD 12 Mth LFP",
+      "Late payment penalty"              -> "CGT PPD Late Payment Penalty",
+      "Six month late payment penalty"    -> "CGT PPD 6 Mth LPP",
+      "Twelve month late payment penalty" -> "CGT PPD 12 Mth LPP",
+      "Interest on penalties paid late"   -> "CGT PPD Penalty Interest"
+    )
+
+    val returns = serviceChargeTypes.zipWithIndex.map { case ((addressLine1, chargeDescription), index) =>
+      val mainChargeReference    = f"XCRG8${index + 1}%09d"
+      val serviceChargeReference = f"XCRG9${index + 1}%09d"
+      val mainChargeDueDate      = LocalDate.of(currentTaxYearMinus2, 6, 24)
+      val serviceChargeDueDate   = LocalDate.of(currentTaxYearMinus1, 1, 31)
+      val mainChargeAmount       = BigDecimal("1000")
+      val serviceChargeAmount    = BigDecimal(100 + ((index + 1) * 10))
+
+      ReturnProfile(
+        ReturnSummary(
+          submissionId = f"900000000${index + 1}%03d",
+          submissionDate = LocalDate.of(currentTaxYearMinus2, 6, 1),
+          completionDate = LocalDate.of(currentTaxYearMinus2, 5, 25),
+          lastUpdatedDate = None,
+          taxYear = "currentTaxYear - 2",
+          propertyAddress = DesAddressDetails(
+            addressLine1,
+            Some("Service Charge Test Avenue"),
+            Some("Staging"),
+            None,
+            Some("AA1 1AA"),
+            "GB"
+          ),
+          totalCGTLiability = mainChargeAmount,
+          charges = Some(
+            List(
+              Charge("CGT PPD Return UK Resident", mainChargeDueDate, mainChargeReference),
+              Charge(chargeDescription, serviceChargeDueDate, serviceChargeReference)
+            )
+          )
+        ),
+        List(
+          FinancialTransaction(
+            chargeReference = mainChargeReference,
+            originalAmount = mainChargeAmount,
+            outstandingAmount = mainChargeAmount,
+            items = Some(
+              List(
+                DesFinancialTransactionItem(
+                  amount = mainChargeAmount,
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(mainChargeDueDate)
+                )
+              )
+            )
+          ),
+          FinancialTransaction(
+            chargeReference = serviceChargeReference,
+            originalAmount = serviceChargeAmount,
+            outstandingAmount = serviceChargeAmount,
+            items = Some(
+              List(
+                DesFinancialTransactionItem(
+                  amount = serviceChargeAmount,
+                  paymentMethod = None,
+                  clearingDate = None,
+                  clearingReason = None,
+                  dueDate = Some(serviceChargeDueDate)
+                )
+              )
+            )
+          )
+        )
+      )
+    }
+
+    AccountProfile(_.equals("XPCGTP123456790"), returns)
+  }
+
   private val profiles: List[AccountProfile] =
-    List(account9, account8, account7, account6, account5, account4, account3, account2, account1)
+    List(account10, account9, account8, account7, account6, account5, account4, account3, account2, account1)
 
   def getProfile(cgtReference: String): Option[AccountProfile] =
     profiles.find(_.cgtReferencePredicate(cgtReference))

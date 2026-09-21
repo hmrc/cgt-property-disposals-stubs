@@ -97,6 +97,7 @@ N.B. ` αβγ` must be one of `400`, `403`, `500` or `503`.
 | CGT Reference | List Return        | View Return                               | Charge info  |
 |---------------|--------------------|-------------------------------------------|--------------|
 | `XD...`       | -                  | -                                         | delta charge | 
+| `XPCGTP123456790` | 8 hard coded returns | single disposal return                  | penalties and service charge types |
 | `....1`       | hard coded returns | -                                         | -            |        
 | `....0`       | nil return         | -                                         | -            |       
 | `....x`       | no sent returns    | -                                         | -            |       
@@ -107,6 +108,29 @@ N.B. ` αβγ` must be one of `400`, `403`, `500` or `503`.
 | `...6x`       | -                  | multiple disposal residential return      | -            |       
 | `...7x`       | -                  | multiple disposal residential 2021 return | -            |       
 | `...yx`       | -                  | single disposal return                    | -            |       
+
+### Penalties and service charge types
+
+In Auth Login Stub, use the following enrolment to view the penalty and service charge examples:
+
+| Field | Value |
+|-------|-------|
+| Enrolment key | `HMRC-CGT-PD` |
+| Identifier name | `CGTPDRef` |
+| Identifier value | `XPCGTP123456790` |
+
+From the account home page, select **View** or **View and pay** for one of these submitted returns:
+
+| Submission ID | Return address | Charge type |
+|---------------|----------------|-------------|
+| `900000000001` | Interest on late tax payment | `CGT PPD Interest` |
+| `900000000002` | Late filing penalty | `CGT PPD Late Filing Penalty` |
+| `900000000003` | Six month late filing penalty | `CGT PPD 6 Mth LFP` |
+| `900000000004` | Twelve month late filing penalty | `CGT PPD 12 Mth LFP` |
+| `900000000005` | Late payment penalty | `CGT PPD Late Payment Penalty` |
+| `900000000006` | Six month late payment penalty | `CGT PPD 6 Mth LPP` |
+| `900000000007` | Twelve month late payment penalty | `CGT PPD 12 Mth LPP` |
+| `900000000008` | Interest on penalties paid late | `CGT PPD Penalty Interest` |
 
 ## Subscription Update
 
